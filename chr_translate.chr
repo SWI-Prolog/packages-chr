@@ -3748,7 +3748,7 @@ generate_attach_code(type_indexed_identifier_store(Index,IndexType),C,L,T) :-
 		Goal3b =.. [Name3,S3b,L3b],
 		type_indexed_identifier_structure(IndexType,Struct3b),
 		arg(1,Struct3b,L3b),
-		Expansion3b = (S3 = Struct3b),
+		Expansion3b = (S3b = Struct3b),
 		Clause3b = ( user:goal_expansion(Goal3b,Expansion3b) :- writeln(expanding)),
 		%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 		%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
