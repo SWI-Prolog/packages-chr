@@ -4060,7 +4060,10 @@ multi_hash_key(C,Head,Index,Susp,VarDict,KeyBody,Key) :-
 
 get_suspension_argument_possibly_in_scope(Head,VarDict,Susp,Index,Arg,Goal) :-
 		arg(Index,Head,OriginalArg),
-		( term_variables(OriginalArg,OriginalVars),
+		( ground(OriginalArg), OriginalArg = '$chr_identifier_match'(Value,KeyType) ->
+			functor(Head,F,A),
+			lookup_identifier_atom(KeyType,Value,Arg,Goal)
+		; term_variables(OriginalArg,OriginalVars),
 		  copy_term_nat(OriginalArg-OriginalVars,Arg-Vars),
 		  translate(OriginalVars,VarDict,Vars) ->
 			Goal = true
@@ -8276,8 +8279,12 @@ multi_order_score([StoreType|StoreTypes],Head,ID,KnownVars,RestHeads,RuleNb,Scor
 	multi_order_score(StoreTypes,Head,ID,KnownVars,RestHeads,RuleNb,Score1,Score).
 	
 order_score(identifier_store(Index),Head,ID,KnownVars,RestHeads,RuleNb,CScore,Score) :-
+	arg(Index,Head,Arg),
+	memberchk_eq(Arg,KnownVars),
 	Score is min(CScore,10).
-order_score(type_indexed_identifier_store(_,_),Head,ID,KnownVars,RestHeads,RuleNb,CScore,Score) :-
+order_score(type_indexed_identifier_store(Index,_),Head,ID,KnownVars,RestHeads,RuleNb,CScore,Score) :-
+	arg(Index,Head,Arg),
+	memberchk_eq(Arg,KnownVars),
 	Score is min(CScore,10).
 % }}}
 
@@ -8845,7 +8852,7 @@ existential_lookup(multi_hash(Indexes),Head,_,VarDict,GroundVars,SuspTerm,Goal,S
 	existential_hash_lookup(hash,Indexes,Head,VarDict,GroundVars,SuspTerm,Goal,Susp,Pairs,NPairs).
 existential_lookup(identifier_store(Index),Head,PreJoin,VarDict,GroundVars,SuspTerm,Goal,Susp,Pairs,NPairs) :- !,
 	lookup_passive_head(identifier_store(Index),Head,PreJoin,VarDict,GroundVars,LookupGoal,AllSusps),
-	hash_index_filter(Pairs,Index,NPairs),
+	hash_index_filter(Pairs,[Index],NPairs),
 
 	functor(Head,F,A),
 	( check_fd_lookup_condition(F,A,Head,KeyArgs) ->
@@ -8866,7 +8873,7 @@ existential_lookup(identifier_store(Index),Head,PreJoin,VarDict,GroundVars,SuspT
 	).
 existential_lookup(type_indexed_identifier_store(Index,IndexType),Head,PreJoin,VarDict,GroundVars,SuspTerm,Goal,Susp,Pairs,NPairs) :- !,
 	lookup_passive_head(type_indexed_identifier_store(Index,IndexType),Head,PreJoin,VarDict,GroundVars,LookupGoal,AllSusps),
-	hash_index_filter(Pairs,Index,NPairs),
+	hash_index_filter(Pairs,[Index],NPairs),
 
 	functor(Head,F,A),
 	( check_fd_lookup_condition(F,A,Head,KeyArgs) ->
