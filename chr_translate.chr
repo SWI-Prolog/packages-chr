@@ -3768,7 +3768,15 @@ generate_attach_code(type_indexed_identifier_store(Index,IndexType),C,L,T) :-
 			),
 		%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
 		%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
-		L1 = [(:- multifile goal_expansion/2),(:- dynamic goal_expansion/2),Clause1,Clause1b,Clause2,Clause3,Clause3b,Clause4|T]
+		lookup_only_identifier_atom(IndexType,Y,IY,LookupOnlyAtom),
+		Clause5 = 
+			( LookupOnlyAtom :-
+				nb_getval(GlobalVariable,HT0),
+				lookup_ht(HT0,Y,[IY])
+			),
+		%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+		%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%
+		L1 = [(:- multifile goal_expansion/2),(:- dynamic goal_expansion/2),Clause1,Clause1b,Clause2,Clause3,Clause3b,Clause4,Clause5|T]
 	;
 		L = T
 	).
@@ -3783,6 +3791,10 @@ constant_initializer(C,Index,Constant) :-
 
 lookup_identifier_atom(Key,X,IX,Atom) :-
 	atom_concat('lookup_identifier_',Key,LookupFunctor),
+	Atom =.. [LookupFunctor,X,IX].
+
+lookup_only_identifier_atom(Key,X,IX,Atom) :-
+	atom_concat('lookup_only_identifier_',Key,LookupFunctor),
 	Atom =.. [LookupFunctor,X,IX].
 
 identifier_label_atom(IndexType,IX,X,Atom) :-
@@ -8745,7 +8757,7 @@ lookup_passive_head(type_indexed_identifier_store(Index,IndexType),Head,PreJoin,
 		translate([Var],VarDict,[KeyVar]),
 		Goal = StructGoal
 	; ground(Var), Var = '$chr_identifier_match'(ActualVar,_) ->
-		lookup_identifier_atom(IndexType,ActualVar,KeyVar,LookupGoal),
+		lookup_only_identifier_atom(IndexType,ActualVar,KeyVar,LookupGoal),
 		Goal = (LookupGoal,StructGoal)
 	),
 	delay_phase_end(validate_store_type_assumptions,
