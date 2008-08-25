@@ -24,7 +24,7 @@
 			lookup(KVs,Key,Value)
 		).
 */
-foreign_t
+static foreign_t
 pl_lookup_ht1(term_t ht, term_t pl_hash, term_t key, term_t values)
 {
   int capacity;
@@ -78,7 +78,7 @@ pl_lookup_ht1(term_t ht, term_t pl_hash, term_t key, term_t values)
   }
 }
 
-foreign_t
+static foreign_t
 pl_memberchk_eq(term_t element, term_t maybe_list)
 {
 
