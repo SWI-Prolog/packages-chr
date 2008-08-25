@@ -936,8 +936,8 @@ store_management_preds(Constraints,Clauses) :-
 
 
 insert_declarations(Clauses0, Clauses) :-
-	findall(:- use_module(chr(Module)),(auxiliary_module(Module), is_used_auxiliary_module(Module)),Decls),
-	append(Clauses0, [:- use_module(chr(chr_runtime))|Decls], Clauses).
+	findall((:- use_module(chr(Module))),(auxiliary_module(Module), is_used_auxiliary_module(Module)),Decls),
+	append(Clauses0, [(:- use_module(chr(chr_runtime)))|Decls], Clauses).
 
 auxiliary_module(chr_hashtable_store).
 auxiliary_module(chr_integertable_store).
@@ -1313,7 +1313,7 @@ check_ast_head_constraints_(simplification(AstConstraints),Decls,PragmaRule) :-
 check_ast_head_constraints_(propagation(AstConstraints),Decls,PragmaRule) :-
 	maplist(check_ast_head_constraint(Decls,PragmaRule),AstConstraints).
 check_ast_head_constraints_(simpagation(AstConstraints1,AstConstraints2),Decls,PragmaRule) :-
-	maplist(check_ast_head_constraint(Decls,PragmaRule),AstConstraints1).
+	maplist(check_ast_head_constraint(Decls,PragmaRule),AstConstraints1),
 	maplist(check_ast_head_constraint(Decls,PragmaRule),AstConstraints2).
 
 check_ast_head_constraint(Decls,PragmaRule,chr_constraint(Symbol,_,Constraint)) :-
@@ -10750,10 +10750,10 @@ flatten_readcontent([Clause|RClauses],Rules,ConstraintSymbols,ModeDecls,TypeDefs
                 flatten_readcontent(RClauses,Rules,ConstraintSymbols,ModeDecls,TypeDefs,TypeDecls,NRestClauses)
         ).
 
-crude_is_rule(_ @ _).
-crude_is_rule(_ pragma _).
-crude_is_rule(_ ==> _).
-crude_is_rule(_ <=> _).	
+crude_is_rule((_ @ _)).
+crude_is_rule((_ pragma _)).
+crude_is_rule((_ ==> _)).
+crude_is_rule((_ <=> _)).	
 
 pure_is_declaration(D, Constraints,Modes,Types) :-		%% constraint declaration
 	D = (:- Decl), Decl =.. [F,Cs], F == (chr_constraint),

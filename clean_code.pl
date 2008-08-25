@@ -189,7 +189,7 @@ merge_two_clauses('$source_location'(F1,L1) : C1,
 		  Result) :- !,
 	merge_two_clauses(C1,C2,C),
 	Result = '$source_location'(F1,L1) : C.
-merge_two_clauses(H1 :- B1, H2 :- B2, H :- B) :-
+merge_two_clauses((H1 :- B1), (H2 :- B2), (H :- B)) :-
 	H1 =@= H2,
 	H1 = H,
 	conj2list(B1,List1),
