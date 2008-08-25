@@ -37,7 +37,19 @@
 	  , chr_compile/3
 	  ]).
 %% SWI begin
+% vsc: 
+:- expects_dialect(swi).
+
+:- if(current_prolog_flag(dialect, yap)).
+
+:- prolog_load_context(directory,D), add_to_path(D).
+
+:- else.
+
 :- use_module(library(listing)). % portray_clause/2
+
+:- endif.
+
 %% SWI end
 :- include(chr_op).
 
@@ -77,8 +89,8 @@ chr_compile(From, To, MsgLevel) :-
 
 
 %% SWI begin
-specific_declarations([:- use_module('chr_runtime'),
-		       :- style_check(-discontiguous)|Tail], Tail).
+specific_declarations([(:- use_module('chr_runtime')),
+		       (:- style_check(-discontiguous))|Tail], Tail).
 %% SWI end
 
 %% SICStus begin
