@@ -53,6 +53,8 @@
 	    chr_leash/1			% +Ports
 	  ]).
 
+:- expects_dialect(swi).
+
 :- set_prolog_flag(generate_debug_info, false).
 
 :- multifile user:file_search_path/2.
@@ -420,13 +422,13 @@ user:term_expansion(In, Out) :-
 
 %%% for SSS %%%
 
-add_pragma_to_chr_rule(Name @ Rule, Pragma, Result) :- !,
+add_pragma_to_chr_rule((Name @ Rule), Pragma, Result) :- !,
 	add_pragma_to_chr_rule(Rule,Pragma,NRule),
 	Result = (Name @ NRule).
-add_pragma_to_chr_rule(Rule pragma Pragmas, Pragma, Result) :- !,
+add_pragma_to_chr_rule((Rule pragma Pragmas), Pragma, Result) :- !,
 	Result = (Rule pragma (Pragma,Pragmas)).
-add_pragma_to_chr_rule(Head ==> Body, Pragma, Result) :- !,
+add_pragma_to_chr_rule((Head ==> Body), Pragma, Result) :- !,
 	Result = (Head ==> Body pragma Pragma).
-add_pragma_to_chr_rule(Head <=> Body, Pragma, Result) :- !,
+add_pragma_to_chr_rule((Head <=> Body), Pragma, Result) :- !,
 	Result = (Head <=> Body pragma Pragma).
 add_pragma_to_chr_rule(Term,_,Term).
