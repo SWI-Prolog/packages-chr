@@ -15,7 +15,7 @@ AC_SUBST(CMFLAGS)
 AC_SUBST(LD)
 AC_SUBST(SO)
 AC_SUBST(LDSOFLAGS)
-AC_SUBST(TARGETS)
+AC_SUBST(CHR_TARGETS)
 
 # Do not cache this, it changes too often in many configurations
 unset ac_cv_prog_PL
@@ -52,7 +52,7 @@ CMFLAGS=-fpic
 
 SO="$PLSOEXT"
 
-TARGETS="chr_support.$SO"
+CHR_TARGETS="chr_support.$SO"
 AC_CHECK_PROGS(MAKE, gmake make, "make")
 AC_PROG_INSTALL
 if test ! -z "$GCC"; then
