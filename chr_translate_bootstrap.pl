@@ -128,6 +128,9 @@
 :- use_module(hprolog).
 :- use_module(pairlist).
 :- include(chr_op).
+:- if(current_prolog_flag(dialect, swi)).
+:- use_module(library(dialect/yap), [atomic_concat/3]).
+:- endif.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
@@ -2462,22 +2465,6 @@ atom_concat_list([X],X) :- ! .
 atom_concat_list([X|Xs],A) :-
 	atom_concat_list(Xs,B),
 	atomic_concat(X,B,A).
-
-atomic_concat(A,B,C) :-
-	make_atom(A,AA),
-	make_atom(B,BB),
-	atom_concat(AA,BB,C).
-
-make_atom(A,AA) :-
-	(
-	  atom(A) ->
-	  AA = A
-	;
-	  number(A) ->
-	  number_codes(A,AL),
-	  atom_codes(AA,AL)
-	).
-
 
 set_elems([],_).
 set_elems([X|Xs],X) :-
