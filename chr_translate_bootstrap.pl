@@ -125,7 +125,7 @@
 :- use_module(library(lists),[member/2,append/3,permutation/2,reverse/2]).
 :- use_module(library(ordsets)).
 %% SWI end
-:- use_module(hprolog).
+:- use_module(library(dialect/hprolog)).
 :- use_module(pairlist).
 :- include(chr_op).
 :- if(current_prolog_flag(dialect, swi)).

@@ -48,7 +48,7 @@
 	]).
 
 :- use_module(pairlist).
-:- use_module(hprolog).
+:- use_module(library(dialect/hprolog)).
 :- use_module(library(lists)).
 
 :- multifile user:goal_expansion/2.

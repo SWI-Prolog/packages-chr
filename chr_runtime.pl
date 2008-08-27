@@ -138,7 +138,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
                                                        
-:- use_module(hprolog).
+:- use_module(library(dialect/hprolog)).
 :- include(chr_op).
 
 %% SICStus begin

@@ -19,7 +19,7 @@
 		reverse/2
 	      ]).
 :- use_module(library(ordsets)).
-:- use_module(hprolog).
+:- use_module(library(dialect/hprolog)).
 :- use_module(pairlist).
 :- include(chr_op2).
 chr_translate(A, C) :-
