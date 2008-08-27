@@ -27,6 +27,7 @@ LN_S=@LN_S@
 #
 CC=@CC@
 CFLAGS= @CFLAGS@ $(YAP_EXTRAS) $(DEFS) -I$(srcdir) -I../.. -I$(srcdir)/../../include
+MKINDEX=true
 
 else	# SWI
 
@@ -54,6 +55,8 @@ LIBS=@LIBS@
 LD=@LD@
 LDFLAGS=@LDSOFLAGS@
 
+MKINDEX=$(PL) -f none -g make -t halt
+
 DOCTOTEX=$(PCEHOME)/bin/doc2tex
 PLTOTEX=$(PCEHOME)/bin/pl2tex
 LATEX=latex
@@ -76,7 +79,7 @@ INSTALL_DATA=@INSTALL_DATA@
 
 LIBPL=		$(srcdir)/chr_runtime.pl $(srcdir)/chr_op.pl \
 		chr_translate.pl $(srcdir)/chr_debug.pl \
-		$(srcdir)/chr_messages.pl $(srcdir)/hprolog.pl \
+		$(srcdir)/chr_messages.pl \
 		$(srcdir)/pairlist.pl $(srcdir)/clean_code.pl \
 		$(srcdir)/find.pl $(srcdir)/a_star.pl \
 		$(srcdir)/binomialheap.pl $(srcdir)/builtins.pl \
@@ -153,8 +156,7 @@ install:	$(LIBPL)
 		$(INSTALL_DATA) $(LIBPL) $(DESTDIR)$(CHRDIR)
 		$(INSTALL_DATA) $(CHRPL) $(DESTDIR)$(SHAREDIR)/chr.pl
 		$(INSTALL_DATA) $(srcdir)/README   $(DESTDIR)$(CHRDIR)
-		@IN_SWI@$(PL) -f none -g make -t halt
-		@IN_YAP@$(INSTALL_PROGRAM) $(SOBJS) $(DESTDIR)$(LIBDIR)
+		$(MKINDEX)
 
 ln-install::
 		@$(MAKE) INSTALL_DATA='../ln-install' install
