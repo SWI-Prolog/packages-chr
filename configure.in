@@ -52,7 +52,8 @@ CMFLAGS=-fpic
 
 SO="$PLSOEXT"
 
-CHR_TARGETS="chr_support.$SO"
+dnl Currently not used
+dnl CHR_TARGETS="chr_support.$SO"
 AC_CHECK_PROGS(MAKE, gmake make, "make")
 AC_PROG_INSTALL
 if test ! -z "$GCC"; then

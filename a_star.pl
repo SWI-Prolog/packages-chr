@@ -12,7 +12,7 @@
 
 :- use_module(find).
 
-:- use_module(hprolog).
+:- use_module(library(dialect/hprolog)).
 
 a_star(DataIn,FinalData,ExpandData,DataOut) :-
 	a_star_node(DataIn,0,InitialNode),

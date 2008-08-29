@@ -3,7 +3,7 @@
 	    simplify_guards/5
 	  ]).
 :- include(chr_op).
-:- use_module(hprolog).
+:- use_module(library(dialect/hprolog)).
 :- use_module(builtins).
 :- use_module(chr_compiler_errors).
 :- chr_option(debug, off).

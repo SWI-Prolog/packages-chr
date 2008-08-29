@@ -40,7 +40,7 @@
 	  value_iht/2
 	]).
 :- use_module(library(lists)).
-:- use_module(hprolog).
+:- use_module(library(dialect/hprolog)).
 
 %initial_capacity(65536).
 %initial_capacity(1024).

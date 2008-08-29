@@ -19,7 +19,7 @@
 		clean_clauses/2
 	]).
 
-:- use_module(hprolog).
+:- use_module(library(dialect/hprolog)).
 
 clean_clauses(Clauses,NClauses) :-
 	clean_clauses1(Clauses,Clauses1),

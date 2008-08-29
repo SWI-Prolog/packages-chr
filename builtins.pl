@@ -11,7 +11,7 @@
 		builtin_binds_b/2
 	]).
 
-:- use_module(hprolog).
+:- use_module(library(dialect/hprolog)).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 negate_b(A,B) :- once(negate(A,B)).
@@ -52,7 +52,7 @@ entails_b(A,B) :-
 entails(A,A,_).
 entails(A,C,History) :-
 	entails_(A,B),
-	\+ hprolog:memberchk_eq(B,History),
+	\+ memberchk_eq(B,History),
 	entails(B,C,[B|History]).		
 
 entails_(X > Y, X >= Y).

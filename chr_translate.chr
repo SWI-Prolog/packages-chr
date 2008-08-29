@@ -139,10 +139,10 @@
 :- use_module(library(apply_macros)).
 :- use_module(library(occurs)).
 :- use_module(library(assoc)).
+:- use_module(library(dialect/hprolog)).
 %% SWI end }}}
 
 % imports and operators {{{
-:- use_module(hprolog).
 :- use_module(pairlist).
 :- use_module(a_star).
 :- use_module(listmap).
