@@ -1284,7 +1284,7 @@ check_rule(Decls,PragmaRule,AstRule) :-
 check_ast_trivial_propagation_rule(AstRule,PragmaRule) :-
 	AstRule = ast_rule(AstHead,_,_,AstBody,_),
 	( AstHead = propagation(_),
-          Body == [] ->
+          AstBody == [] ->
     		chr_warning(weird_program,'Ignoring propagation rule with empty body: ~@.\n\t\n',[format_rule(PragmaRule)]),
 		set_rule_passive(PragmaRule)
 	;
