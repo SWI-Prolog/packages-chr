@@ -4197,13 +4197,24 @@ trie_step_case(F/A,N,Patterns,MorePatterns,Results,Symbol,Prefix,[Clause|List],T
 			append(Args,Vs,[First|Rest]),
 			First-Rest = CommonPatternPair,	
 			% Body = RSymbol(DiffVars,Result)
-			gensym(Prefix,RSymbol),
+			fresh_symbol(Prefix,RSymbol),
 			append(DiffVars,[Result],RecCallVars),
 			Body =.. [RSymbol|RecCallVars],
 			maplist(head_tail,Differences,CHs,CTs),
 			trie_step(CHs,RSymbol,Prefix,CTs,MoreResults,List,Tail)
 		)
 	).
+
+:- chr_constraint symbol_count/2.
+:- chr_constraint fresh_symbol/2.
+
+symbol_count(Atom,N), fresh_symbol(Atom,Symbol) <=>
+	atom_concat(Atom,N,Symbol),
+	M is N + 1,
+	symbol_count(Atom,M).
+
+fresh_symbol(Atom,Symbol) ==>
+	symbol_count(Atom,0).
 
 head_tail([H|T],H,T).
 	
@@ -10957,7 +10968,7 @@ dispatch_trie_step_case(F/A,N,Patterns,MorePatterns,Payload,MaybeErrorHandler,Co
 			append(Args,Vs,[First|Rest]),
 			First-Rest = CommonPatternPair,	
 			Context2 = gct([First|Rest],Context1),
-			gensym(Prefix,RSymbol),
+			fresh_symbol(Prefix,RSymbol),
 			append(DiffVars,PayloadArgs,RecCallVars),
 			Body =.. [RSymbol|RecCallVars],
 			findall(CH-CT,member([CH|CT],Differences),CPairs),
