@@ -38,6 +38,7 @@
 	  lookup_ht1/4,
 	  lookup_ht2/4,
 	  insert_ht/3,
+	  insert_ht1/4,
 	  insert_ht/4,
 	  delete_ht/3,
 	  delete_ht1/4,
