@@ -411,9 +411,9 @@ store_management_preds(Constraints,Clauses) :-
 
 
 %% SWI begin
-specific_declarations([:- use_module('chr_runtime')
-		      ,:- use_module('chr_hashtable_store')
-		      ,:- style_check(-discontiguous)
+specific_declarations([(:- use_module('chr_runtime'))
+		      ,(:- use_module('chr_hashtable_store'))
+		      ,(:- style_check(-discontiguous))
 		      |Tail],Tail).
 %% SWI end
 
@@ -3562,22 +3562,6 @@ atom_concat_list([X],X) :- ! .
 atom_concat_list([X|Xs],A) :-
 	atom_concat_list(Xs,B),
 	atomic_concat(X,B,A).
-
-atomic_concat(A,B,C) :-
-	make_atom(A,AA),
-	make_atom(B,BB),
-	atom_concat(AA,BB,C).
-
-make_atom(A,AA) :-
-	(
-	  atom(A) ->
-	  AA = A
-	;
-	  number(A) ->
-	  number_codes(A,AL),
-	  atom_codes(AA,AL)
-	).
-
 
 make_name(Prefix,F/A,Name) :-
 	atom_concat_list([Prefix,F,(/),A],Name).

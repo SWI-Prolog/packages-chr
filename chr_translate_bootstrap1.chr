@@ -1686,10 +1686,6 @@ atom_concat_list([A], A) :- !.
 atom_concat_list([B|A], D) :-
 	atom_concat_list(A, C),
 	atomic_concat(B, C, D).
-atomic_concat(A, B, E) :-
-	make_atom(A, C),
-	make_atom(B, D),
-	atom_concat(C, D, E).
 make_atom(A, B) :-
 	(   atom(A)
 	->  B=A

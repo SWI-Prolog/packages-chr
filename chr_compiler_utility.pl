@@ -44,7 +44,6 @@
 	, my_term_copy/3
 	, my_term_copy/4
 	, atom_concat_list/2
-	, atomic_concat/3
 	, init/2
 	, member2/3
 	, select2/6
@@ -66,9 +65,6 @@
 :- use_module(pairlist).
 :- use_module(library(lists), [permutation/2]).
 :- use_module(library(assoc)).
-:- if(current_prolog_flag(dialect, swi)).
-:- use_module(library(dialect/yap), [atomic_concat/3]).
-:- endif.
 
 %% SICStus begin
 %% use_module(library(terms),[term_variables/2]).

@@ -128,9 +128,6 @@
 :- use_module(library(dialect/hprolog)).
 :- use_module(pairlist).
 :- include(chr_op).
-:- if(current_prolog_flag(dialect, swi)).
-:- use_module(library(dialect/yap), [atomic_concat/3]).
-:- endif.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
