@@ -84,7 +84,7 @@ user:file_search_path(chr, library(chr)).
 %%	chr_flag/3,
 %%	chr_show_store/1
 %%	]).
-%% 
+%%
 %% :- op(1180, xfx, ==>),
 %% 	op(1180, xfx, <=>),
 %% 	op(1150, fx, constraints),
@@ -97,13 +97,13 @@ user:file_search_path(chr, library(chr)).
 %% 	op(1150, fx, chr_type),
 %% 	op(1130, xfx, --->),
 %% 	op(1150, fx, (?)).
-%% 
+%%
 %% :- multifile user:file_search_path/2.
 %% :- dynamic   chr_translated_program/1.
-%% 
+%%
 %% user:file_search_path(chr, library(chr)).
-%% 
-%% 
+%%
+%%
 %% :- use_module('chr/chr_translate').
 %% :- use_module('chr/chr_runtime').
 %% :- use_module('chr/chr_hashtable_store').
@@ -117,7 +117,7 @@ user:file_search_path(chr, library(chr)).
 :- dynamic chr_pp/2.		% File, Term
 
 %	chr_expandable(+Term)
-%	
+%
 %	Succeeds if Term is a  rule  that   must  be  handled by the CHR
 %	compiler. Ideally CHR definitions should be between
 %
@@ -126,7 +126,7 @@ user:file_search_path(chr, library(chr)).
 %		:- end_constraints.
 %
 %	As they are not we have to   use  some heuristics. We assume any
-%	file is a CHR after we've seen :- constraints ... 
+%	file is a CHR after we've seen :- constraints ...
 
 chr_expandable((:- constraints _)).
 chr_expandable((constraints _)).
@@ -144,7 +144,7 @@ chr_expandable((_ ==> _)).
 chr_expandable((_ pragma _)).
 
 %	chr_expand(+Term, -Expansion)
-%	
+%
 %	Extract CHR declarations and rules from the file and run the
 %	CHR compiler when reaching end-of-file.
 
@@ -159,7 +159,7 @@ extra_declarations([(:- use_module(chr(chr_runtime)))
 %% extra_declarations([(:-use_module(chr(chr_runtime)))
 %% 		     , (:- use_module(chr(hprolog),[term_variables/2,term_variables/3]))
 %% 		     , (:-use_module(chr(hpattvars)))
-%% 		     | Tail], Tail).		   
+%% 		     | Tail], Tail).
 %% SICStus end
 
 chr_expand(Term, []) :-
@@ -230,7 +230,7 @@ add_optimise_decl(CHR, CHR).
 
 
 %	call_chr_translate(+File, +In, -Out)
-%	
+%
 %	The entire chr_translate/2 translation may fail, in which case we'd
 %	better issue a warning  rather  than   simply  ignoring  the CHR
 %	declarations.
@@ -279,9 +279,9 @@ user:message_hook(trace_mode(OnOff), _, _) :-
 	fail.				% backtrack to other handlers
 
 %	chr:debug_event(+State, +Event)
-%	
+%
 %	Hook into the CHR debugger.  At this moment we will discard CHR
-%	events if we are in a Prolog `skip' and we ignore the 
+%	events if we are in a Prolog `skip' and we ignore the
 
 chr:debug_event(_State, _Event) :-
 	tracing,			% are we tracing?
@@ -292,7 +292,7 @@ chr:debug_event(_State, _Event) :-
 	Level > Skip, !.
 
 %	chr:debug_interact(+Event, +Depth, -Command)
-%	
+%
 %	Hook into the CHR debugger to display Event and ask for the next
 %	command to execute. This  definition   causes  the normal Prolog
 %	debugger to be used for the standard ports.
@@ -319,7 +319,7 @@ prolog:message(chr(CHR)) -->
 	chr_message(CHR).
 
 		 /*******************************
-		 *	 TOPLEVEL PRINTING	*	
+		 *	 TOPLEVEL PRINTING	*
 		 *******************************/
 
 :- set_prolog_flag(chr_toplevel_show_store,true).
@@ -346,36 +346,36 @@ print_all_stores :-
 		 *	   MUST BE LAST!	*
 		 *******************************/
 
-:- multifile user:term_expansion/2.
-:- dynamic   user:term_expansion/2.
+:- multifile system:term_expansion/2.
+:- dynamic   system:term_expansion/2.
 
-user:term_expansion(In, Out) :-
+system:term_expansion(In, Out) :-
 	chr_expand(In, Out).
 %% SWI end
 
 %% SICStus begin
-% 
+%
 % :- dynamic
 % 	current_toplevel_show_store/1,
 % 	current_generate_debug_info/1,
 % 	current_optimize/1.
-% 
+%
 % current_toplevel_show_store(on).
-% 
+%
 % current_generate_debug_info(false).
-% 
+%
 % current_optimize(off).
-% 
+%
 % chr_current_prolog_flag(generate_debug_info, X) :-
 % 	chr_flag(generate_debug_info, X, X).
 % chr_current_prolog_flag(optimize, X) :-
 % 	chr_flag(optimize, X, X).
-% 
+%
 % chr_flag(Flag, Old, New) :-
 % 	Goal = chr_flag(Flag,Old,New),
 % 	g must_be(Flag, oneof([toplevel_show_store,generate_debug_info,optimize]), Goal, 1),
 % 	chr_flag(Flag, Old, New, Goal).
-% 
+%
 % chr_flag(toplevel_show_store, Old, New, Goal) :-
 % 	clause(current_toplevel_show_store(Old), true, Ref),
 % 	(   New==Old -> true
@@ -397,27 +397,27 @@ user:term_expansion(In, Out) :-
 % 	    erase(Ref),
 % 	    assertz(current_optimize(New))
 % 	).
-% 
-% 
+%
+%
 % all_stores_goal(Goal, CVAs) :-
 % 	chr_flag(toplevel_show_store, on, on), !,
 % 	findall(C-CVAs, find_chr_constraint(C), Pairs),
 % 	andify(Pairs, Goal, CVAs).
 % all_stores_goal(true, _).
-% 
+%
 % andify([], true, _).
 % andify([X-Vs|L], Conj, Vs) :- andify(L, X, Conj, Vs).
-% 
+%
 % andify([], X, X, _).
 % andify([Y-Vs|L], X, (X,Conj), Vs) :- andify(L, Y, Conj, Vs).
-% 
+%
 % :- multifile user:term_expansion/6.
-% 
+%
 % user:term_expansion(In, _, Ids, Out, [], [chr|Ids]) :-
 % 	nonvar(In),
 % 	nonmember(chr, Ids),
 % 	chr_expand(In, Out), !.
-% 
+%
 %% SICStus end
 
 %%% for SSS %%%
