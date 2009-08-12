@@ -103,7 +103,8 @@ option_definition(optimize,full,Flags) :-
 		  late_allocation	   - on,
 		  reduced_indexing	   - on,
                   inline_insertremove      - on,
-		  mixed_stores		   - off
+		  mixed_stores		   - off,
+		  debugable		   - off
 		].
 
 option_definition(optimize,off,Flags) :-
