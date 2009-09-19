@@ -1,9 +1,15 @@
+[Aug 12 2009]
+
+ * CHR: no debugging instrumentation for optimized code
+
 [Jun 27 2008]
 
- * CHR: ADDED error value for check_guard_bindings option: throw error on guard binding
-   
- * CHR: ADDED error value for check_guard_bindings option: throw error on guard binding
-   
+ * CHR: ADDED error value for check_guard_bindings option:
+   throw error on guard binding
+
+ * CHR: ADDED error value for check_guard_bindings option:
+   throw error on guard binding
+
 [May 22 2008]
 
  * CHR: experimental detach code size reduction (bug fix)
@@ -28,7 +34,7 @@
 
  * MODIFIED: Renamed hash_term/2 to term_hash/2.  Added hash_term/2 to
    library(backcomp), so most code should not notice this.
-   
+
 [Feb 27 2008]
 
  * ENHANCED: CHR performance of find_chr_constraint when called with nonvar argument
@@ -84,7 +90,7 @@ Jan 23, 2008
 Jan 22, 2008
 
   * TS: Rewrite Prolog code: common prefix elimination in
-	successive clauses of the same predicate. 
+	successive clauses of the same predicate.
   * TS: Tries stores enabled by default again.
   * TS: Success and failure continuation optimization for
 	propagation occurrences.
@@ -118,7 +124,7 @@ Jan 7, 2008
 
   * TS: Performance improvement: use new store
 	implementation for multi-argument lookups
-	on manifest ground terms. Should be faster than	
+	on manifest ground terms. Should be faster than
 	hashtable.
 
 Jan 4, 2008
@@ -129,7 +135,7 @@ Jan 4, 2008
 	hashtable. Will be generalized to arbitrary
 	manifest ground lookups and non-manifest
 	atomically typed lookups .
-	
+
 Jan 3, 2008
 
   * TS: Modified error messages of declare_stored_constraints
@@ -160,9 +166,9 @@ Dec 29, 2007
 Dec 27, 2007
 
   * TS: Inline constraint lookup.
- 
+
   * TS: Precompile term hashing.
- 
+
 Sep 26, 2007
 
   * TS: Code cleaning was hampered by line numbers.
@@ -250,8 +256,8 @@ Oct 12, 2006
 
 Oct 10, 2006
 
-  * TS: Allow for empty type definitions aka phantom types. These are 
-	useful for some type-level tricks. A warning is issued so the 
+  * TS: Allow for empty type definitions aka phantom types. These are
+	useful for some type-level tricks. A warning is issued so the
 	user can check whether a phantom type is intended. No other
 	phantom type-specific checks are in place yet.
 
@@ -265,7 +271,7 @@ Oct 9, 2006
 Oct 3, 2006
 
   * TS: Fixed bug concerning matchings between ground and possibly
- 	non-ground arguments.	
+ 	non-ground arguments.
 
 Oct 2, 2006
 
@@ -278,7 +284,7 @@ Sep 28, 2006
 Sep 22, 2006
 
   * TS: Add exception handler to initialize chr_leash in new threads.
-  
+
 Sep 18. 2006
 
   * TS: Bug fix for programs in debugging mode.
@@ -337,7 +343,7 @@ Aug 3, 2006
 Aug 2, 2006
 
   * TS: Fixed bug (type alias related) in static type checker. Mike Elston.
- 
+
   * TS: Added static type checking on variable matching in rule heads.
 
   * TS: Added static type checking on CHR constraints in rule bodies.
@@ -419,7 +425,7 @@ Apr 19, 2006
  * JW: Make library(chr) load its private stuff silent.
 
 Apr 14, 2006
- 
+
  * TS: Bug fix: too many guards were locked.
 
 Apr 11, 2006
@@ -436,7 +442,7 @@ Apr 11, 2006
         their own global variable: a list of all the suspensions.
 	Removal from this list is now O(1) thanks to setarg/1 and
         back pointers in the suspension terms. This can cause time
-	time complexity improvements in solvers that always have 
+	time complexity improvements in solvers that always have
 	variable indexing on their constraints.
 
         Ground, non-indexed constraints are now removed from
@@ -456,13 +462,13 @@ Mar 16, 2006
         properly instantiated.
 
 Mar 11, 2006
-  
+
   * TS: Renamed global variable id to chr_id in chr_runtime.pl.
 
 Mar 9, 2006
   * JS: Synchronization with experimental version:
         - minor optimizations, e.g. efficient lookups with statically known
-          instantiated data 
+          instantiated data
         - new alternative syntax for passive declarations
 	- new dense_int built-in type + underlying store
 	- new type alias definitions, like in Mercury
@@ -477,7 +483,7 @@ Mar 3, 2006
 
 Mar 2, 2006
 
-  * TS: Use exception/3 hook to catch undefined 
+  * TS: Use exception/3 hook to catch undefined
         global variables of chr_runtime.pl and CHR modules,
 	for multi-threaded programs and saved states.
 
@@ -558,7 +564,7 @@ Nov 30, 2005
 	   system specific declarations factored out in insert_declarations
 	   changed two atom_concat/3 into atomic_concat/3 (because arg 2 was sometimes an int)
   * BD: chr_compiler_utility.pl:
-	   put atomic_concat/3 there 
+	   put atomic_concat/3 there
 	   adapted atom_concat_list/2 to use it
   * BD: chr_swi_bootstrap.pl:
 	   introduced chr_swi_bootstrap/2 for ease of porting
@@ -643,7 +649,7 @@ Oct 18, 2005
 	Debug off now entails optimize on.
 
   * TS: Some fixes of the documentation. Thanks to Bart Demoen
-	and Thom Fruehwirth. 
+	and Thom Fruehwirth.
 
 Sep 2, 2005
 
@@ -709,7 +715,7 @@ Jun 1, 2005
 
   * TS: Added option to disable toplevel constraint store printing.
   * TS: Slightly improved hash table constraint store implementation.
- 
+
 Apr 16, 2005
 
   * JW: Added patch from Jon Sneyers.
