@@ -322,7 +322,7 @@ prolog:message(chr(CHR)) -->
 		 *	 TOPLEVEL PRINTING	*
 		 *******************************/
 
-:- set_prolog_flag(chr_toplevel_show_store,true).
+:- create_prolog_flag(chr_toplevel_show_store, true, []).
 
 prolog:message(query(YesNo)) --> !,
 	['~@'-[chr:print_all_stores]],
