@@ -45,7 +45,7 @@
 %%	* based on the SICStus CHR compilation by Christian Holzbaur
 %%
 %% First working version: 6 June 2003
-%% 
+%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% To Do
 %%
@@ -68,9 +68,9 @@
 %%
 %%	* intelligent backtracking for simplification/simpagation rule
 %%		generator_1(X),'_$savecp'(CP_1),
-%%              ... 
+%%              ...
 %%              if( (
-%%			generator_n(Y), 
+%%			generator_n(Y),
 %%		     	test(X,Y)
 %%		    ),
 %%		    true,
@@ -78,7 +78,7 @@
 %%		),
 %%		...
 %%
-%%	  or recently developped cascading-supported approach 
+%%	  or recently developped cascading-supported approach
 %%
 %%      * intelligent backtracking for propagation rule
 %%          use additional boolean argument for each possible smart backtracking
@@ -109,7 +109,7 @@
 %%	* unique optimisation for simpagation and simplification rules
 %%	* cheap guards interleaved with head retrieval + faster
 %%	  via-retrieval + non-empty checking for simplification / simpagation rules
-%%	* transform 
+%%	* transform
 %%		C \ C <=> true
 %%	  into
 %%		C # ID \ C <=> true pragma passive.
@@ -161,14 +161,14 @@ chr_translate(Declarations,NewDeclarations) :-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
-%% Partitioning of clauses into constraint declarations, chr rules and other 
+%% Partitioning of clauses into constraint declarations, chr rules and other
 %% clauses
 
 partition_clauses([],[],[],[],_).
 partition_clauses([C|Cs],Ds,Rs,OCs,Mod) :-
   (   rule(C,R) ->
       Ds = RDs,
-      Rs = [R | RRs], 
+      Rs = [R | RRs],
       OCs = ROCs
   ;   is_declaration(C,D) ->
       append(D,RDs,Ds),
@@ -208,7 +208,7 @@ is_declaration(D, Constraints) :-		%% constraint declaration
 
 %% Data Declaration
 %%
-%% pragma_rule 
+%% pragma_rule
 %%	-> pragma(
 %%		rule,
 %%		ids,
@@ -220,7 +220,7 @@ is_declaration(D, Constraints) :-		%% constraint declaration
 %%		list(int),
 %%		list(int)
 %%		)
-%%		
+%%
 %% rule -> rule(
 %%		list(constraint),	:: constraints to be removed
 %%		list(constraint),	:: surviving constraints
@@ -366,7 +366,7 @@ check_pragma(Pragma, PragmaRule, N) :-
 	!,
 	format('CHR compiler WARNING: currently unsupported pragma ~w in ~@.\n',[Pragma,format_rule(PragmaRule,N)]),
 	format('    `--> Pragma is ignored. Termination and correctness may be affected \n',[]).
-	
+
 check_pragma(Pragma,PragmaRule,N) :-
 	format('CHR compiler ERROR: invalid pragma ~w in ~@.\n',[Pragma,format_rule(PragmaRule,N)]),
 	format('    `--> Pragma should be one of passive/1!\n',[]),
@@ -386,13 +386,13 @@ format_rule(PragmaRule,N) :-
 % Global Options
 %
 
-handle_option(Var,Value) :- 
+handle_option(Var,Value) :-
 	var(Var), !,
 	format('CHR compiler ERROR: ~w.\n',[option(Var,Value)]),
 	format('    `--> First argument should be an atom, not a variable.\n',[]),
 	fail.
 
-handle_option(Name,Value) :- 
+handle_option(Name,Value) :-
 	var(Value), !,
 	format('CHR compiler ERROR: ~w.\n',[option(Name,Value)]),
 	format('    `--> Second argument should be a nonvariable.\n',[]),
@@ -403,15 +403,15 @@ handle_option(Name,Value) :-
 	!,
 	set_chr_pp_flags(Flags).
 
-handle_option(Name,Value) :- 
+handle_option(Name,Value) :-
 	\+ option_definition(Name,_,_), !,
-	setof(N,_V ^ _F ^ (option_definition(N,_V,_F)),Ns),
+	setof(N, V^F^option_definition(N,V,F), Ns),
 	format('CHR compiler ERROR: ~w.\n',[option(Name,Value)]),
 	format('    `--> Invalid option name ~w: should be one of ~w.\n',[Name,Ns]),
 	fail.
 
-handle_option(Name,Value) :- 
-	findall(V,option_definition(Name,V,_),Vs), 
+handle_option(Name,Value) :-
+	findall(V,option_definition(Name,V,_),Vs),
 	format('CHR compiler ERROR: ~w.\n',[option(Name,Value)]),
 	format('    `--> Invalid value ~w: should be one of ~w.\n',[Value,Vs]),
 	fail.
@@ -450,7 +450,7 @@ init_chr_pp_flags :-
 	chr_pp_flag_definition(Name,[DefaultValue|_]),
 	set_chr_pp_flag(Name,DefaultValue),
 	fail.
-init_chr_pp_flags.		
+init_chr_pp_flags.
 
 set_chr_pp_flags([]).
 set_chr_pp_flags([Name-Value|Flags]) :-
@@ -490,7 +490,7 @@ chr_pp_flag(Name,Value) :-
 generate_attach_a_constraint_all(Constraints,Mod,Clauses) :-
 	length(Constraints,Total),
 	generate_attach_a_constraint_all(Constraints,1,Total,Mod,Clauses).
-	
+
 generate_attach_a_constraint_all([],_,_,_,[]).
 generate_attach_a_constraint_all([Constraint|Constraints],Position,Total,Mod,Clauses) :-
 	generate_attach_a_constraint(Total,Position,Constraint,Mod,Clauses1),
@@ -522,7 +522,7 @@ generate_attach_a_constraint_1_1(CFct / CAty,Mod,Clause) :-
 		(   get_attr(Var, Mod, Susps) ->
 	            NewSusps=[Susp|Susps],
 	            put_attr(Var, Mod, NewSusps)
-	        ;   
+	        ;
 	            put_attr(Var, Mod, [Susp])
         	),
 		RecursiveCall
@@ -567,7 +567,7 @@ generate_attach_a_constraint_t_p(Total,Position,CFct / CAty ,Mod,Clause) :-
 generate_detach_a_constraint_all(Constraints,Mod,Clauses) :-
 	length(Constraints,Total),
 	generate_detach_a_constraint_all(Constraints,1,Total,Mod,Clauses).
-	
+
 generate_detach_a_constraint_all([],_,_,_,[]).
 generate_detach_a_constraint_all([Constraint|Constraints],Position,Total,Mod,Clauses) :-
 	generate_detach_a_constraint(Total,Position,Constraint,Mod,Clauses1),
@@ -674,7 +674,7 @@ generate_attach_increment_one(Mod,Clause) :-
 			put_attr(Var,Mod,Susps)
 		),
 		attach_increment(Vars,Susps)
-	), 
+	),
 	Clause = (Head :- Body).
 
 generate_attach_increment_many(N,Mod,Clause) :-
@@ -685,7 +685,7 @@ generate_attach_increment_many(N,Mod,Clause) :-
 	list2conj(Gs,SortGoals),
 	bagof(MS,A ^ B ^ C ^ member((A,'chr merge_attributes'(B,C,MS)),Gs), MergedSuspsList),
 	make_attr(N,MergedMask,MergedSuspsList,NewAttr),
-	Body =	
+	Body =
 	(
 		'chr not_locked'(Var),
 		( get_attr(Var,Mod,TOtherAttr) ->
@@ -711,7 +711,7 @@ generate_attr_unify_hook(Constraints,Mod,[Clause]) :-
 
 generate_attr_unify_hook_one(Mod,Clause) :-
 	Head = attr_unify_hook(Susps,Other),
-	Body = 
+	Body =
 	(
 		sort(Susps, SortedSusps),
 		( var(Other) ->
@@ -773,10 +773,10 @@ generate_attr_unify_hook_many(N,Mod,Clause) :-
 				true
 			),
 			'chr run_suspensions_loop'(SortedSuspsList)
-		)	
-	),	
+		)
+	),
 	Clause = (Head :- Body).
-	
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -816,7 +816,7 @@ constraint_prelude(F/A, _Mod, Clause) :-
 	vars_susp(A,Vars,_Susp,VarsSusp),
 	Head =.. [ F | Vars],
 	build_head(F,A,[0],VarsSusp,Delegate),
-	Clause = ( Head  :- Delegate ). 
+	Clause = ( Head  :- Delegate ).
 
 gen_cond_attach_clause(Mod,F/A,_I,_N,_Constraints,Id,L,T) :-
 	( Id == [0] ->
@@ -837,7 +837,7 @@ gen_cond_attach_goal(Mod,F/A,Goal,AllArgs) :-
 	(
 		( var(Susp) ->
 			'chr insert_constraint_internal'(Vars,Susp,Mod:Closure,F,Args)
-		; 
+		;
 			'chr activate_constraint'(Vars,Susp,_)
 		),
 		Attach
@@ -849,7 +849,7 @@ gen_uncond_attach_goal(F/A,Susp,_Mod,AttachGoal,Generation) :-
 	AttachGoal =
 	(
 		'chr activate_constraint'(Vars, Susp, Generation),
-		Attach	
+		Attach
 	).
 
 %%	Generate all the code for a constraint based on all CHR rules
@@ -877,7 +877,7 @@ heads1_code([Head|Heads],RestHeads,[HeadID|HeadIDs],RestIDs,PragmaRule,F/A,I,N,C
 		append(Heads,RestHeads,OtherHeads),
 		append(HeadIDs,RestIDs,OtherIDs),
 		head1_code(Head,OtherHeads,OtherIDs,PragmaRule,F/A,I,N,Constraints,Mod,Id,L,L1)
-	;	
+	;
 		L = L1
 	),
 	heads1_code(Heads,[Head|RestHeads],HeadIDs,[HeadID|RestIDs],PragmaRule,F/A,I,N,Constraints,Mod,Id,L1,T).
@@ -921,7 +921,7 @@ head2_code(Head,OtherHeads,OtherIDs,PragmaRule,RuleNb,RestHeadNb,FA,I,N,Constrai
 		reorder_heads(Head,OtherHeads,NOtherHeads),
 		propagation_code(Head,NOtherHeads,Rule,RuleNb,RestHeadNb,FA,N,Constraints,Mod,Id,L,T)
 	;
-		simpagation_head2_code(Head,OtherHeads,OtherIDs,PragmaRule,FA,I,N,Constraints,Mod,Id,L,T) 
+		simpagation_head2_code(Head,OtherHeads,OtherIDs,PragmaRule,FA,I,N,Constraints,Mod,Id,L,T)
 	).
 
 gen_alloc_inc_clause(F/A,Mod,Id,L,T) :-
@@ -933,7 +933,7 @@ gen_alloc_inc_clause(F/A,Mod,Id,L,T) :-
 		gen_cond_allocation(Vars,Susp,F/A,VarsSusp,Mod,ConditionalAlloc)
 	;
 		ConditionalAlloc = true
-	), 
+	),
 	Clause =
 	(
 		Head :-
@@ -947,7 +947,7 @@ gen_cond_allocation(Vars,Susp,F/A,VarsSusp,Mod,ConstraintAllocationGoal) :-
 	ConstraintAllocationGoal =
 	( var(Susp) ->
 		'chr allocate_constraint'(Mod : Term, Susp, F, Vars)
-	;  
+	;
 		true
 	).
 
@@ -1021,7 +1021,7 @@ build_retrieval_units2([U|Us],N,M,Dict,NDict,L,T) :-
 
 initialize_unit_dictionary(Term,Dict) :-
 	term_variables(Term,Vars),
-	pair_all_with(Vars,0,Dict).	
+	pair_all_with(Vars,0,Dict).
 
 update_unit_dictionary([],_,Dict,Dict,GIDs,GIDs).
 update_unit_dictionary([V|Vs],This,Dict,NDict,GIDs,NGIDs) :-
@@ -1063,22 +1063,22 @@ update_unit_dictionary2([V|Vs],This,Dict,NDict,GIDs,NGIDs) :-
 		GIDs1 = GIDs
 	),
 	update_unit_dictionary2(Vs,This,Dict1,NDict,GIDs1,NGIDs).
-	
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%  ____       _     ____                             _   _            
-%% / ___|  ___| |_  / ___|  ___ _ __ ___   __ _ _ __ | |_(_) ___ ___ _ 
+%%  ____       _     ____                             _   _
+%% / ___|  ___| |_  / ___|  ___ _ __ ___   __ _ _ __ | |_(_) ___ ___ _
 %% \___ \ / _ \ __| \___ \ / _ \ '_ ` _ \ / _` | '_ \| __| |/ __/ __(_)
-%%  ___) |  __/ |_   ___) |  __/ | | | | | (_| | | | | |_| | (__\__ \_ 
+%%  ___) |  __/ |_   ___) |  __/ | | | | | (_| | | | | |_| | (__\__ \_
 %% |____/ \___|\__| |____/ \___|_| |_| |_|\__,_|_| |_|\__|_|\___|___(_)
-%%                                                                     
-%%  _   _       _                    ___        __                              
-%% | | | |_ __ (_) __ _ _   _  ___  |_ _|_ __  / _| ___ _ __ ___ _ __   ___ ___ 
+%%
+%%  _   _       _                    ___        __
+%% | | | |_ __ (_) __ _ _   _  ___  |_ _|_ __  / _| ___ _ __ ___ _ __   ___ ___
 %% | | | | '_ \| |/ _` | | | |/ _ \  | || '_ \| |_ / _ \ '__/ _ \ '_ \ / __/ _ \
 %% | |_| | | | | | (_| | |_| |  __/  | || | | |  _|  __/ | |  __/ | | | (_|  __/
 %%  \___/|_| |_|_|\__, |\__,_|\___| |___|_| |_|_|  \___|_|  \___|_| |_|\___\___|
-%%                   |_|                                                        
+%%                   |_|
 unique_analyse_optimise(Rules,N,PatternList,NRules) :-
 		( chr_pp_flag(unique_analyse_optimise,on) ->
 			unique_analyse_optimise_main(Rules,N,PatternList,NRules)
@@ -1131,7 +1131,7 @@ apply_unique_pattern(Constraint,Id,Pattern,Pragma) :-
 	Pragma = unique(Id,Vars).
 
 %	subsumes(+Term1, +Term2, -Unifier)
-%	
+%
 %	If Term1 is a more general term   than  Term2 (e.g. has a larger
 %	part instantiated), unify  Unifier  with   a  list  Var-Value of
 %	variables from Term2 and their corresponding values in Term1.
@@ -1167,10 +1167,10 @@ subsumes_aux(N, T1, T2, S0, S) :-
 build_unifier([],[]).
 build_unifier([X-V|R],[V - X | T]) :-
 	build_unifier(R,T).
-	
+
 discover_unique_pattern(PragmaRule,RuleNb,Pattern) :-
 	PragmaRule = pragma(Rule,_,Pragmas,Name),
-	( Rule = rule([C1],[C2],Guard,Body) -> 
+	( Rule = rule([C1],[C2],Guard,Body) ->
 		true
 	;
 		Rule = rule([C1,C2],[],Guard,Body)
@@ -1181,12 +1181,12 @@ discover_unique_pattern(PragmaRule,RuleNb,Pattern) :-
 	Pattern0 = unique(C1,Key),
 	copy_term_nat(Pattern0,Pattern),
 	( verbosity_on ->
-		format('Found unique pattern ~w in rule ~d~@\n', 
+		format('Found unique pattern ~w in rule ~d~@\n',
 			[Pattern,RuleNb,(Name=yes(N) -> write(": "),write(N) ; true)])
 	;
 		true
 	).
-	
+
 select_pragma_unique_variables([],_,[]).
 select_pragma_unique_variables([X-Y|R],Vs,L) :-
 	( X == Y ->
@@ -1255,12 +1255,12 @@ set_semantics_rule_main(PragmaRule) :-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%  ____        _        _____            _            _                     
-%% |  _ \ _   _| | ___  | ____|__ _ _   _(_)_   ____ _| | ___ _ __   ___ ___ 
+%%  ____        _        _____            _            _
+%% |  _ \ _   _| | ___  | ____|__ _ _   _(_)_   ____ _| | ___ _ __   ___ ___
 %% | |_) | | | | |/ _ \ |  _| / _` | | | | \ \ / / _` | |/ _ \ '_ \ / __/ _ \
 %% |  _ <| |_| | |  __/ | |__| (_| | |_| | |\ V / (_| | |  __/ | | | (_|  __/
 %% |_| \_\\__,_|_|\___| |_____\__, |\__,_|_| \_/ \__,_|_|\___|_| |_|\___\___|
-%%                               |_|                                         
+%%                               |_|
 % have to check for no duplicates in value list
 
 % check wether two rules are identical
@@ -1284,9 +1284,9 @@ identical_bodies(B1,B2) :-
      !
    ; B1 == B2
    ).
- 
+
 % replace variables in list
-   
+
 copy_with_variable_replacement(X,Y,L) :-
    ( var(X) ->
      ( lookup_eq(L,X,Y) ->
@@ -1304,12 +1304,12 @@ copy_with_variable_replacement_l([],[],_).
 copy_with_variable_replacement_l([X|Xs],[Y|Ys],L) :-
    copy_with_variable_replacement(X,Y,L),
    copy_with_variable_replacement_l(Xs,Ys,L).
-   
+
 %% build variable replacement list
 
 variable_replacement(X,Y,L) :-
    variable_replacement(X,Y,[],L).
-   
+
 variable_replacement(X,Y,L1,L2) :-
    ( var(X) ->
      var(Y),
@@ -1336,30 +1336,30 @@ variable_replacement_l([X|Xs],[Y|Ys],L1,L3) :-
 %% \___ \| | '_ ` _ \| '_ \| | | |_| |/ __/ _` | __| |/ _ \| '_ \
 %%  ___) | | | | | | | |_) | | |  _| | (_| (_| | |_| | (_) | | | |
 %% |____/|_|_| |_| |_| .__/|_|_|_| |_|\___\__,_|\__|_|\___/|_| |_|
-%%                   |_| 
+%%                   |_|
 
 simplification_code(Head,RestHeads,RestIDs,PragmaRule,F/A,_I,N,Constraints,Mod,Id,L,T) :-
 	PragmaRule = pragma(Rule,_,Pragmas,_),
 	head_info(Head,A,_Vars,Susp,HeadVars,HeadPairs),
 	build_head(F,A,Id,HeadVars,ClauseHead),
 	head_arg_matches(HeadPairs,[],FirstMatching,VarDict1),
-	
+
 	(   RestHeads == [] ->
 	    Susps = [],
 	    VarDict = VarDict1,
 	    GetRestHeads = []
-	;   
+	;
 	    rest_heads_retrieval_and_matching(RestHeads,RestIDs,Pragmas,Head,Mod,N,Constraints,GetRestHeads,Susps,VarDict1,VarDict)
 	),
-	
+
 	guard_body_copies2(Rule,VarDict,GuardCopyList,BodyCopy),
 	guard_via_reschedule(GetRestHeads,GuardCopyList,ClauseHead-FirstMatching,RescheduledTest),
-	
+
 	gen_uncond_susps_detachments(Susps,RestHeads,SuspsDetachments),
 	gen_cond_susp_detachment(Susp,F/A,SuspDetachment),
-	
+
 	Clause = ( ClauseHead :-
-	     	FirstMatching, 
+	     	FirstMatching,
 		     RescheduledTest,
 	             !,
 	             SuspsDetachments,
@@ -1371,7 +1371,7 @@ simplification_code(Head,RestHeads,RestIDs,PragmaRule,F/A,_I,N,Constraints,Mod,I
 head_arg_matches(Pairs,VarDict,Goal,NVarDict) :-
 	head_arg_matches_(Pairs,VarDict,GoalList,NVarDict),
 	list2conj(GoalList,Goal).
- 
+
 head_arg_matches_([],VarDict,[],VarDict).
 head_arg_matches_([Arg-Var| Rest],VarDict,GoalList,NVarDict) :-
    (   var(Arg) ->
@@ -1390,7 +1390,7 @@ head_arg_matches_([Arg-Var| Rest],VarDict,GoalList,NVarDict) :-
        functor(Arg,Fct,N),
        functor(Term,Fct,N),
        Term =.. [_|Vars],
-       GoalList =[ nonvar(Var), Var = Term | RestGoalList ], 
+       GoalList =[ nonvar(Var), Var = Term | RestGoalList ],
        pairup(Args,Vars,NewPairs),
        append(NewPairs,Rest,Pairs),
        VarDict1 = VarDict
@@ -1399,10 +1399,10 @@ head_arg_matches_([Arg-Var| Rest],VarDict,GoalList,NVarDict) :-
 
 rest_heads_retrieval_and_matching(Heads,IDs,Pragmas,ActiveHead,Mod,N,Constraints,GoalList,Susps,VarDict,NVarDict):-
 	rest_heads_retrieval_and_matching(Heads,IDs,Pragmas,ActiveHead,Mod,N,Constraints,GoalList,Susps,VarDict,NVarDict,[],[],[]).
-	
+
 rest_heads_retrieval_and_matching(Heads,IDs,Pragmas,ActiveHead,Mod,N,Constraints,GoalList,Susps,VarDict,NVarDict,PrevHs,PrevSusps,AttrDict) :-
 	( Heads = [_|_] ->
-		rest_heads_retrieval_and_matching_n(Heads,IDs,Pragmas,PrevHs,PrevSusps,ActiveHead,Mod,N,Constraints,GoalList,Susps,VarDict,NVarDict,AttrDict)	
+		rest_heads_retrieval_and_matching_n(Heads,IDs,Pragmas,PrevHs,PrevSusps,ActiveHead,Mod,N,Constraints,GoalList,Susps,VarDict,NVarDict,AttrDict)
 	;
 		GoalList = [],
 		Susps = [],
@@ -1426,7 +1426,7 @@ rest_heads_retrieval_and_matching_n([H|Hs],[ID|IDs],Pragmas,PrevHs,PrevSusps,Act
 	),
 	different_from_other_susps(H,Susp,PrevHs,PrevSusps,DiffSuspGoals),
 	create_get_mutable_ref(active,State,GetMutable),
-	Goal1 = 
+	Goal1 =
 	(
 		'chr sbag_member'(Susp,VarSusps),
 		Susp = Suspension,
@@ -1478,12 +1478,12 @@ passive_head_via(Head,PrevHeads,AttrDict,Constraints,Mod,VarDict,Goal,Attr,NewAt
 		member(Bit,Positions), !,
 		NewAttrDict = AttrDict,
 		Goal = true
-	; 
+	;
 		Goal = (Goal1, PatternGoal),
 		gen_get_mod_constraints(Mod,Vars,Goal1,Attr),
 		NewAttrDict = [Vars - attr(Attr,[Bit|_],PatternGoal) | AttrDict]
 	).
- 
+
 common_variables(T,Ts,Vs) :-
 	term_variables(T,V1),
 	term_variables(Ts,V2),
@@ -1491,12 +1491,12 @@ common_variables(T,Ts,Vs) :-
 
 gen_get_mod_constraints(Mod,L,Goal,Susps) :-
    (   L == [] ->
-       Goal = 
+       Goal =
        (   'chr default_store'(Global),
            get_attr(Global,Mod,TSusps),
 	   TSusps = Susps
        )
-   ; 
+   ;
        (    L = [A] ->
             VIA =  'chr via_1'(A,V)
        ;    (   L = [A,B] ->
@@ -1603,7 +1603,7 @@ my_term_copy_list([X|Xs],Dict1,Dict3,[Y|Ys]) :-
 
 gen_cond_susp_detachment(Susp,FA,SuspDetachment) :-
    gen_uncond_susp_detachment(Susp,FA,UnCondSuspDetachment),
-   SuspDetachment = 
+   SuspDetachment =
       (   var(Susp) ->
           true
       ;   UnCondSuspDetachment
@@ -1612,7 +1612,7 @@ gen_cond_susp_detachment(Susp,FA,SuspDetachment) :-
 gen_uncond_susp_detachment(Susp,CFct/CAty,SuspDetachment) :-
 	atom_concat_list(['detach_',CFct, (/) ,CAty],Fct),
 	Detach =.. [Fct,Vars,Susp],
-	SuspDetachment = 
+	SuspDetachment =
 	(
 		'chr remove_constraint_internal'(Susp, Vars),
 		Detach
@@ -1655,9 +1655,9 @@ simpagation_head1_code(Head,RestHeads,OtherIDs,PragmaRule,F/A,_I,N,Constraints,M
 
    gen_uncond_susps_detachments(Susps1,RestHeads,SuspsDetachments),
    gen_cond_susp_detachment(Susp,F/A,SuspDetachment),
-   
+
    Clause = ( ClauseHead :-
-		FirstMatching, 
+		FirstMatching,
 		RescheduledTest,
                 !,
                 SuspsDetachments,
@@ -1685,7 +1685,7 @@ simpagation_head2_code(Head2,RestHeads2,RestIDs,PragmaRule,FA,I,N,Constraints,Mo
    reorder_heads(Head2,Heads1,IDs1,[Head1|RestHeads1],[ID1|RestIDs1]),   	% Heads1 = [Head1|RestHeads1],
 										% IDs1 = [ID1|RestIDs1],
    simpagation_head2_prelude(Head2,Head1,[RestHeads2,Heads1,Guard,Body],FA,I,N,Constraints,Mod,Id,L,L1),
-   extend_id(Id,Id2), 
+   extend_id(Id,Id2),
    simpagation_head2_worker(Head2,Head1,ID1,RestHeads1,RestIDs1,RestHeads2,RestIDs,Rule,Pragmas,FA,I,N,Constraints,Mod,Id2,L1,T).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1694,7 +1694,7 @@ simpagation_head2_prelude(Head,Head1,Rest,F/A,_I,N,Constraints,Mod,Id1,L,T) :-
 	build_head(F,A,Id1,VarsSusp,ClauseHead),
 	head_arg_matches(HeadPairs,[],FirstMatching,VarDict),
 
-	passive_head_via(Head1,[Head],[],Constraints,Mod,VarDict,ModConstraintsGoal,Attr,AttrDict),   
+	passive_head_via(Head1,[Head],[],Constraints,Mod,VarDict,ModConstraintsGoal,Attr,AttrDict),
 	instantiate_pattern_goals(AttrDict,N),
 	( N == 1 ->
 		AllSusps = Attr
@@ -1715,7 +1715,7 @@ simpagation_head2_prelude(Head,Head1,Rest,F/A,_I,N,Constraints,Mod,Id1,L,T) :-
 	append([AllSusps|VarsSusp],ExtraVars,DelegateCallVars),
 	build_head(F,A,DelegateId,DelegateCallVars,Delegate),
 
-	PreludeClause = 
+	PreludeClause =
 	   ( ClauseHead :-
 	          FirstMatching,
 	          ModConstraintsGoal,
@@ -1739,8 +1739,8 @@ delegate_variables(Term,Terms,VarDict,PrevVars,Vars) :-
 	intersect_eq(V1,V2,V3),
 	list_difference_eq(V3,PrevVars,V4),
 	translate(V4,VarDict,Vars).
-	
-	
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 simpagation_head2_worker(Head2,Head1,ID1,RestHeads1,IDs1,RestHeads2,IDs2,Rule,Pragmas,FA,I,N,Constraints,Mod,Id,L,T) :-
    Rule = rule(_,_,Guard,Body),
@@ -1866,17 +1866,17 @@ simpagation_head2_worker_end(Head,Rest,F/A,Id,L,T) :-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%  ____                                    _   _             
-%% |  _ \ _ __ ___  _ __   __ _  __ _  __ _| |_(_) ___  _ __  
-%% | |_) | '__/ _ \| '_ \ / _` |/ _` |/ _` | __| |/ _ \| '_ \ 
+%%  ____                                    _   _
+%% |  _ \ _ __ ___  _ __   __ _  __ _  __ _| |_(_) ___  _ __
+%% | |_) | '__/ _ \| '_ \ / _` |/ _` |/ _` | __| |/ _ \| '_ \
 %% |  __/| | | (_) | |_) | (_| | (_| | (_| | |_| | (_) | | | |
 %% |_|   |_|  \___/| .__/ \__,_|\__, |\__,_|\__|_|\___/|_| |_|
-%%                 |_|          |___/                         
+%%                 |_|          |___/
 
 propagation_code(Head,RestHeads,Rule,RuleNb,RestHeadNb,FA,N,Constraints,Mod,Id,L,T) :-
 	( RestHeads == [] ->
 		propagation_single_headed(Head,Rule,RuleNb,FA,Mod,Id,L,T)
-	;   
+	;
 		propagation_multi_headed(Head,RestHeads,Rule,RuleNb,RestHeadNb,FA,N,Constraints,Mod,Id,L,T)
 	).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1899,7 +1899,7 @@ propagation_single_headed(Head,Rule,RuleNb,F/A,Mod,Id,L,T) :-
    ;
 	Allocation1 = true
    ),
-   gen_uncond_attach_goal(F/A,Susp,Mod,Attachment,Generation), 
+   gen_uncond_attach_goal(F/A,Susp,Mod,Attachment,Generation),
 
    gen_state_cond_call(Susp,A,NextCall,Generation,ConditionalNextCall),
 
@@ -1914,9 +1914,9 @@ propagation_single_headed(Head,Rule,RuleNb,F/A,Mod,Id,L,T) :-
 		Attachment,
 		BodyCopy,
 		ConditionalNextCall
-   ),  
+   ),
    L = [Clause | T].
-   
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% multi headed propagation
 %% prelude + predicates to accumulate the necessary combinations of suspended
@@ -1935,7 +1935,7 @@ propagation_prelude(Head,[First|Rest],Rule,F/A,N,Constraints,Mod,Id,L,T) :-
    Rule = rule(_,_,Guard,Body),
    extra_active_delegate_variables(Head,[First,Rest,Guard,Body],VarDict,ExtraVars),
 
-   passive_head_via(First,[Head],[],Constraints,Mod,VarDict,FirstSuspGoal,Attr,AttrDict),   
+   passive_head_via(First,[Head],[],Constraints,Mod,VarDict,FirstSuspGoal,Attr,AttrDict),
    instantiate_pattern_goals(AttrDict,N),
    ( N == 1 ->
        	Susps = Attr
@@ -1952,7 +1952,7 @@ propagation_prelude(Head,[First|Rest],Rule,F/A,N,Constraints,Mod,Id,L,T) :-
    ),
 
    extend_id(Id,NestedId),
-   append([Susps|VarsSusp],ExtraVars,NestedVars), 
+   append([Susps|VarsSusp],ExtraVars,NestedVars),
    build_head(F,A,NestedId,NestedVars,NestedHead),
    NestedCall = NestedHead,
 
@@ -1998,8 +1998,8 @@ propagation_body(CurrentHead,PreHeads,Rule,RuleNb,RestHeadNb,F/A,Mod,Id,L,T) :-
    CurrentHead =.. [_|OtherArgs],
    pairup(OtherArgs,OtherVars,OtherPairs),
    head_arg_matches(OtherPairs,VarDict1,Matching,VarDict),
- 
-   different_from_other_susps(CurrentHead,OtherSusp,PreHeads,RestSusps,DiffSuspGoals), 
+
+   different_from_other_susps(CurrentHead,OtherSusp,PreHeads,RestSusps,DiffSuspGoals),
 
    guard_body_copies(Rule,VarDict,GuardCopy,BodyCopy),
    gen_uncond_attach_goal(F/A,Susp,Mod,Attach,Generation),
@@ -2070,10 +2070,10 @@ propagation_end([CurrentHead|PrevHeads],NextHeads,Rule,F/A,Id,L,T) :-
        dec_id(Id,PrevId),
        PrevVarsAndSusps = [FirstSusp|AllButFirst]
    ),
-  
+
    build_head(F,A,PrevId,PrevVarsAndSusps,PrevHead),
    PredecessorCall = PrevHead,
- 
+
    Clause = (
       Head :-
          PredecessorCall
@@ -2104,7 +2104,7 @@ propagation_accumulator([NextHead|RestHeads],[CurrentHead|PreHeads],Rule,F/A,N,C
 	gen_vars(OtherA,OtherVars),
 	head_info(CurrentHead,OtherA,OtherVars,OtherSusp,_VarsSusp,HeadPairs),
 	head_arg_matches(HeadPairs,VarDict,FirstMatching,VarDict1),
-	
+
 	OtherSuspension =.. [suspension,_,State,_,_,_,_|OtherVars],
 
 	different_from_other_susps(CurrentHead,OtherSusp,PreHeads,PreSusps,DiffSuspGoals),
@@ -2116,7 +2116,7 @@ propagation_accumulator([NextHead|RestHeads],[CurrentHead|PreHeads],Rule,F/A,N,C
 	   FirstMatching
 	),
 	functor(NextHead,NextF,NextA),
-	passive_head_via(NextHead,[CurrentHead|PreHeads],[],Constraints,Mod,VarDict1,NextSuspGoal,Attr,AttrDict),   
+	passive_head_via(NextHead,[CurrentHead|PreHeads],[],Constraints,Mod,VarDict1,NextSuspGoal,Attr,AttrDict),
 	instantiate_pattern_goals(AttrDict,N),
 	( N == 1 ->
 	     NextSusps = Attr
@@ -2131,7 +2131,7 @@ propagation_accumulator([NextHead|RestHeads],[CurrentHead|PreHeads],Rule,F/A,N,C
 	passive_delegate_variables(CurrentHead,PreHeads,[NextHead,RestHeads,Guard,Body],VarDict1,CurrentHeadVars),
 	append([NextSusps|CurrentHeadVars],[OtherSusp,OtherSusps|PreVarsAndSusps],NestedVars),
 	build_head(F,A,NestedId,NestedVars,NestedHead),
-	
+
 	RecursiveVars = [OtherSusps|PreVarsAndSusps],
 	build_head(F,A,Id,RecursiveVars,RecursiveHead),
 	Clause = (
@@ -2142,7 +2142,7 @@ propagation_accumulator([NextHead|RestHeads],[CurrentHead|PreHeads],Rule,F/A,N,C
 	       NestedHead
 	   ;   RecursiveHead
 	   )
-	),   
+	),
 	L = [Clause|T].
 
 pre_vars_and_susps([Head],Terms,HeadVars,VarDict,[]) :-
@@ -2164,24 +2164,24 @@ pre_vars_and_susps([Head|Heads],Terms,NVSs,NVarDict,[Susp|Susps]) :-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%  ____               _             _   _                _ 
+%%  ____               _             _   _                _
 %% |  _ \ __ _ ___ ___(_)_   _____  | | | | ___  __ _  __| |
 %% | |_) / _` / __/ __| \ \ / / _ \ | |_| |/ _ \/ _` |/ _` |
 %% |  __/ (_| \__ \__ \ |\ V /  __/ |  _  |  __/ (_| | (_| |
 %% |_|   \__,_|___/___/_| \_/ \___| |_| |_|\___|\__,_|\__,_|
-%%                                                          
-%%  ____      _        _                 _ 
+%%
+%%  ____      _        _                 _
 %% |  _ \ ___| |_ _ __(_) _____   ____ _| |
 %% | |_) / _ \ __| '__| |/ _ \ \ / / _` | |
 %% |  _ <  __/ |_| |  | |  __/\ V / (_| | |
 %% |_| \_\___|\__|_|  |_|\___| \_/ \__,_|_|
-%%                                         
-%%  ____                    _           _             
-%% |  _ \ ___  ___  _ __ __| | ___ _ __(_)_ __   __ _ 
+%%
+%%  ____                    _           _
+%% |  _ \ ___  ___  _ __ __| | ___ _ __(_)_ __   __ _
 %% | |_) / _ \/ _ \| '__/ _` |/ _ \ '__| | '_ \ / _` |
 %% |  _ <  __/ (_) | | | (_| |  __/ |  | | | | | (_| |
 %% |_| \_\___|\___/|_|  \__,_|\___|_|  |_|_| |_|\__, |
-%%                                              |___/ 
+%%                                              |___/
 
 reorder_heads(Head,RestHeads,RestIDs,NRestHeads,NRestIDs) :-
 	( chr_pp_flag(reorder_heads,on) ->
@@ -2208,15 +2208,15 @@ reorder_heads1(Heads,IDs,KnownVars,NHeads,NIDs) :-
 
 select_best_head(Heads,IDs,KnownVars,BestHead,BestID,RestHeads,RestIDs,NKnownVars) :-
 		( bagof(tuple(Score,Head,ID,Rest,RIDs), (
-					select2(Head,ID, Heads,IDs,Rest,RIDs) , 
-					order_score(Head,KnownVars,Rest,Score) 
-				    ), 
+					select2(Head,ID, Heads,IDs,Rest,RIDs) ,
+					order_score(Head,KnownVars,Rest,Score)
+				    ),
 				    Scores) -> true ; Scores = []),
 		max_go_list(Scores,tuple(_,BestHead,BestID,RestHeads,RestIDs)),
 		term_variables(BestHead,BestHeadVars),
 		( setof(V, (
 				member(V,BestHeadVars),
-				\+ memberchk_eq(V,KnownVars) 
+				\+ memberchk_eq(V,KnownVars)
 			 ),
 			 NewVars) -> true ; NewVars = []),
 		append(NewVars,KnownVars,NKnownVars).
@@ -2236,15 +2236,15 @@ reorder_heads1(Heads,KnownVars,NHeads) :-
 
 select_best_head(Heads,KnownVars,BestHead,RestHeads,NKnownVars) :-
 		( bagof(tuple(Score,Head,Rest), (
-					select(Head,Heads,Rest) , 
-					order_score(Head,KnownVars,Rest,Score) 
-				    ), 
+					select(Head,Heads,Rest) ,
+					order_score(Head,KnownVars,Rest,Score)
+				    ),
 				    Scores) -> true ; Scores = []),
 		max_go_list(Scores,tuple(_,BestHead,RestHeads)),
 		term_variables(BestHead,BestHeadVars),
 		( setof(V, (
 				member(V,BestHeadVars),
-				\+ memberchk_eq(V,KnownVars) 
+				\+ memberchk_eq(V,KnownVars)
 			 ),
 			 NewVars) -> true ; NewVars = []),
 		append(NewVars,KnownVars,NKnownVars).
@@ -2269,14 +2269,14 @@ order_score_vars([V|Vs],KnownVars,RestVars,Score,NScore) :-
 		TScore = Score
 	),
 	order_score_vars(Vs,KnownVars,RestVars,TScore,NScore).
-		
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%  ___       _ _       _             
-%% |_ _|_ __ | (_)_ __ (_)_ __   __ _ 
+%%  ___       _ _       _
+%% |_ _|_ __ | (_)_ __ (_)_ __   __ _
 %%  | || '_ \| | | '_ \| | '_ \ / _` |
 %%  | || | | | | | | | | | | | | (_| |
 %% |___|_| |_|_|_|_| |_|_|_| |_|\__, |
-%%                              |___/ 
+%%                              |___/
 
 %% SWI begin
 create_get_mutable_ref(V,M,GM) :- GM = (M = mutable(V)).
@@ -2291,12 +2291,12 @@ create_get_mutable_ref(V,M,GM) :- GM = (M = mutable(V)).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%   ____          _         ____ _                  _             
-%%  / ___|___   __| | ___   / ___| | ___  __ _ _ __ (_)_ __   __ _ 
+%%   ____          _         ____ _                  _
+%%  / ___|___   __| | ___   / ___| | ___  __ _ _ __ (_)_ __   __ _
 %% | |   / _ \ / _` |/ _ \ | |   | |/ _ \/ _` | '_ \| | '_ \ / _` |
 %% | |__| (_) | (_| |  __/ | |___| |  __/ (_| | | | | | | | | (_| |
 %%  \____\___/ \__,_|\___|  \____|_|\___|\__,_|_| |_|_|_| |_|\__, |
-%%                                                           |___/ 
+%%                                                           |___/
 %%
 %% removes redundant 'true's and other trivial but potentially non-free constructs
 
@@ -2390,13 +2390,13 @@ clean_goal(Goal,Goal).
 
 gen_var(_).
 gen_vars(N,Xs) :-
-   length(Xs,N). 
+   length(Xs,N).
 
 head_info(Head,A,Vars,Susp,VarsSusp,HeadPairs) :-
    vars_susp(A,Vars,Susp,VarsSusp),
    Head =.. [_|Args],
    pairup(Args,Vars,HeadPairs).
- 
+
 inc_id([N|Ns],[O|Ns]) :-
    O is N + 1.
 dec_id([N|Ns],[M|Ns]) :-
