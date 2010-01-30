@@ -1,6 +1,6 @@
 ################################################################
 # SWI-Prolog CHR package
-# Author:    Jan Wielemaker. jan@swi.psy.uva.nl
+# Author:    Tom Schrijvers and many others
 # Copyright: LGPL (see COPYING or www.gnu.org
 ################################################################
 
@@ -19,7 +19,7 @@ YAPLIBDIR=$(EROOTDIR)/lib/Yap
 SHAREDIR=$(ROOTDIR)/share/Yap
 
 SHELL=@SHELL@
-PL=@EXTEND_DYNLOADER_PATH@ $(DESTDIR)$(BINDIR)/yap $(DESTDIR)$(YAPLIBDIR)/startup 
+PL=@EXTEND_DYNLOADER_PATH@ $(DESTDIR)$(BINDIR)/yap $(DESTDIR)$(YAPLIBDIR)/startup
 CHRDIR=$(SHAREDIR)/chr
 EXDIR=$(CHRDIR)/examples/chr
 LN_S=@LN_S@
@@ -88,33 +88,15 @@ LIBPL=		$(srcdir)/chr_runtime.pl $(srcdir)/chr_op.pl \
 		$(srcdir)/chr_compiler_options.pl \
 		$(srcdir)/chr_compiler_utility.pl \
 		$(srcdir)/chr_compiler_errors.pl \
-		$(srcdir)/chr_integertable_store.pl @CHR_TARGETS@
-TARGETS=	@CHR_TARGETS@
+		$(srcdir)/chr_integertable_store.pl
 CHRPL=		$(srcdir)/chr_swi.pl
 EXAMPLES=	chrfreeze.chr fib.chr gcd.chr primes.chr \
 		bool.chr family.chr fibonacci.chr leq.chr listdom.chr \
 		chrdif.chr
 
-all:		chr_translate.pl $(TARGETS)
+all:		chr_translate.pl
 
-ifeq (@PROLOG_SYSTEM@,yap)
-
-SOBJS=chr_support@SHLIB_SUFFIX@
-
-chr_support.o: $(srcdir)/chr_support.c
-	$(CC) -c $(CFLAGS) $(SHLIB_CFLAGS) $(srcdir)/chr_support.c -o chr_support.o
-
-@DO_SECOND_LD@chr_support@SHLIB_SUFFIX@: chr_support.o
-@DO_SECOND_LD@	@SHLIB_LD@ -o chr_support@SHLIB_SUFFIX@ chr_support.o
-
-else
-
-chr_support.@SO@:	chr_support.o
-		$(LD) $(LDFLAGS) -o $@ chr_support.o
-
-endif
-
-chr_translate_bootstrap.pl: $(TARGETS)
+chr_translate_bootstrap.pl:
 
 chr_translate_bootstrap1.pl: $(srcdir)/chr_translate_bootstrap1.chr $(srcdir)/chr_translate_bootstrap.pl
 		$(PL) -q -f $(srcdir)/chr_swi_bootstrap.pl \
@@ -124,7 +106,7 @@ chr_translate_bootstrap1.pl: $(srcdir)/chr_translate_bootstrap1.chr $(srcdir)/ch
 		      -g "chr_compile_step2('$<','$@'),halt" \
 		      -t 'halt(1)'
 
-chr_translate_bootstrap2.pl: $(srcdir)/chr_translate_bootstrap2.chr chr_translate_bootstrap1.pl 
+chr_translate_bootstrap2.pl: $(srcdir)/chr_translate_bootstrap2.chr chr_translate_bootstrap1.pl
 		$(PL) -q -f $(srcdir)/chr_swi_bootstrap.pl \
 		      -g "chr_compile_step2('$<','$@'),halt" \
 		      -t 'halt(1)'
@@ -132,7 +114,7 @@ chr_translate_bootstrap2.pl: $(srcdir)/chr_translate_bootstrap2.chr chr_translat
 		      -g "chr_compile_step3('$<','$@'),halt" \
 		      -t 'halt(1)'
 
-guard_entailment.pl: $(srcdir)/guard_entailment.chr chr_translate_bootstrap2.pl 
+guard_entailment.pl: $(srcdir)/guard_entailment.chr chr_translate_bootstrap2.pl
 		$(PL) -q -f $(srcdir)/chr_swi_bootstrap.pl \
 		      -g "chr_compile_step3('$<','$@'),halt" \
 		      -t 'halt(1)'
@@ -141,10 +123,10 @@ chr_translate.pl: $(srcdir)/chr_translate.chr chr_translate_bootstrap2.pl guard_
 		$(PL) -q -f $(srcdir)/chr_swi_bootstrap.pl \
 		      -g "chr_compile_step3('$<','$@'),halt" \
 		      -t 'halt(1)'
-		$(PL) -L50M -G50M -T20M -p chr=. -q -f $(srcdir)/chr_swi_bootstrap.pl \
+		$(PL) -p chr=. -q -f $(srcdir)/chr_swi_bootstrap.pl \
 		      -g "chr_compile_step4('guard_entailment.chr','guard_entailment.pl'),halt" \
 		      -t 'halt(1)'
-		$(PL) -L50M -G50M -T20M -p chr=. -q -f $(srcdir)/chr_swi_bootstrap.pl \
+		$(PL) -p chr=. -q -f $(srcdir)/chr_swi_bootstrap.pl \
 		      -g "chr_compile_step4('$<','$@'),halt" \
 		      -t 'halt(1)'
 
@@ -216,6 +198,6 @@ clean:
 		rm -f guard_entailment.pl
 
 distclean:	clean
-		rm -f $(TARGETS) config.h config.cache config.status Makefile
+		rm -f config.h config.cache config.status Makefile
 		rm -f $(TEX)
 		../../man/runtex --clean $(DOC)
