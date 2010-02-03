@@ -13,7 +13,7 @@ CFLAGS=$(CFLAGS) /D__SWI_PROLOG__
 LIBDIR=$(PLBASE)\library
 EXDIR=$(PKGDOC)\examples\chr
 CHR=$(LIBDIR)\chr
-PL="$(PLHOME)\bin\plcon.exe" -L80M -G50M -T20M
+PL="$(PLHOME)\bin\swipl.exe"
 
 LIBPL=		chr_runtime.pl chr_op.pl chr_translate.pl chr_debug.pl \
 		chr_messages.pl hprolog.pl pairlist.pl clean_code.pl \
@@ -29,7 +29,7 @@ EXAMPLES=	chrfreeze.chr fib.chr gcd.chr primes.chr \
 		chrdif.chr
 
 
-all:		chr_translate.pl chr_support.dll
+all:		chr_translate.pl
 
 chr_support.dll:	chr_support.obj
 		$(LD) /dll /out:$@ $(LDFLAGS) chr_support.obj $(PLLIB)
