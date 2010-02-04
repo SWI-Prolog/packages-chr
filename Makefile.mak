@@ -1,7 +1,7 @@
 ################################################################
 # Install CHR stuff for the MS-Windows build
 # Author: Jan Wielemaker
-# 
+#
 # Use:
 #	nmake /f Makefile.mak
 #	nmake /f Makefile.mak install
@@ -21,8 +21,7 @@ LIBPL=		chr_runtime.pl chr_op.pl chr_translate.pl chr_debug.pl \
 		chr_hashtable_store.pl listmap.pl guard_entailment.pl \
 		chr_compiler_options.pl chr_compiler_utility.pl \
 		chr_compiler_errors.pl \
-		chr_integertable_store.pl \
-		chr_support.dll
+		chr_integertable_store.pl
 CHRPL=		chr_swi.pl
 EXAMPLES=	chrfreeze.chr fib.chr gcd.chr primes.chr \
 		bool.chr family.chr fibonacci.chr leq.chr listdom.chr \
@@ -34,7 +33,7 @@ all:		chr_translate.pl
 chr_support.dll:	chr_support.obj
 		$(LD) /dll /out:$@ $(LDFLAGS) chr_support.obj $(PLLIB)
 
-chr_translate_bootstrap1.pl: chr_translate_bootstrap1.chr 
+chr_translate_bootstrap1.pl: chr_translate_bootstrap1.chr
 		$(PL) -q -f chr_swi_bootstrap.pl \
 		      -g "chr_compile_step1('chr_translate_bootstrap1.chr','chr_translate_bootstrap1.pl'),halt" \
 		      -t "halt(1)"
@@ -42,7 +41,7 @@ chr_translate_bootstrap1.pl: chr_translate_bootstrap1.chr
 		      -g "chr_compile_step2('chr_translate_bootstrap1.chr','chr_translate_bootstrap1.pl'),halt" \
 		      -t "halt(1)"
 
-chr_translate_bootstrap2.pl: chr_translate_bootstrap2.chr chr_translate_bootstrap1.pl 
+chr_translate_bootstrap2.pl: chr_translate_bootstrap2.chr chr_translate_bootstrap1.pl
 		$(PL) -q -f chr_swi_bootstrap.pl \
 		      -g "chr_compile_step2('chr_translate_bootstrap2.chr','chr_translate_bootstrap2.pl'),halt" \
 		      -t 'halt(1)'
@@ -50,7 +49,7 @@ chr_translate_bootstrap2.pl: chr_translate_bootstrap2.chr chr_translate_bootstra
 		      -g "chr_compile_step3('chr_translate_bootstrap2.chr','chr_translate_bootstrap2.pl'),halt" \
 		      -t 'halt(1)'
 
-guard_entailment.pl: guard_entailment.chr chr_translate_bootstrap2.pl 
+guard_entailment.pl: guard_entailment.chr chr_translate_bootstrap2.pl
 		$(PL) -q -f chr_swi_bootstrap.pl \
 		      -g "chr_compile_step3('guard_entailment.chr','guard_entailment.pl'),halt" \
 		      -t 'halt(1)'
