@@ -41,7 +41,6 @@ PCEHOME=../xpce
 LIBDIR=$(PLBASE)/library
 CHRDIR=$(LIBDIR)/chr
 EXDIR=$(PKGDOC)/examples/chr
-DESTDIR=
 
 
 CC=@CC@
