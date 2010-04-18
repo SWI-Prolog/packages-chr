@@ -1,15 +1,40 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Author:	Tom Schrijvers
-% Email:	Tom.Schrijvers@cs.kuleuven.be
-% Copyright:	K.U.Leuven 2004
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%   ____          _         ____ _                  _             
-%%  / ___|___   __| | ___   / ___| | ___  __ _ _ __ (_)_ __   __ _ 
+/*  $Id$
+
+    Part of CHR (Constraint Handling Rules)
+
+    Author:        Tom Schrijvers
+    E-mail:        Tom.Schrijvers@cs.kuleuven.be
+    WWW:           http://www.swi-prolog.org
+    Copyright (C): 2003-2004, K.U. Leuven
+
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+    As a special exception, if you link this library with other files,
+    compiled with a Free Software compiler, to produce an executable, this
+    library does not by itself cause the resulting executable to be covered
+    by the GNU General Public License. This exception does not however
+    invalidate any other reasons why the executable file might be covered by
+    the GNU General Public License.
+*/
+
+%%   ____          _         ____ _                  _
+%%  / ___|___   __| | ___   / ___| | ___  __ _ _ __ (_)_ __   __ _
 %% | |   / _ \ / _` |/ _ \ | |   | |/ _ \/ _` | '_ \| | '_ \ / _` |
 %% | |__| (_) | (_| |  __/ | |___| |  __/ (_| | | | | | | | | (_| |
 %%  \____\___/ \__,_|\___|  \____|_|\___|\__,_|_| |_|_|_| |_|\__, |
-%%                                                           |___/ 
-%%
+%%                                                           |___/
 %%
 %% To be done:
 %%	inline clauses
@@ -24,12 +49,12 @@
 clean_clauses(Clauses,NClauses) :-
 	clean_clauses1(Clauses,Clauses1),
 	merge_clauses(Clauses1,NClauses).
-	
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CLEAN CLAUSES
 %
-%	- move neck unification into the head of the clause	
+%	- move neck unification into the head of the clause
 %	- drop true body
 %	- specialize control flow goal wrt true and fail
 %
@@ -135,13 +160,13 @@ move_unification_into_head_([G|Gs],Head,NHead,NBody) :-
 		;
 			Head = NHead,
 			list2conj([G|Gs],NBody)
-		)	
+		)
 	;
 		Head = NHead,
 		list2conj([G|Gs],NBody)
 	).
 
-		
+
 conj2list(Conj,L) :-				%% transform conjunctions to list
   conj2list(Conj,L,[]).
 
@@ -154,7 +179,7 @@ conj2list(Conj,L,T) :-
   conj2list(G1,L,T1),
   conj2list(G2,T1,T).
 conj2list(G,[G | T],T).
-	
+
 list2conj([],true).
 list2conj([G],X) :- !, X = G.
 list2conj([G|Gs],C) :-
@@ -183,7 +208,7 @@ merge_clauses([X,Y|Clauses],NClauses) :-
 		NClauses = [X|RClauses],
 		merge_clauses([Y|Clauses],RClauses)
 	).
-		
+
 merge_two_clauses('$source_location'(F1,L1) : C1,
 		  '$source_location'(_F2,_L2) : C2,
 		  Result) :- !,
