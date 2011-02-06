@@ -4,77 +4,11 @@
 # Copyright: LGPL (see COPYING or www.gnu.org
 ################################################################
 
-.SUFFIXES: .tex .dvi .doc .pl
+PACKAGE=chr
+include ../Makefile.defs
 
-ifeq (@PROLOG_SYSTEM@,yap)
-prefix = @prefix@
-ROOTDIR = $(prefix)
-EROOTDIR = @exec_prefix@
-
-srcdir=@srcdir@
-
-BINDIR = $(EROOTDIR)/bin
-LIBDIR=$(EROOTDIR)/lib
-YAPLIBDIR=$(EROOTDIR)/lib/Yap
-SHAREDIR=$(ROOTDIR)/share/Yap
-
-SHELL=@SHELL@
-PL=@EXTEND_DYNLOADER_PATH@ $(DESTDIR)$(BINDIR)/yap $(DESTDIR)$(YAPLIBDIR)/startup
-CHRDIR=$(SHAREDIR)/chr
-EXDIR=$(CHRDIR)/examples/chr
-LN_S=@LN_S@
-#
-#
-CC=@CC@
-CFLAGS= @CFLAGS@ $(YAP_EXTRAS) $(DEFS) -I$(srcdir) -I../.. -I$(srcdir)/../../include
-MKINDEX=true
-
-else	# SWI
-
-PLBASE=@PLBASE@
-PLARCH=@PLARCH@
-PLINCL=@PLINCL@
-PL=@PL@
-XPCEBASE=$(PLBASE)/xpce
-PKGDOC=$(PLBASE)/doc/packages
-PCEHOME=../xpce
-LIBDIR=$(PLBASE)/library
-CHRDIR=$(LIBDIR)/chr
-EXDIR=$(PKGDOC)/examples/chr
-
-
-CC=@CC@
-COFLAGS=@COFLAGS@
-CWFLAGS=@CWFLAGS@
-CMFLAGS=@CMFLAGS@
-CIFLAGS=
-CFLAGS=$(COFLAGS) $(CWFLAGS) $(CMFLAGS) $(CIFLAGS) @DEFS@
-LIBS=@LIBS@
-
-LD=@LD@
-LDFLAGS=@LDSOFLAGS@
-
-MKINDEX=$(PL) -f none -g make -t halt
-
-DOCTOTEX=$(PCEHOME)/bin/doc2tex
-PLTOTEX=$(PCEHOME)/bin/pl2tex
-LATEX=latex
-DOC=chr
-TEX=$(DOC).tex
-DVI=$(DOC).dvi
-PDF=$(DOC).pdf
-HTML=$(DOC).html
-
-srcdir=.
-SHAREDIR=$(LIBDIR)
-
-endif	#YAP/SWI
-
-SHELL=@SHELL@
-
-INSTALL=@INSTALL@
-INSTALL_PROGRAM=@INSTALL_PROGRAM@
-INSTALL_DATA=@INSTALL_DATA@
+CHRDIR=$(PLLIBDIR)/chr
+EXDIR=$(PKGEXDIR)/chr
 
 LIBPL=		$(srcdir)/chr_runtime.pl $(srcdir)/chr_op.pl \
 		chr_translate.pl $(srcdir)/chr_debug.pl \
@@ -132,10 +66,10 @@ chr_translate.pl: $(srcdir)/chr_translate.chr chr_translate_bootstrap2.pl guard_
 chr.pl:		$(srcdir)/chr_swi.pl
 		cp $< $@
 
-install:	$(LIBPL)
+install:	$(PLLIBDIR)
 		mkdir -p $(DESTDIR)$(CHRDIR)
 		$(INSTALL_DATA) $(LIBPL) $(DESTDIR)$(CHRDIR)
-		$(INSTALL_DATA) $(CHRPL) $(DESTDIR)$(SHAREDIR)/chr.pl
+		$(INSTALL_DATA) $(CHRPL) $(DESTDIR)$(PLLIBDIR)/chr.pl
 		$(INSTALL_DATA) $(srcdir)/README   $(DESTDIR)$(CHRDIR)
 		$(MKINDEX)
 
@@ -161,37 +95,11 @@ check:		chr.pl
 
 
 ################################################################
-# Documentation
-################################################################
-
-# NOTE: Manual is integrated in system manual
-
-doc:		pdf html
-#pdf:		$(PDF)
-#html:		$(HTML)
-pdf::
-html::
-
-$(HTML):	$(TEX)
-		latex2html $(DOC)
-		mv html/index.html $@
-
-$(PDF):		$(TEX)
-		../../man/runtex --pdf $(DOC)
-
-$(TEX):		$(DOCTOTEX)
-
-.doc.tex:
-		$(DOCTOTEX) $*.doc > $*.tex
-.pl.tex:
-		$(PLTOTEX) $*.pl > $*.tex
-
-################################################################
 # Clean
 ################################################################
 
 clean:
-		rm -f *~ *.o *.so *% config.log
+		rm -f *~ *.o *.@SO@ *% config.log
 		rm -f chr.pl chr_translate.pl
 		rm -f chr_translate_bootstrap1.pl chr_translate_bootstrap2.pl
 		rm -f guard_entailment.pl
