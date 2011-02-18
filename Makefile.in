@@ -66,12 +66,15 @@ chr_translate.pl: $(srcdir)/chr_translate.chr chr_translate_bootstrap2.pl guard_
 chr.pl:		$(srcdir)/chr_swi.pl
 		cp $< $@
 
-install:	all $(PLLIBDIR)
+install:	all $(DESTDIR)$(PLLIBDIR)
 		mkdir -p $(DESTDIR)$(CHRDIR)
 		$(INSTALL_DATA) $(LIBPL) $(DESTDIR)$(CHRDIR)
 		$(INSTALL_DATA) $(CHRPL) $(DESTDIR)$(PLLIBDIR)/chr.pl
 		$(INSTALL_DATA) $(srcdir)/README   $(DESTDIR)$(CHRDIR)
 		$(MKINDEX)
+
+$(DESTDIR)$(PLLIBDIR):
+		mkdir $@
 
 ln-install::
 		@$(MAKE) INSTALL_DATA='../ln-install' install
