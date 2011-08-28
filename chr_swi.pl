@@ -86,17 +86,17 @@ user:file_search_path(chr, library(chr)).
 %%	]).
 %%
 %% :- op(1180, xfx, ==>),
-%% 	op(1180, xfx, <=>),
-%% 	op(1150, fx, constraints),
-%% 	op(1150, fx, handler),
-%% 	op(1150, fx, rules),
-%% 	op(1100, xfx, \),
-%% 	op(1200, xfx, @),
-%% 	op(1190, xfx, pragma),
-%% 	op( 500, yfx, #),
-%% 	op(1150, fx, chr_type),
-%% 	op(1130, xfx, --->),
-%% 	op(1150, fx, (?)).
+%%	op(1180, xfx, <=>),
+%%	op(1150, fx, constraints),
+%%	op(1150, fx, handler),
+%%	op(1150, fx, rules),
+%%	op(1100, xfx, \),
+%%	op(1200, xfx, @),
+%%	op(1190, xfx, pragma),
+%%	op( 500, yfx, #),
+%%	op(1150, fx, chr_type),
+%%	op(1130, xfx, --->),
+%%	op(1150, fx, (?)).
 %%
 %% :- multifile user:file_search_path/2.
 %% :- dynamic   chr_translated_program/1.
@@ -157,24 +157,24 @@ extra_declarations([(:- use_module(chr(chr_runtime)))
 
 %% SICStus begin
 %% extra_declarations([(:-use_module(chr(chr_runtime)))
-%% 		     , (:- use_module(chr(hprolog),[term_variables/2,term_variables/3]))
-%% 		     , (:-use_module(chr(hpattvars)))
-%% 		     | Tail], Tail).
+%%		     , (:- use_module(chr(hprolog),[term_variables/2,term_variables/3]))
+%%		     , (:-use_module(chr(hpattvars)))
+%%		     | Tail], Tail).
 %% SICStus end
 
 chr_expand(Term, []) :-
 	chr_expandable(Term), !,
-	prolog_load_context(file,File),
+	prolog_load_context(source,File),
 	prolog_load_context(term_position,'$stream_position'(_, LineNumber, _, _, _)),
 	add_pragma_to_chr_rule(Term,line_number(LineNumber),NTerm),
 	assert(chr_term(File, LineNumber, NTerm)).
 chr_expand(Term, []) :-
 	Term = (:- chr_preprocessor Preprocessor), !,
-	prolog_load_context(file,File),
+	prolog_load_context(source,File),
 	assert(chr_pp(File, Preprocessor)).
 chr_expand(end_of_file, FinalProgram) :-
 	extra_declarations(FinalProgram,Program),
-	prolog_load_context(file,File),
+	prolog_load_context(source,File),
 	findall(T, retract(chr_term(File,_Line,T)), CHR0),
 	CHR0 \== [],
 	prolog_load_context(module, Module),
@@ -251,7 +251,7 @@ call_chr_preprocessor(Preprocessor,CHR,_NCHR) :-
 	( call(Preprocessor,CHR,CHR0) ->
 		nb_setval(chr_preprocessed_program,CHR0),
 		fail
- 	).
+	).
 call_chr_preprocessor(_,_,NCHR)	:-
 	nb_current(chr_preprocessed_program,NCHR), !,
 	nb_delete(chr_preprocessed_program).
@@ -356,9 +356,9 @@ system:term_expansion(In, Out) :-
 %% SICStus begin
 %
 % :- dynamic
-% 	current_toplevel_show_store/1,
-% 	current_generate_debug_info/1,
-% 	current_optimize/1.
+%	current_toplevel_show_store/1,
+%	current_generate_debug_info/1,
+%	current_optimize/1.
 %
 % current_toplevel_show_store(on).
 %
@@ -367,42 +367,42 @@ system:term_expansion(In, Out) :-
 % current_optimize(off).
 %
 % chr_current_prolog_flag(generate_debug_info, X) :-
-% 	chr_flag(generate_debug_info, X, X).
+%	chr_flag(generate_debug_info, X, X).
 % chr_current_prolog_flag(optimize, X) :-
-% 	chr_flag(optimize, X, X).
+%	chr_flag(optimize, X, X).
 %
 % chr_flag(Flag, Old, New) :-
-% 	Goal = chr_flag(Flag,Old,New),
-% 	g must_be(Flag, oneof([toplevel_show_store,generate_debug_info,optimize]), Goal, 1),
-% 	chr_flag(Flag, Old, New, Goal).
+%	Goal = chr_flag(Flag,Old,New),
+%	g must_be(Flag, oneof([toplevel_show_store,generate_debug_info,optimize]), Goal, 1),
+%	chr_flag(Flag, Old, New, Goal).
 %
 % chr_flag(toplevel_show_store, Old, New, Goal) :-
-% 	clause(current_toplevel_show_store(Old), true, Ref),
-% 	(   New==Old -> true
-% 	;   must_be(New, oneof([on,off]), Goal, 3),
-% 	    erase(Ref),
-% 	    assertz(current_toplevel_show_store(New))
-% 	).
+%	clause(current_toplevel_show_store(Old), true, Ref),
+%	(   New==Old -> true
+%	;   must_be(New, oneof([on,off]), Goal, 3),
+%	    erase(Ref),
+%	    assertz(current_toplevel_show_store(New))
+%	).
 % chr_flag(generate_debug_info, Old, New, Goal) :-
-% 	clause(current_generate_debug_info(Old), true, Ref),
-% 	(   New==Old -> true
-% 	;   must_be(New, oneof([false,true]), Goal, 3),
-% 	    erase(Ref),
-% 	    assertz(current_generate_debug_info(New))
-% 	).
+%	clause(current_generate_debug_info(Old), true, Ref),
+%	(   New==Old -> true
+%	;   must_be(New, oneof([false,true]), Goal, 3),
+%	    erase(Ref),
+%	    assertz(current_generate_debug_info(New))
+%	).
 % chr_flag(optimize, Old, New, Goal) :-
-% 	clause(current_optimize(Old), true, Ref),
-% 	(   New==Old -> true
-% 	;   must_be(New, oneof([full,off]), Goal, 3),
-% 	    erase(Ref),
-% 	    assertz(current_optimize(New))
-% 	).
+%	clause(current_optimize(Old), true, Ref),
+%	(   New==Old -> true
+%	;   must_be(New, oneof([full,off]), Goal, 3),
+%	    erase(Ref),
+%	    assertz(current_optimize(New))
+%	).
 %
 %
 % all_stores_goal(Goal, CVAs) :-
-% 	chr_flag(toplevel_show_store, on, on), !,
-% 	findall(C-CVAs, find_chr_constraint(C), Pairs),
-% 	andify(Pairs, Goal, CVAs).
+%	chr_flag(toplevel_show_store, on, on), !,
+%	findall(C-CVAs, find_chr_constraint(C), Pairs),
+%	andify(Pairs, Goal, CVAs).
 % all_stores_goal(true, _).
 %
 % andify([], true, _).
@@ -414,9 +414,9 @@ system:term_expansion(In, Out) :-
 % :- multifile user:term_expansion/6.
 %
 % user:term_expansion(In, _, Ids, Out, [], [chr|Ids]) :-
-% 	nonvar(In),
-% 	nonmember(chr, Ids),
-% 	chr_expand(In, Out), !.
+%	nonvar(In),
+%	nonmember(chr, Ids),
+%	chr_expand(In, Out), !.
 %
 %% SICStus end
 
