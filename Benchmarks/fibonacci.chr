@@ -8,7 +8,7 @@
 
 :- use_module(library(chr)).
 
-:- constraints fibonacci/2.
+:- chr_constraint fibonacci/2.
 
 %% fibonacci(N,M) is true iff  M is the Nth Fibonacci number.
 
@@ -23,7 +23,7 @@ fibonacci(0,M) ==> M = 1.
 fibonacci(1,M) ==> M = 1.
 
 fibonacci(N,M) ==>
-	N > 1 | 
+	N > 1 |
 		N1 is N-1,
 		fibonacci(N1,M1),
 		N2 is N-2,

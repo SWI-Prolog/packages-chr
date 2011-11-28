@@ -8,7 +8,7 @@
 
 :- use_module(library(chr)).
 
-:- constraints fib/2.
+:- chr_constraint fib/2.
 
 %% fib(N,M) is true if  M is the Nth Fibonacci number.
 
@@ -31,4 +31,4 @@ main(N):-
 	cputime( Now),
 	Time is Now-X,
 	write(bench(fib ,N,Time, 0, hprolog)),write('.'), nl.
-                 
+

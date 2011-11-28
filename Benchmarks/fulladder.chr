@@ -5,15 +5,16 @@
 %% 910904 added xor,neg constraints
 %% 911120 added imp constraint
 %% 931110 ported to new release
-%% 931111 added card constraint 
+%% 931111 added card constraint
 %% 961107 Christian Holzbaur, SICStus mods
 %%
 %% ported to hProlog by Tom Schrijvers June 2003
 
 
 :- module(fulladder,[main/0,main/1]).
+:- use_module(library(chr)).
 
-:- constraints and/3, or/3, xor/3, neg/2.
+:- chr_constraint and/3, or/3, xor/3, neg/2.
 
 :- use_module(library(lists)).
 
@@ -74,9 +75,9 @@ neg(X,0) <=> X=1.
 neg(1,X) <=> X=0.
 neg(X,1) <=> X=0.
 neg(X,X) <=> fail.
-neg(X,Y) \ neg(Y,Z) <=> X=Z, chr_dummy.	
-neg(X,Y) \ neg(Z,Y) <=> X=Z, chr_dummy.	
-neg(Y,X) \ neg(Y,Z) <=> X=Z, chr_dummy.	
+neg(X,Y) \ neg(Y,Z) <=> X=Z, chr_dummy.
+neg(X,Y) \ neg(Z,Y) <=> X=Z, chr_dummy.
+neg(Y,X) \ neg(Y,Z) <=> X=Z, chr_dummy.
 %% Interaction with other boolean constraints
 neg(X,Y) \ and(X,Y,Z) <=> Z=0, chr_dummy.
 neg(Y,X) \ and(X,Y,Z) <=> Z=0, chr_dummy.

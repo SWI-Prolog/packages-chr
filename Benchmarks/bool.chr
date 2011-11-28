@@ -5,7 +5,7 @@
 %% 910904 added xor,neg constraints
 %% 911120 added imp constraint
 %% 931110 ported to new release
-%% 931111 added card constraint 
+%% 931111 added card constraint
 %% 961107 Christian Holzbaur, SICStus mods
 %%
 %% ported to hProlog by Tom Schrijvers June 2003
@@ -14,17 +14,16 @@
 :- module(bool,[main/0,main/1]).
 
 :- use_module( library(chr)).
-
 :- use_module(library(lists)).
 
-:- constraints boolean/1, and/3, or/3, xor/3, neg/2, imp/2, labeling/0, card/4.
+:- chr_constraint boolean/1, and/3, or/3, xor/3, neg/2, imp/2, labeling/0, card/4.
 
 
 boolean(0) <=> true.
 boolean(1) <=> true.
 
-labeling, boolean(A)#Pc <=> 
-( A=0 ; A=1), 
+labeling, boolean(A)#Pc <=>
+( A=0 ; A=1),
 labeling
 pragma passive(Pc).
 
@@ -46,8 +45,8 @@ and(X,X,Z) <=> X=Z.
 and(X,Y,A) \ and(X,Y,B) <=> A=B.
 and(X,Y,A) \ and(Y,X,B) <=> A=B.
 
-labeling, and(A,B,C)#Pc <=> 
-label_and(A,B,C), 
+labeling, and(A,B,C)#Pc <=>
+label_and(A,B,C),
 labeling
 pragma passive(Pc).
 
@@ -72,8 +71,8 @@ or(X,X,Z) <=> X=Z.
 or(X,Y,A) \ or(X,Y,B) <=> A=B.
 or(X,Y,A) \ or(Y,X,B) <=> A=B.
 
-labeling, or(A,B,C)#Pc <=> 
-label_or(A,B,C), 
+labeling, or(A,B,C)#Pc <=>
+label_or(A,B,C),
 labeling
 pragma passive(Pc).
 
@@ -99,8 +98,8 @@ xor(Y,X,X) <=> Y=0.
 xor(X,Y,A) \ xor(X,Y,B) <=> A=B.
 xor(X,Y,A) \ xor(Y,X,B) <=> A=B.
 
-labeling, xor(A,B,C)#Pc <=> 
-label_xor(A,B,C), 
+labeling, xor(A,B,C)#Pc <=>
+label_xor(A,B,C),
 labeling
 pragma passive(Pc).
 
@@ -117,9 +116,9 @@ neg(X,0) <=> X=1.
 neg(1,X) <=> X=0.
 neg(X,1) <=> X=0.
 neg(X,X) <=> fail.
-neg(X,Y) \ neg(Y,Z) <=> X=Z.	
-neg(X,Y) \ neg(Z,Y) <=> X=Z.	
-neg(Y,X) \ neg(Y,Z) <=> X=Z.	
+neg(X,Y) \ neg(Y,Z) <=> X=Z.
+neg(X,Y) \ neg(Z,Y) <=> X=Z.
+neg(Y,X) \ neg(Y,Z) <=> X=Z.
 %% Interaction with other boolean constraints
 neg(X,Y) \ and(X,Y,Z) <=> Z=0.
 neg(Y,X) \ and(X,Y,Z) <=> Z=0.
@@ -142,8 +141,8 @@ neg(Z,Y) \ xor(X,Y,Z) <=> X=1.
 neg(X,Y) , imp(X,Y) <=> X=0,Y=1.
 neg(Y,X) , imp(X,Y) <=> X=0,Y=1.
 
-labeling, neg(A,B)#Pc <=> 
-label_neg(A,B), 
+labeling, neg(A,B)#Pc <=>
+label_neg(A,B),
 labeling
 pragma passive(Pc).
 
@@ -161,10 +160,10 @@ imp(X,0) <=> X=0.
 imp(1,X) <=> X=1.
 imp(X,1) <=> true.
 imp(X,X) <=> true.
-imp(X,Y),imp(Y,X) <=> X=Y.	
+imp(X,Y),imp(Y,X) <=> X=Y.
 
-labeling, imp(A,B)#Pc <=> 
-label_imp(A,B), 
+labeling, imp(A,B)#Pc <=>
+label_imp(A,B),
 labeling
 pragma passive(Pc).
 
@@ -177,9 +176,9 @@ label_imp(1,1).
 %% card(A,B,L,N) constrains list L of length N to have between A and B 1s
 
 
-card(A,B,L):- 
-	length(L,N), 
-	A=<B,0=<B,A=<N,				%0=<N 	
+card(A,B,L):-
+	length(L,N),
+	A=<B,0=<B,A=<N,				%0=<N
 	card(A,B,L,N).
 
 %% card/4 specification
@@ -187,7 +186,7 @@ card(A,B,L):-
 %%card(A,B,[0|L],N):-
 %%		N1 is N-1,
 %%		card(A,B,L,N1).
-%%card(A,B,[1|L],N):-  
+%%card(A,B,[1|L],N):-
 %%		A1 is A-1, B1 is B-1, N1 is N-1,
 %%		card(A1,B1,L,N1).
 
@@ -201,16 +200,16 @@ neg_red @ card(A,B,L,N) <=> b_delete(X,L,L1),X==0 | % negative reduction
 N1 is N-1,
 card(A,B,L1,N1).
 %% special cases with two variables
-card2nand @ card(0,1,[X,Y],2) <=> and(X,Y,0).		
-card2neg @ card(1,1,[X,Y],2) <=> neg(X,Y).		
+card2nand @ card(0,1,[X,Y],2) <=> and(X,Y,0).
+card2neg @ card(1,1,[X,Y],2) <=> neg(X,Y).
 card2or @ card(1,2,[X,Y],2) <=> or(X,Y,1).
 
 b_delete( X, [X|L],  L).
 b_delete( Y, [X|Xs], [X|Xt]) :-
 	b_delete( Y, Xs, Xt).
 
-labeling, card(A,B,L,N)#Pc <=> 
-label_card(A,B,L,N), 
+labeling, card(A,B,L,N)#Pc <=>
+label_card(A,B,L,N),
 labeling
 pragma passive(Pc).
 
@@ -218,7 +217,7 @@ label_card(A,B,[],0):- A=<0,0=<B.
 label_card(A,B,[0|L],N):-
 	%N1 is N-1,
 	card(A,B,L).
-label_card(A,B,[1|L],N):-  
+label_card(A,B,[1|L],N):-
 	A1 is A-1, B1 is B-1, %N1 is N-1,
 	card(A1,B1,L).
 
@@ -250,7 +249,7 @@ solve_bool(A # B, C) :- !,
 	solve_bool(A,A1),
 	solve_bool(B,B1),
 	xor(A1,B1,C).
-solve_bool(not(A),C) :- !, 
+solve_bool(not(A),C) :- !,
 	solve_bool(A,A1),
 	neg(A1,C).
 solve_bool((A -> B), C) :- !,
@@ -262,7 +261,7 @@ solve_bool(A = B, C) :- !,
 	solve_bool(B,B1),
 	A1=B1,C=1.
 
-%% Labeling 
+%% Labeling
 label_bool([]).
 label_bool([X|L]) :-
 	( X=0;X=1),

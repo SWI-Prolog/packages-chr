@@ -4,12 +4,13 @@
 %% thom fruehwirth 920218-20, 980311
 %% christian holzbaur 980207 for Sicstus CHR
 %%
-%% ported to hProlog by Tom Schrijvers 
+%% ported to hProlog by Tom Schrijvers
 
 :- module(primes,[main/0,main/1]).
+:- use_module(library(chr)).
 
-:- constraints candidate/1.
-:- constraints prime/1.
+:- chr_constraint candidate/1.
+:- chr_constraint prime/1.
 
 candidate(1) <=> true.
 candidate(N) <=> primes:prime(N), N1 is N - 1, primes:candidate(N1).

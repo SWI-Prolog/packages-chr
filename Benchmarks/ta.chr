@@ -8,17 +8,17 @@
 	Timed automaton => Constraints
 
 			=>
-	
+
 	 X := N			geq(X,N)
 	-------->
 
 	 X =< N			leq(X,N)
 	-------->
-	
+
 	 X >= N			geq(X,N)
 	-------->
 
-	
+
 n > 1,	1 ------> v		fincl(Xv,X1),
 	...    /		...
 	n ----/			fincl(Xv,Xn),
@@ -32,31 +32,31 @@ n >= 1, v ------> 1		bincl(Xv,X1),
 
 %% handler ta.
 
-:- constraints
- 
-	fincl/2, 	% expresses that clock 1 includes clock 2 (union)
+:- chr_constraint
+
+	fincl/2,	% expresses that clock 1 includes clock 2 (union)
 			% in the sense that clock 2 is forward of clock 1
 
-	bincl/2, 	% expresses that clock 1 includes clock 2 (union)
+	bincl/2,	% expresses that clock 1 includes clock 2 (union)
 			% in the sense that clock 1 is forward of clock 2
 
-	leq/2, 		% expresses that clock 1 =< number 2
+	leq/2,		% expresses that clock 1 =< number 2
 
-	geq/2, 		% expresses that clock 1 >= number 2
+	geq/2,		% expresses that clock 1 >= number 2
 
-	fub_init/2, 	% collects the inital upper bounds 
+	fub_init/2,	% collects the inital upper bounds
 			% from incoming arrows for clock 1 in list 2
 
 	fub/2,		% collects the upper bounds for clock 1
 			% from incoming arrows in list 2
 
-	flb_init/2, 	% collects the inital lower bounds 
+	flb_init/2,	% collects the inital lower bounds
 			% from incoming arrows for clock 1 in list 2
 
 	flb/2,		% collects the lower bounds for clock 1
 			% from incoming arrows in list 2
 
-	bub_init/2, 	% collects the inital upper bounds 
+	bub_init/2,	% collects the inital upper bounds
 			% from backward arrows for clock 1 in list 2
 
 	bub/2,		% collects the upper bounds for clock 1
@@ -64,7 +64,7 @@ n >= 1, v ------> 1		bincl(Xv,X1),
 			% values of clock 1 cannot exceed all
 			% values of the clocks in list 2
 
-	blb_init/2, 	% collects the inital lower bounds 
+	blb_init/2,	% collects the inital lower bounds
 			% from backward arrows for clock 1 in list 2
 
 	blb/2,		% collects the lower bounds for clock 1
@@ -87,7 +87,7 @@ n >= 1, v ------> 1		bincl(Xv,X1),
 			% clock 1 is reset to value 3
 
 /* More Constraints:
-	
+
 */
 
 leq(X,N1) \ leq(X,N2) <=> N1 =< N2 | true.
@@ -102,12 +102,12 @@ dist(X,Y,D), leq(Y,MY) \ leq(X,MX1) <=>
 dist(X,Y,D), geq(X,MX) \ geq(Y,MY1) <=>
 	MY2 is MX - D, MY2 > MY1 | geq(Y,MY2).
 
-fincl(X,Y), leq(Y,N) \ fub_init(X,L) 
+fincl(X,Y), leq(Y,N) \ fub_init(X,L)
 	<=> \+ memberchk_eq(N-Y,L) |
 	    insert_ub(L,Y,N,NL),
 	    fub_init(X,NL).
 
-fincl(X,Y), geq(Y,N) \ flb_init(X,L) 
+fincl(X,Y), geq(Y,N) \ flb_init(X,L)
 	<=> \+ memberchk_eq(N-Y,L) |
 	    insert_lb(L,Y,N,NL),
 	    flb_init(X,NL).
@@ -124,15 +124,15 @@ bincl(X,Y), leq(Y,N) \ bub_init(X,L)
 	insert_ub(L,Y,N,NL),
 	bub_init(X,NL).
 
-compl(X) \ fub_init(X,L) # ID 
-	<=> 
+compl(X) \ fub_init(X,L) # ID
+	<=>
 	fub(X,L),
 	val(L,M),
 	leq(X,M)
 	pragma passive(ID).
 
-compl(X) \ flb_init(X,L) # ID 
-	<=> 
+compl(X) \ flb_init(X,L) # ID
+	<=>
 	flb(X,L),
 	val(L,M),
 	geq(X,M)
@@ -145,14 +145,14 @@ compl(X), compl(Y) \ fdist_init(X,Y,L) # ID
 	dist(X,Y,D)
 	pragma passive(D).
 
-compl(X) \ bub_init(X,L) # ID 
-	<=> 
+compl(X) \ bub_init(X,L) # ID
+	<=>
 	bub(X,L),
 	val(L,M),
 	leq(X,M)
 	pragma passive(ID).
 
-fincl(X,Y), leq(Y,N) \ fub(X,L) 
+fincl(X,Y), leq(Y,N) \ fub(X,L)
 	<=>
 	\+ memberchk_eq(N-Y,L) |
 	insert_ub(L,Y,N,NL),
@@ -160,7 +160,7 @@ fincl(X,Y), leq(Y,N) \ fub(X,L)
 	val(NL,M),
 	leq(X,M).
 
-fincl(X,Y), geq(Y,N) \ flb(X,L) 
+fincl(X,Y), geq(Y,N) \ flb(X,L)
 	<=>
 	\+ memberchk_eq(N-Y,L) |
 	insert_lb(L,Y,N,NL),
@@ -168,7 +168,7 @@ fincl(X,Y), geq(Y,N) \ flb(X,L)
 	val(NL,M),
 	geq(X,M).
 
-bincl(X,Y), leq(Y,N) \ bub(X,L) 
+bincl(X,Y), leq(Y,N) \ bub(X,L)
 	<=>
 	\+ memberchk_eq(N-Y,L) |
 	insert_ub(L,Y,N,NL),
@@ -229,7 +229,7 @@ giri :-
 giri(L) :-
 	L = [X1,Y1,X2,Y2,X3,Y3,X4,Y4,X5,Y5,X6,Y6,X7,Y7,X8,Y8,X9,Y9,X10,Y10],
 	clocks(L),
-	
+
 	% 1.
 	couple(X1,Y1),
 	geq(X1,0),
@@ -256,7 +256,7 @@ giri(L) :-
 	bincl(X2,X4),
 	bub_init(X2,[]),
 	blb_init(X2,[]),
-	
+
 	bincl(Y2,Y3),
 	bincl(Y2,Y4),
 	bub_init(Y2,[]),
@@ -330,7 +330,7 @@ giri(L) :-
 	couple(X9,Y9),
 	geq(Y9,5),
 	leq(Y9,5),
-	
+
 
 	% 10.
 	couple(X10,Y10),
@@ -344,12 +344,12 @@ giri(L) :-
 	compl(Y2),
 
 	compl(X3),
-	compl(Y3),	
-	
-	compl(X6),
-	compl(Y6).	
+	compl(Y3),
 
-	
+	compl(X6),
+	compl(Y6).
+
+
 
 clocks([]).
 clocks([C|Cs]) :-
@@ -369,7 +369,7 @@ main(N) :-
 	cputime(T2),
 	T is T2 - T1,
 	write(bench(ta ,N , T,0,hprolog)),write('.'),nl.
-	
+
 
 loop(N) :-
 	( N =< 0 ->

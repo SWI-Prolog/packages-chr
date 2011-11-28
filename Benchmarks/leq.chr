@@ -3,11 +3,13 @@
 %% simple constraint solver for inequalities between variables
 %% thom fruehwirth ECRC 950519, LMU 980207, 980311
 %%
-%% ported to hProlog by Tom Schrijvers 
+%% ported to hProlog by Tom Schrijvers
 
 :- module(leq,[main/0,main/1]).
+:- use_module(library(chr)).
 
-:- constraints leq/2.
+:- chr_constraint leq/2.
+
 reflexivity  @ leq(X,X) <=> true.
 antisymmetry @ leq(X,Y), leq(Y,X) <=> X = Y.
 idempotence  @ leq(X,Y) \ leq(X,Y) <=> true.

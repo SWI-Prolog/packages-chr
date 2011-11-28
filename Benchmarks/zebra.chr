@@ -1,8 +1,9 @@
 :- module(zebra,[main/0, main/1]).
 
+:- use_module(library(chr)).
 :- use_module(lib / lists).
 
-/*     
+/*
 1.   The Englishman lives in the red house.
 2.   The Spaniard owns the dog.
 3.   Coffee is drunk in the green house.
@@ -21,7 +22,7 @@
 14.  The Norwegian lives next to the blue house.
 */
 
-:- constraints domain/2, diff/2.
+:- chr_constraint domain/2, diff/2.
 
 domain(X,[]) <=> fail.
 domain(X,[V]) <=> X = V.
@@ -30,7 +31,7 @@ domain(X,L1), domain(X,L2) <=> intersect(L1,L2,L3), domain(X,L3).
 diff(X,Y), domain(X,L) <=> nonvar(Y) | delete(L,Y,NL), domain(X,NL).
 diff(X,Y) <=> nonvar(X), nonvar(Y) | X \== Y.
 
-all_different([]). 
+all_different([]).
 all_different([H|T]) :-
 	all_different(T,H),
 	all_different(T).
@@ -40,7 +41,7 @@ all_different([H|T],E) :-
 	diff(H,E),
 	diff(E,H),
 	all_different(T,E).
-	
+
 main :-
 	main(10).
 

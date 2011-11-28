@@ -1,5 +1,6 @@
 :- module(wfs,[main/0, main/1]).
 
+:- use_module(library(chr)).
 :- use_module(library(lists)).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -39,7 +40,7 @@ prog(c :- c).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-:- constraints true/1, false/1, undefined/1, aclause/2, pos/2, neg/2, nbulit/2, nbplit/2, nbucl/2, phase2/0, true2/1, undefined2/1, aclause2/2, pos2/2, nbplit2/2, phase1/0, witness1/0, witness2/0.
+:- chr_constraint true/1, false/1, undefined/1, aclause/2, pos/2, neg/2, nbulit/2, nbplit/2, nbucl/2, phase2/0, true2/1, undefined2/1, aclause2/2, pos2/2, nbplit2/2, phase1/0, witness1/0, witness2/0.
 
 true(At), aclause(Cl,At) \ pos(_,Cl) <=> true.
 
@@ -84,7 +85,7 @@ phase2, nbplit(Cl,N) ==> nbplit2(Cl,N).
 phase2, witness2 # ID <=> phase1 pragma passive(ID).
 phase2 \ nbplit2(_,_) # ID <=> true pragma passive(ID).
 phase2 \ aclause2(_,_) # ID <=> true pragma passive(ID).
-phase2 <=> true. 
+phase2 <=> true.
 
 
 true2(At), aclause2(Cl,At) \ pos2(_,Cl) <=> true.
@@ -106,11 +107,11 @@ phase1 \ nbplit2(_,_) # ID <=> true pragma passive(ID).
 phase1, witness1 # ID  <=> phase2 pragma passive(ID).
 phase1 \ nbucl(At,_) # ID <=> undefined(At) pragma passive(ID).
 phase1 \ pos(_,_) # ID <=> true.
-phase1 \ neg(_,_) # ID <=> true pragma passive(ID). 
-phase1 \ aclause(_,_) # ID <=>  true pragma passive(ID). 
-phase1 \ nbulit(_,_) # ID <=> true pragma passive(ID). 
-phase1 \ nbplit(_,_) # ID <=> true pragma passive(ID). 
-phase1 <=> true. 
+phase1 \ neg(_,_) # ID <=> true pragma passive(ID).
+phase1 \ aclause(_,_) # ID <=>  true pragma passive(ID).
+phase1 \ nbulit(_,_) # ID <=> true pragma passive(ID).
+phase1 \ nbplit(_,_) # ID <=> true pragma passive(ID).
+phase1 <=> true.
 
 /*
 	p :- r.
@@ -122,7 +123,7 @@ program1 :-
 	aclause(cl1,p),		% clause cl1 defineert p
 	nbulit(cl1,1),		% aantal undefined literals in cl1
 	nbplit(cl1,1),		% aantal positieve undefined literals in cl1
-	nbucl(r,1),		
+	nbucl(r,1),
 	aclause(cl2,r),
 	nbulit(cl2,0),
 	nbplit(cl2,0).
@@ -174,19 +175,19 @@ program5 :-
 	neg(p,cl2),
 	aclause(cl1,p),
 	nbulit(cl1,2),
-	nbplit(cl1,1),	
+	nbplit(cl1,1),
 	nbucl(q,1),
 	pos(q,cl1),
 	neg(q,cl3),
 	aclause(cl2,q),
 	nbulit(cl2,2),
-	nbplit(cl2,1),	
-	nbucl(r,1),	
+	nbplit(cl2,1),
+	nbucl(r,1),
 	pos(r,cl2),
 	neg(r,cl1),
 	aclause(cl3,r),
 	nbulit(cl3,2),
-	nbplit(cl3,1).	
+	nbplit(cl3,1).
 
 
 main :-
