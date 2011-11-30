@@ -29,7 +29,7 @@
     the GNU General Public License.
 */
 :- module(chr_compiler_errors,
-		[	
+		[
 			chr_info/3,
 			chr_warning/3,
 			chr_error/3,
@@ -46,15 +46,15 @@ chr_info(_,Message,Params) :-
 		true
 	;
 		long_line_with_equality_signs,
-		format(user_error,'CHR compiler:\n',[]),	
+		format(user_error,'CHR compiler:\n',[]),
 		format(user_error,Message,Params),
 		long_line_with_equality_signs
 	).
 
 
 %% SWI begin
-verbosity_on :- 
-	current_prolog_flag(verbose,V), V \== silent, 	
+verbosity_on :-
+	current_prolog_flag(verbose,V), V \== silent,
 	current_prolog_flag(verbose_load,true).
 %% SWI end
 
@@ -67,7 +67,7 @@ verbosity_on :-
 
 chr_warning(deprecated(Term),Message,Params) :- !,
 	long_line_with_equality_signs,
-	format(user_error,'CHR compiler WARNING: deprecated syntax      ~w.\n',[Term]),	
+	format(user_error,'CHR compiler WARNING: deprecated syntax      ~w.\n',[Term]),
 	format(user_error,'    `--> ',[]),
 	format(user_error,Message,Params),
         format(user_error,'    Support for deprecated syntax will be discontinued in the near future!\n',[]),
@@ -75,7 +75,7 @@ chr_warning(deprecated(Term),Message,Params) :- !,
 
 chr_warning(internal,Message,Params) :- !,
 	long_line_with_equality_signs,
-	format(user_error,'CHR compiler WARNING: something unexpected happened in the CHR compiler.\n',[]),	
+	format(user_error,'CHR compiler WARNING: something unexpected happened in the CHR compiler.\n',[]),
 	format(user_error,'    `--> ',[]),
 	format(user_error,Message,Params),
         format(user_error,'    Your program may not have been compiled correctly!\n',[]),
@@ -84,14 +84,14 @@ chr_warning(internal,Message,Params) :- !,
 
 chr_warning(unsupported_pragma(Pragma,Rule),Message,Params) :- !,
 	long_line_with_equality_signs,
-	format(user_error,'CHR compiler WARNING: unsupported pragma ~w in ~@.\n',[Pragma,format_rule(Rule)]),	
+	format(user_error,'CHR compiler WARNING: unsupported pragma ~w in ~@.\n',[Pragma,format_rule(Rule)]),
 	format(user_error,'    `--> ',[]),
 	format(user_error,Message,Params),
         format(user_error,'    Pragma is ignored!\n',[]),
 	long_line_with_equality_signs.
 chr_warning(problem_pragma(Pragma,Rule),Message,Params) :- !,
 	long_line_with_equality_signs,
-	format(user_error,'CHR compiler WARNING: unsupported pragma ~w in ~@.\n',[Pragma,format_rule(Rule)]),	
+	format(user_error,'CHR compiler WARNING: unsupported pragma ~w in ~@.\n',[Pragma,format_rule(Rule)]),
 	format(user_error,'    `--> ',[]),
 	format(user_error,Message,Params),
 	long_line_with_equality_signs.
@@ -99,7 +99,7 @@ chr_warning(problem_pragma(Pragma,Rule),Message,Params) :- !,
 chr_warning(_,Message,Params) :-
 	( chr_pp_flag(verbosity,on) ->
 		long_line_with_equality_signs,
-		format(user_error,'CHR compiler WARNING:\n',[]),	
+		format(user_error,'CHR compiler WARNING:\n',[]),
 		format(user_error,'    `--> ',[]),
 		format(user_error,Message,Params),
 		long_line_with_equality_signs
@@ -118,21 +118,21 @@ print_chr_error(error(Type,Message,Params)) :-
 
 print_chr_error(syntax(Term),Message,Params) :- !,
 	long_line_with_equality_signs,
-	format(user_error,'CHR compiler ERROR: invalid syntax "~w".\n',[Term]),	
+	format(user_error,'CHR compiler ERROR: invalid syntax "~w".\n',[Term]),
 	format(user_error,'    `--> ',[]),
 	format(user_error,Message,Params),
 	long_line_with_equality_signs.
 
 print_chr_error(type_error,Message,Params) :- !,
 	long_line_with_equality_signs,
-	format(user_error,'CHR compiler TYPE ERROR:\n',[]),	
+	format(user_error,'CHR compiler TYPE ERROR:\n',[]),
 	format(user_error,'    `--> ',[]),
 	format(user_error,Message,Params),
 	long_line_with_equality_signs.
 
 print_chr_error(internal,Message,Params) :- !,
 	long_line_with_equality_signs,
-	format(user_error,'CHR compiler ERROR: something unexpected happened in the CHR compiler.\n',[]),	
+	format(user_error,'CHR compiler ERROR: something unexpected happened in the CHR compiler.\n',[]),
 	format(user_error,'    `--> ',[]),
 	format(user_error,Message,Params),
         format(user_error,'    Please contact tom.schrijvers@cs.kuleuven.be.\n',[]),
@@ -140,19 +140,22 @@ print_chr_error(internal,Message,Params) :- !,
 
 print_chr_error(cyclic_alias(Alias),_Message,_Params) :- !,
 	long_line_with_equality_signs,
-	format(user_error,'CHR compiler ERROR: cyclic alias "~w".\n',[Alias]),	
+	format(user_error,'CHR compiler ERROR: cyclic alias "~w".\n',[Alias]),
 	format(user_error,'    `--> Aborting compilation.\n',[]),
 	long_line_with_equality_signs.
 
 print_chr_error(_,Message,Params) :-
 	long_line_with_equality_signs,
-	format(user_error,'CHR compiler ERROR:\n',[]),	
+	format(user_error,'CHR compiler ERROR:\n',[]),
 	format(user_error,'    `--> ',[]),
 	format(user_error,Message,Params),
 	long_line_with_equality_signs.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+:- public
+	format_rule/1.			% called using format/3 `@'
 
 format_rule(PragmaRule) :-
 	PragmaRule = pragma(_,_,Pragmas,MaybeName,N),

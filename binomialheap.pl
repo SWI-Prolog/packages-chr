@@ -53,7 +53,6 @@
 % data Maybe a = Zero | One a
 % type Item = (Entry,Key)
 
-entry(Entry-_,Entry).
 key(_-Key,Key).
 
 empty_q([]).

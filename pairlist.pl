@@ -1,10 +1,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%              _      _ _     _   
-%%  _ __   __ _(_)_ __| (_)___| |_ 
+%%              _      _ _     _
+%%  _ __   __ _(_)_ __| (_)___| |_
 %% | '_ \ / _` | | '__| | / __| __|
-%% | |_) | (_| | | |  | | \__ \ |_ 
+%% | |_) | (_| | | |  | | \__ \ |_
 %% | .__/ \__,_|_|_|  |_|_|___/\__|
-%% |_|                            
+%% |_|
 %%
 %% * author: Tom Schrijvers
 
@@ -40,7 +40,7 @@ lookup([K - V | KVs],Key,Value) :-
 	).
 
 lookup_any([K - V | KVs],Key,Value) :-
-	( 
+	(
 		K = Key,
 		V = Value
 	;
@@ -55,7 +55,7 @@ lookup_eq([K - V | KVs],Key,Value) :-
 	).
 
 lookup_any_eq([K - V | KVs],Key,Value) :-
-	( 
+	(
 		K == Key,
 		V = Value
 	;
@@ -67,25 +67,6 @@ translate([X|Xs],Dict,[Y|Ys]) :-
 	lookup_eq(Dict,X,Y),
 	translate(Xs,Dict,Ys).
 
-pairlist_delete([], _, []).
-pairlist_delete([K - V| KVs], Key, PL) :-
-	( Key = K ->
-		PL = KVs
-	;
-		PL = [ K - V | T ],
-		pairlist_delete(KVs, Key, T)
-	).
-
-pairlist_delete_all([], _, []).
-pairlist_delete_all([K - V| KVs], Key, PL) :-
-	( Key = K ->
-		pairlist_delete_all(KVs, Key, PL)
-		
-	;
-		PL = [ K - V | T ],
-		pairlist_delete_all(KVs, Key, T)
-	).
-
 pairlist_delete_eq([], _, []).
 pairlist_delete_eq([K - V| KVs], Key, PL) :-
 	( Key == K ->
@@ -95,12 +76,3 @@ pairlist_delete_eq([K - V| KVs], Key, PL) :-
 		pairlist_delete_eq(KVs, Key, T)
 	).
 
-pairlist_delete_all_eq([], _, []).
-pairlist_delete_all_eq([K - V| KVs], Key, PL) :-
-	( Key == K ->
-		pairlist_delete_all_eq(KVs, Key, PL)
-	;
-		PL = [ K - V | T ],
-		pairlist_delete_all_eq(KVs, Key, T)
-	).
-		

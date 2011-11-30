@@ -66,6 +66,10 @@
 :- use_module(library(lists), [permutation/2]).
 :- use_module(library(assoc)).
 
+:- meta_predicate
+	fold1(3,+,-),
+	fold(+,3,+,-).
+
 %% SICStus begin
 %% use_module(library(terms),[term_variables/2]).
 %% SICStus end
@@ -73,17 +77,17 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % time(Phase,Goal) :-
-% 	statistics(runtime,[T1|_]),
-% 	call(Goal),
-% 	statistics(runtime,[T2|_]),
-% 	T is T2 - T1,
-% 	format('    ~w ~46t ~D~80| ms\n',[Phase,T]),
-% 	deterministic(Det),
-% 	( Det == true ->
-% 		true
-% 	;
-% 		format('\t\tNOT DETERMINISTIC!\n',[])
-% 	).
+%	statistics(runtime,[T1|_]),
+%	call(Goal),
+%	statistics(runtime,[T2|_]),
+%	T is T2 - T1,
+%	format('    ~w ~46t ~D~80| ms\n',[Phase,T]),
+%	deterministic(Det),
+%	( Det == true ->
+%		true
+%	;
+%		format('\t\tNOT DETERMINISTIC!\n',[])
+%	).
 time(_,Goal) :- call(Goal).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -175,9 +179,9 @@ identical_bodies(B1,B2) :-
      !
    ; B1 == B2
    ).
- 
+
 % replace variables in list
-   
+
 copy_with_variable_replacement(X,Y,L) :-
    ( var(X) ->
      ( lookup_eq(L,X,Y) ->
@@ -195,12 +199,12 @@ copy_with_variable_replacement_l([],[],_).
 copy_with_variable_replacement_l([X|Xs],[Y|Ys],L) :-
    copy_with_variable_replacement(X,Y,L),
    copy_with_variable_replacement_l(Xs,Ys,L).
-   
+
 % build variable replacement list
 
 variable_replacement(X,Y,L) :-
    variable_replacement(X,Y,[],L).
-   
+
 variable_replacement(X,Y,L1,L2) :-
    ( var(X) ->
      var(Y),
@@ -270,10 +274,10 @@ instrument_goal(Goal,Pre,Post,(Pre,Goal,Post)).
 sort_by_key(List,Keys,SortedList) :-
 	pairup(Keys,List,Pairs),
 	sort(Pairs,SortedPairs),
-	once(pairup(_,SortedList,SortedPairs)).	
+	once(pairup(_,SortedList,SortedPairs)).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-arg1(Term,Index,Arg) :- arg(Index,Term,Arg).	
+arg1(Term,Index,Arg) :- arg(Index,Term,Arg).
 
 wrap_in_functor(Functor,X,Term) :-
 	Term =.. [Functor,X].
@@ -304,7 +308,7 @@ maplist_dcg(P,L1,L2,L) -->
 maplist_dcg_([],[],[],_) --> [].
 maplist_dcg_([X|Xs],[Y|Ys],[Z|Zs],P) -->
 	call(P,X,Y,Z),
-	maplist_dcg_(Xs,Ys,Zs,P).	
+	maplist_dcg_(Xs,Ys,Zs,P).
 
 maplist_dcg(P,L1,L2) -->
 	maplist_dcg_(L1,L2,P).
@@ -312,7 +316,7 @@ maplist_dcg(P,L1,L2) -->
 maplist_dcg_([],[],_) --> [].
 maplist_dcg_([X|Xs],[Y|Ys],P) -->
 	call(P,X,Y),
-	maplist_dcg_(Xs,Ys,P).	
+	maplist_dcg_(Xs,Ys,P).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 :- dynamic
 	user:goal_expansion/2.

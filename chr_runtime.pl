@@ -35,27 +35,27 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%       _                             _   _                
-%%   ___| |__  _ __   _ __ _   _ _ __ | |_(_)_ __ ___   ___ 
+%%       _                             _   _
+%%   ___| |__  _ __   _ __ _   _ _ __ | |_(_)_ __ ___   ___
 %%  / __| '_ \| '__| | '__| | | | '_ \| __| | '_ ` _ \ / _ \
 %% | (__| | | | |    | |  | |_| | | | | |_| | | | | | |  __/
 %%  \___|_| |_|_|    |_|   \__,_|_| |_|\__|_|_| |_| |_|\___|
 %%
 %% hProlog CHR runtime:
 %%
-%% 	* based on the SICStus CHR runtime by Christian Holzbaur
-%% 
+%%	* based on the SICStus CHR runtime by Christian Holzbaur
+%%
 %%          %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%          %  Constraint Handling Rules		      version 2.2 %
 %%          %								  %
 %%          %  (c) Copyright 1996-98					  %
 %%          %  LMU, Muenchen						  %
-%% 	    %								  %
+%%	    %								  %
 %%          %  File:   chr.pl						  %
 %%          %  Author: Christian Holzbaur	christian@ai.univie.ac.at %
 %%          %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% 
-%%	
+%%
+%%
 %%	* modified by Tom Schrijvers, K.U.Leuven, Tom.Schrijvers@cs.kuleuven.be
 %%		- ported to hProlog
 %%		- modified for eager suspension removal
@@ -64,8 +64,8 @@
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% SWI-Prolog changes
-%% 
-%% 	* Added initialization directives for saved-states
+%%
+%%	* Added initialization directives for saved-states
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 :- module(chr_runtime,
@@ -75,7 +75,7 @@
 
 	    'chr run_suspensions'/1,
 	    'chr run_suspensions_loop'/1,
-	    
+
 	    'chr run_suspensions_d'/1,
 	    'chr run_suspensions_loop_d'/1,
 
@@ -117,7 +117,7 @@
 	    'chr debug command'/2,	% Char, Command
 
 	    'chr chr_indexed_variables'/2,
-	
+
 	    'chr all_suspensions'/3,
 	    'chr new_merge_attributes'/3,
 	    'chr normalize_attr'/2,
@@ -137,7 +137,7 @@
 %% SWI end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-                                                       
+
 :- use_module(library(dialect/hprolog)).
 :- include(chr_op).
 
@@ -173,7 +173,7 @@ chr_init :-
 
 %% SICStus begin
 %% chr_init :-
-%% 	        nb_setval(chr_id,0).
+%%	        nb_setval(chr_id,0).
 %% SICStus end
 
 :- initialization chr_init.
@@ -181,9 +181,9 @@ chr_init :-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Contents of former chr_debug.pl
-%   
+%
 %	chr_show_store(+Module)
-%	
+%
 %	Prints all suspended constraints of module   Mod to the standard
 %	output.
 
@@ -233,7 +233,7 @@ user:goal_expansion('chr default_store'(X),        nb_getval(chr_global,X)).
 %% SICStus begin
 %% :- multifile user:goal_expansion/2.
 %% :- dynamic   user:goal_expansion/2.
-%% 
+%%
 %% user:goal_expansion('chr get_mutable'(Val,Var),    get_mutable(Val,Var)).
 %% user:goal_expansion('chr update_mutable'(Val,Var), update_mutable(Val,Var)).
 %% user:goal_expansion('chr create_mutable'(Val,Var), create_mutable(Val,Var)).
@@ -292,7 +292,7 @@ run_suspensions_d([S|Next] ) :-
 	    Generation is Gen+1,
 	    'chr update_mutable'( Generation, Gref),
 	    arg( 3, S, Goal), % ARGXXX
-	    ( 
+	    (
 		'chr debug_event'(wake(S)),
 	        call( Goal)
 	    ;
@@ -304,7 +304,7 @@ run_suspensions_d([S|Next] ) :-
 	    ;
 		'chr debug_event'(redo(S)),
 		fail
-	    ),	
+	    ),
 	    'chr get_mutable'( Post, Mref),
 	    ( Post==triggered ->
 		'chr update_mutable'( active, Mref)   % catching constraints that did not do anything
@@ -323,7 +323,7 @@ run_suspensions_d([S|Next] ) :-
 %= IMPLEMENTATION 1: SILENT FAILURE ============================================
 
 %- attribute handler -----------------------------------------------------------
-% 	intercepts unification of locked variable unification
+%	intercepts unification of locked variable unification
 
 locked:attr_unify_hook(_,_) :- fail.
 
@@ -360,7 +360,7 @@ unlockv([T|R]) :- del_attr( T, locked), unlockv(R).
 
 'chr not_locked'(V) :-
 	( var( V) ->
-  		( get_attr( V, locked, _) ->
+		( get_attr( V, locked, _) ->
 			fail
 		;
 			true
@@ -376,7 +376,7 @@ lock_error(Term) :-
 	throw(error(instantation_error(Term),context(_,'CHR Runtime Error: unification in guard not allowed!'))).
 
 %- attribute handler -----------------------------------------------------------
-% 	intercepts unification of locked variable unification
+%	intercepts unification of locked variable unification
 
 error_locked:attr_unify_hook(_,Term) :- lock_error(Term).
 
@@ -413,7 +413,7 @@ unerror_lockv([T|R]) :- del_attr( T, error_locked), unerror_lockv(R).
 
 'chr not_error_locked'(V) :-
 	( var( V) ->
-  		( get_attr( V, error_locked, _) ->
+		( get_attr( V, error_locked, _) ->
 			fail
 		;
 			true
@@ -428,7 +428,7 @@ unerror_lockv([T|R]) :- del_attr( T, error_locked), unerror_lockv(R).
 %
 'chr remove_constraint_internal'( Susp, Agenda) :-
 	arg( 2, Susp, Mref), % ARGXXX
-	'chr get_mutable'( State, Mref), 
+	'chr get_mutable'( State, Mref),
 	'chr update_mutable'( removed, Mref),		% mark in any case
 	( compound(State) ->			% passive/1
 	    Agenda = []
@@ -447,18 +447,18 @@ unerror_lockv([T|R]) :- del_attr( T, error_locked), unerror_lockv(R).
 'chr newvia_1'(X,V) :-
 	( var(X) ->
 		X = V
-	; 
+	;
 		nonground(X,V)
 	).
 
-'chr newvia_2'(X,Y,V) :- 
-	( var(X) -> 
+'chr newvia_2'(X,Y,V) :-
+	( var(X) ->
 		X = V
 	; var(Y) ->
 		Y = V
 	; compound(X), nonground(X,V) ->
 		true
-	; 
+	;
 		compound(Y), nonground(Y,V)
 	).
 
@@ -482,8 +482,8 @@ unerror_lockv([T|R]) :- del_attr( T, error_locked), unerror_lockv(R).
 		'chr default_store'(V)
 	).
 
-'chr via_2'(X,Y,V) :- 
-	( var(X) -> 
+'chr via_2'(X,Y,V) :-
+	( var(X) ->
 		X = V
 	; var(Y) ->
 		Y = V
@@ -531,13 +531,6 @@ nonground( Term, V) :-
 	'chr get_mutable'( History, Ref),
 	put_ds( Tuple, History, x, NewHistory),
 	'chr update_mutable'( NewHistory, Ref).
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-constraint_generation( Susp, State, Generation) :-
-	arg( 2, Susp, Mref), % ARGXXX
-	'chr get_mutable'( State, Mref),
-	arg( 4, Susp, Gref), % ARGXXX
-	'chr get_mutable'( Generation, Gref). 	% not incremented meanwhile 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 'chr allocate_constraint'( Closure, Self, F, Args) :-
@@ -614,7 +607,7 @@ insert_constraint_internal([Global|Vars], Self, Term, Closure, F, Args) :-
 
 %% SWI begin
 'chr create_mutable'(V,mutable(V)).
-'chr get_mutable'(V,mutable(V)).  
+'chr get_mutable'(V,mutable(V)).
 'chr update_mutable'(V,M) :- setarg(1,M,V).
 %% SWI end
 
@@ -643,8 +636,8 @@ insert_constraint_internal([Global|Vars], Self, Term, Closure, F, Args) :-
         % does it really avoid the choicepoint? -jon
  sbag_member( E, _,	     E).
  sbag_member( E, [Head|Tail], _) :-
- 	sbag_member( E, Tail, Head).
- 
+	sbag_member( E, Tail, Head).
+
 'chr sbag_del_element'( [],	  _,	[]).
 'chr sbag_del_element'( [X|Xs], Elem, Set2) :-
 	( X==Elem ->
@@ -669,7 +662,7 @@ insert_constraint_internal([Global|Vars], Self, Term, Closure, F, Args) :-
        ;
            R = [X | T],
            'chr merge_attributes'(Xs,Ys,T)
-       )    
+       )
   ;
        R = [X | Xs]
   ).
@@ -682,7 +675,7 @@ insert_constraint_internal([Global|Vars], Self, Term, Closure, F, Args) :-
 	;
 		A = [E1|AT1]
 	).
-		
+
 'chr new_merge_attributes'(Pos1-L1,Pos2-L2,AT1,AT2,A) :-
 	( Pos1 < Pos2 ->
 		A = [Pos1-L1|AT],
@@ -715,7 +708,7 @@ all_suspensions([APos-ASusps|RAttr],Susps,SuspsList,Pos) :-
 'chr normalize_attr'([],[]).
 'chr normalize_attr'([Pos-L|R],[Pos-NL|NR]) :-
 	sort(L,NL),
-	'chr normalize_attr'(R,NR).			
+	'chr normalize_attr'(R,NR).
 
 'chr select'([E|T],F,R) :-
 	( E = F ->
@@ -737,7 +730,7 @@ all_suspensions([APos-ASusps|RAttr],Susps,SuspsList,Pos) :-
 		true
 	; chr:debug_event(State, Event) ->
 		true
-	; 	debug_event(State,Event)
+	;	debug_event(State,Event)
 	).
 
 chr_trace :-
@@ -746,7 +739,7 @@ chr_notrace :-
 	nb_setval(chr_debug,mutable(off)).
 
 %	chr_leash(+Spec)
-%	
+%
 %	Define the set of ports at which we prompt for user interaction
 
 chr_leash(Spec) :-
@@ -791,32 +784,32 @@ chr_debug_init :-
 %debug_event(trace, Event) :-
 %	functor(Event, Name, Arity),
 %	writeln(Name/Arity), fail.
-debug_event(trace,Event) :- 
+debug_event(trace,Event) :-
 	Event = call(_), !,
 	get_debug_history(History,Depth),
 	NDepth is Depth + 1,
-	chr_debug_interact(Event,NDepth), 
+	chr_debug_interact(Event,NDepth),
 	set_debug_history([Event|History],NDepth).
-debug_event(trace,Event) :- 
+debug_event(trace,Event) :-
 	Event = wake(_), !,
 	get_debug_history(History,Depth),
 	NDepth is Depth + 1,
-	chr_debug_interact(Event,NDepth), 
+	chr_debug_interact(Event,NDepth),
 	set_debug_history([Event|History],NDepth).
 debug_event(trace,Event) :-
 	Event = redo(_), !,
 	get_debug_history(_History, Depth),
 	chr_debug_interact(Event, Depth).
-debug_event(trace,Event) :- 
+debug_event(trace,Event) :-
 	Event = exit(_),!,
 	get_debug_history([_|History],Depth),
 	chr_debug_interact(Event,Depth),
 	NDepth is Depth - 1,
-	set_debug_history(History,NDepth). 
-debug_event(trace,Event) :- 
+	set_debug_history(History,NDepth).
+debug_event(trace,Event) :-
 	Event = fail(_),!,
 	get_debug_history(_,Depth),
-	chr_debug_interact(Event,Depth). 
+	chr_debug_interact(Event,Depth).
 debug_event(trace, Event) :-
 	Event = remove(_), !,
 	get_debug_history(_,Depth),
@@ -829,38 +822,38 @@ debug_event(trace, Event) :-
 	Event = try(_,_,_,_), !,
 	get_debug_history(_,Depth),
 	chr_debug_interact(Event, Depth).
-debug_event(trace, Event) :- 
+debug_event(trace, Event) :-
 	Event = apply(_,_,_,_), !,
 	get_debug_history(_,Depth),
-	chr_debug_interact(Event,Depth). 
+	chr_debug_interact(Event,Depth).
 
-debug_event(skip(_,_),Event) :- 
+debug_event(skip(_,_),Event) :-
 	Event = call(_), !,
 	get_debug_history(History,Depth),
 	NDepth is Depth + 1,
 	set_debug_history([Event|History],NDepth).
-debug_event(skip(_,_),Event) :- 
+debug_event(skip(_,_),Event) :-
 	Event = wake(_), !,
 	get_debug_history(History,Depth),
 	NDepth is Depth + 1,
 	set_debug_history([Event|History],NDepth).
-debug_event(skip(SkipSusp,SkipDepth),Event) :- 
+debug_event(skip(SkipSusp,SkipDepth),Event) :-
 	Event = exit(Susp),!,
 	get_debug_history([_|History],Depth),
 	( SkipDepth == Depth,
-	  SkipSusp == Susp -> 
+	  SkipSusp == Susp ->
 		set_chr_debug(trace),
 		chr_debug_interact(Event,Depth)
 	;
 		true
 	),
 	NDepth is Depth - 1,
-	set_debug_history(History,NDepth). 
+	set_debug_history(History,NDepth).
 debug_event(skip(_,_),_) :- !,
 	true.
 
 %	chr_debug_interact(+Event, +Depth)
-%	
+%
 %	Interact with the user on Event that took place at Depth.  First
 %	calls chr:debug_interact(+Event, +Depth, -Command) hook. If this
 %	fails the event is printed and the system prompts for a command.
@@ -922,10 +915,10 @@ handle_debug_command(skip, Event, Depth) :- !,
 		Rest = [Susp],
 		set_chr_debug(skip(Susp,Depth))
 	).
-	
+
 handle_debug_command(ancestors,Event,Depth) :- !,
 	print_chr_debug_history,
-	chr_debug_interact(Event,Depth).	
+	chr_debug_interact(Event,Depth).
 handle_debug_command(nodebug,_,_) :- !,
 	chr_notrace.
 handle_debug_command(abort,_,_) :- !,
@@ -939,8 +932,8 @@ handle_debug_command(break,Event,Depth) :- !,
 	chr_debug_interact(Event,Depth).
 handle_debug_command(help,Event,Depth) :- !,
 	print_message(help, chr(debug_options)),
-	chr_debug_interact(Event,Depth).	
-handle_debug_command(Cmd, _, _) :- 
+	chr_debug_interact(Event,Depth).
+handle_debug_command(Cmd, _, _) :-
 	throw(error(domain_error(chr_debug_command, Cmd), _)).
 
 print_chr_debug_history :-
@@ -951,7 +944,7 @@ print_event(Event, Depth) :-
 	print_message(debug, chr(event(Event, Depth))).
 
 %	{set,get}_debug_history(Ancestors, Depth)
-%	
+%
 %	Set/get the list of ancestors and the depth of the current goal.
 
 get_debug_history(History,Depth) :-
