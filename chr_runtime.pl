@@ -875,14 +875,14 @@ leashed(Event) :-
 	memberchk(Port, Ports).
 
 ask_continue(Command) :-
-	print_message(debug, chr(prompt)),
+	print_message(trace, chr(prompt)),
 	get_single_char(CharCode),
 	(   CharCode == -1
 	->  Char = end_of_file
 	;   char_code(Char, CharCode)
 	),
 	(   debug_command(Char, Command)
-	->  print_message(debug, chr(command(Command)))
+	->  print_message(trace, chr(command(Command)))
 	;   print_message(help, chr(invalid_command)),
 	    ask_continue(Command)
 	).
@@ -938,10 +938,10 @@ handle_debug_command(Cmd, _, _) :-
 
 print_chr_debug_history :-
 	get_debug_history(History,Depth),
-	print_message(debug, chr(ancestors(History, Depth))).
+	print_message(trace, chr(ancestors(History, Depth))).
 
 print_event(Event, Depth) :-
-	print_message(debug, chr(event(Event, Depth))).
+	print_message(trace, chr(event(Event, Depth))).
 
 %	{set,get}_debug_history(Ancestors, Depth)
 %
