@@ -1,7 +1,7 @@
 :- module(zebra,[main/0, main/1]).
 
 :- use_module(library(chr)).
-:- use_module(lib / lists).
+:- use_module(library(lists)).
 
 /*
 1.   The Englishman lives in the red house.
@@ -24,9 +24,9 @@
 
 :- chr_constraint domain/2, diff/2.
 
-domain(X,[]) <=> fail.
+domain(_,[]) <=> fail.
 domain(X,[V]) <=> X = V.
-domain(X,L1), domain(X,L2) <=> intersect(L1,L2,L3), domain(X,L3).
+domain(X,L1), domain(X,L2) <=> intersection(L1,L2,L3), domain(X,L3).
 
 diff(X,Y), domain(X,L) <=> nonvar(Y) | delete(L,Y,NL), domain(X,NL).
 diff(X,Y) <=> nonvar(X), nonvar(Y) | X \== Y.
@@ -46,9 +46,9 @@ main :-
 	main(10).
 
 main(N):-
-	cputime(X),
+	statistics(cputime, X),
 	test(N),
-	cputime( Now),
+	statistics(cputime, Now),
 	Time is Now-X,
 	write(bench(zebra, N,Time,0,hprolog)), write('.'),nl.
 
