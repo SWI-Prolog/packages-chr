@@ -350,6 +350,7 @@ print_all_stores :-
 :- dynamic   system:term_expansion/2.
 
 system:term_expansion(In, Out) :-
+	\+ current_prolog_flag(xref, true),
 	chr_expand(In, Out).
 %% SWI end
 
