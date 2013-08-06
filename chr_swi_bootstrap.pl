@@ -37,7 +37,7 @@
 	  , chr_compile/3
 	  ]).
 %% SWI begin
-% vsc: 
+% vsc:
 :- expects_dialect(swi).
 
 :- if(current_prolog_flag(dialect, yap)).
@@ -58,7 +58,7 @@
 		 *******************************/
 
 %	chr_compile(+CHRFile, -PlFile)
-%	
+%
 %	Compile a CHR specification into a Prolog file
 
 chr_compile_step1(From, To) :-
@@ -78,7 +78,7 @@ chr_compile(From, To, MsgLevel) :-
 	print_message(MsgLevel, chr(start(From))),
 	read_chr_file_to_terms(From,Declarations),
 	% read_file_to_terms(From, Declarations,
-	% 		   [ module(chr) 	% get operators from here
+	%		   [ module(chr)	% get operators from here
 	%		   ]),
 	print_message(silent, chr(translate(From))),
 	chr_translate(Declarations, Declarations1),
@@ -89,18 +89,21 @@ chr_compile(From, To, MsgLevel) :-
 
 
 %% SWI begin
-specific_declarations([(:- use_module('chr_runtime')),
-		       (:- style_check(-discontiguous))|Tail], Tail).
+specific_declarations([ (:- use_module('chr_runtime')),
+			(:- style_check(-discontiguous)),
+			(:- style_check(-singleton))
+		      | Tail
+		      ], Tail).
 %% SWI end
 
 %% SICStus begin
 %% specific_declarations([(:- use_module('chr_runtime')),
 %%                     (:-use_module(chr_hashtable_store)),
-%% 		       (:- use_module('hpattvars')),
-%% 		       (:- use_module('b_globval')),
-%% 		       (:- use_module('hprolog')),  % needed ?
-%% 		       (:- set_prolog_flag(discontiguous_warnings,off)),
-%% 		       (:- set_prolog_flag(single_var_warnings,off))|Tail], Tail).
+%%		       (:- use_module('hpattvars')),
+%%		       (:- use_module('b_globval')),
+%%		       (:- use_module('hprolog')),  % needed ?
+%%		       (:- set_prolog_flag(discontiguous_warnings,off)),
+%%		       (:- set_prolog_flag(single_var_warnings,off))|Tail], Tail).
 %% SICStus end
 
 
@@ -116,7 +119,7 @@ insert_declarations(Clauses0, Clauses) :-
 	).
 
 %	writefile(+File, +From, +Desclarations)
-%	
+%
 %	Write translated CHR declarations to a File.
 
 writefile(File, From, Declarations) :-
@@ -148,8 +151,8 @@ format_date(Out) :-
 %% SICStus begin
 %% :- use_module(library(system), [datime/1]).
 %% format_date(Out) :-
-%% 	datime(datime(Year,Month,Day,Hour,Min,Sec)),
-%% 	format(Out, '    Date: ~d-~d-~d ~d:~d:~d~n~n', [Day,Month,Year,Hour,Min,Sec]).
+%%	datime(datime(Year,Month,Day,Hour,Min,Sec)),
+%%	format(Out, '    Date: ~d-~d-~d ~d:~d:~d~n~n', [Day,Month,Year,Hour,Min,Sec]).
 %% SICStus end
 
 

@@ -149,10 +149,12 @@ chr_expandable((_ pragma _)).
 %	CHR compiler when reaching end-of-file.
 
 %% SWI begin
-extra_declarations([(:- use_module(chr(chr_runtime)))
-		   ,(:- style_check(-discontiguous)) % no need to restore; file ends
-		   ,(:- set_prolog_flag(generate_debug_info, false))
-		   | Tail], Tail).
+extra_declarations([ (:- use_module(chr(chr_runtime))),
+		     (:- style_check(-discontiguous)),
+		     (:- style_check(-singleton)),
+		     (:- set_prolog_flag(generate_debug_info, false))
+		   | Tail
+		   ], Tail).
 %% SWI end
 
 %% SICStus begin
