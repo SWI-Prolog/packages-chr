@@ -152,6 +152,7 @@ chr_expandable((_ pragma _)).
 extra_declarations([ (:- use_module(chr(chr_runtime))),
 		     (:- style_check(-discontiguous)),
 		     (:- style_check(-singleton)),
+		     (:- style_check(-no_effect)),
 		     (:- set_prolog_flag(generate_debug_info, false))
 		   | Tail
 		   ], Tail).

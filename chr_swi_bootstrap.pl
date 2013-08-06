@@ -91,7 +91,8 @@ chr_compile(From, To, MsgLevel) :-
 %% SWI begin
 specific_declarations([ (:- use_module('chr_runtime')),
 			(:- style_check(-discontiguous)),
-			(:- style_check(-singleton))
+			(:- style_check(-singleton)),
+			(:- style_check(-no_effect))
 		      | Tail
 		      ], Tail).
 %% SWI end
