@@ -75,7 +75,7 @@ lookup_ht(HT,Key,Values) :-
 	arg(Index,Table,Bucket),
 	nonvar(Bucket),
 	( Bucket = K-Vs ->
-	    K == Key,	
+	    K == Key,
 	    Values = Vs
 	;
 	    lookup(Bucket,Key,Values)
@@ -104,7 +104,7 @@ lookup_ht1(HT,Hash,Key,Values) :-
 	arg(Index,Table,Bucket),
 	nonvar(Bucket),
 	( Bucket = K-Vs ->
-	    K == Key,	
+	    K == Key,
 	    Values = Vs
 	;
 	    lookup(Bucket,Key,Values)
@@ -117,7 +117,7 @@ lookup_ht2(HT,Key,Values,Index) :-
 	arg(Index,Table,Bucket),
 	nonvar(Bucket),
 	( Bucket = K-Vs ->
-	    K == Key,	
+	    K == Key,
 	    Values = Vs
 	;
 	    lookup(Bucket,Key,Values)
@@ -139,13 +139,13 @@ insert_ht(HT,Key,Value) :-
 	( var(LookupBucket) ->
 		LookupBucket = Key - [Value]
 	; LookupBucket = K-Values ->
-		( K == Key ->	
+		( K == Key ->
 			setarg(2,LookupBucket,[Value|Values])
 		;
 			setarg(LookupIndex,Table0,[Key-[Value],LookupBucket])
-		)	
+		)
 	;
-	      	( lookup_pair_eq(LookupBucket,Key,Pair) ->
+		( lookup_pair_eq(LookupBucket,Key,Pair) ->
 			Pair = _-Values,
 			setarg(2,Pair,[Value|Values])
 		;
@@ -167,13 +167,13 @@ insert_ht1(HT,Key,Hash,Value) :-
 	( var(LookupBucket) ->
 		LookupBucket = Key - [Value]
 	; LookupBucket = K-Values ->
-		( K == Key ->	
+		( K == Key ->
 			setarg(2,LookupBucket,[Value|Values])
 		;
 			setarg(LookupIndex,Table0,[Key-[Value],LookupBucket])
-		)	
+		)
 	;
-	      	( lookup_pair_eq(LookupBucket,Key,Pair) ->
+		( lookup_pair_eq(LookupBucket,Key,Pair) ->
 			Pair = _-Values,
 			setarg(2,Pair,[Value|Values])
 		;
@@ -207,7 +207,7 @@ insert_ht(HT,Key,Value,Result) :-
 	    ;   Result = [Value],
 		setarg(LookupIndex,Table,[Key - Result,LookupBucket]),
 		NewLoad is Load + 1
-	    )	
+	    )
 	;   (   lookup_pair_eq(LookupBucket,Key,Pair)
 	    ->  Pair = _-Values,
 		Result = [Value|Values],
@@ -251,7 +251,8 @@ delete_first_ht(HT,Key,Values) :-
 	    ;   setarg(2,Pair,Values),
 		NewLoad = Load
 	    )
-	).
+	),
+	setarg(2,HT,NewLoad).
 
 delete_ht(HT,Key,Value) :-
 	HT = ht(Capacity,Load,Table),
@@ -272,8 +273,8 @@ delete_ht(HT,Key,Value) :-
 			)
 		;
 			true
-		)	
-	; 
+		)
+	;
 		( lookup_pair_eq(Bucket,Key,Pair),
 		  Pair = _-Vs,
 		  delete_first_fail(Vs,Value,NVs) ->
@@ -320,8 +321,8 @@ delete_ht1(HT,Key,Value,Index) :-
 			)
 		;
 			true
-		)	
-	; 
+		)
+	;
 		( lookup_pair_eq(Bucket,Key,Pair),
 		  Pair = _-Vs,
 		  delete_first_fail(Vs,Value,NVs) ->
@@ -393,7 +394,7 @@ expand_inserts([K-V|R],Table,Capacity) :-
 	expand_inserts(R,Table,Capacity).
 
 expand_insert(Table,Capacity,K,V) :-
-	term_hash(K,Hash),	
+	term_hash(K,Hash),
 	Index is (Hash mod Capacity) + 1,
 	arg(Index,Table,Bucket),
 	( var(Bucket) ->
@@ -404,7 +405,7 @@ expand_insert(Table,Capacity,K,V) :-
 		setarg(Index,Table,[K-V|Bucket])
 	).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-stats_ht(HT) :-	
+stats_ht(HT) :-
 	HT = ht(Capacity,Load,Table),
 	format('HT load = ~w / ~w\n',[Load,Capacity]),
 	( between(1,Capacity,Index),
