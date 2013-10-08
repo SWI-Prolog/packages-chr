@@ -508,7 +508,7 @@ builtin_binds_(true,L,L).
 % builtin_binds_(string_concat(_, _, _), L, L).
 % builtin_binds_(string_length(_, _), L, L).
 % builtin_binds_(string_to_atom(_, _), L, L).
-% builtin_binds_(string_to_list(_, _), L, L).
+% builtin_binds_(string_codes(_, _), L, L).
 % builtin_binds_(strip_module(_, _, _), L, L).
 % builtin_binds_(style_check(_), L, L).
 % builtin_binds_(sub_atom(_, _, _, _, _), L, L).
