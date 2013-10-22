@@ -102,13 +102,13 @@ is_rule(A, G, D) :-
 	conj2list(B, C),
 	get_ids(C, E, H),
 	D=ids([], E),
-	(   F= (I'|'J)
+	(   F= '|'(I,J)
 	->  G=rule([], H, I, J)
 	;   G=rule([], H, true, F)
 	).
 is_rule(A, R, M) :-
 	A= <=>(G, B), !,
-	(   B= (C'|'D)
+	(   B= '|'(C,D)
 	->  E=C,
 	    F=D
 	;   E=true,
