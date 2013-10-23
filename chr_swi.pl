@@ -321,6 +321,13 @@ prolog_event(fail(_)).
 prolog:message(chr(CHR)) -->
 	chr_message(CHR).
 
+:- multifile
+        check:trivial_fail_goal/1.
+
+check:trivial_fail_goal(_:Goal) :-
+        functor(Goal, Name, _),
+        sub_atom(Name, 0, _, _, '$chr_store_constants_').
+
 		 /*******************************
 		 *	 TOPLEVEL PRINTING	*
 		 *******************************/
