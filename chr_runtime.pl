@@ -910,7 +910,7 @@ handle_debug_command(skip, Event, Depth) :- !,
 	Event =.. [Type|Rest],
 	( Type \== call,
 	  Type \== wake ->
-		handle_debug_command('c',Event,Depth)
+		handle_debug_command(creep,Event,Depth)
 	;
 		Rest = [Susp],
 		set_chr_debug(skip(Susp,Depth))
