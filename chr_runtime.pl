@@ -630,13 +630,12 @@ insert_constraint_internal([Global|Vars], Self, Term, Closure, F, Args) :-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 'chr sbag_member'( Element, [Head|Tail]) :-
-      sbag_member( Element, Tail, Head).
+      sbag_member( Tail, Element, Head).
 
 % auxiliary to avoid choicepoint for last element
-        % does it really avoid the choicepoint? -jon
- sbag_member( E, _,	     E).
- sbag_member( E, [Head|Tail], _) :-
-	sbag_member( E, Tail, Head).
+ sbag_member( _, E,	     E).
+ sbag_member( [Head|Tail], E, _) :-
+	sbag_member( Tail, E, Head).
 
 'chr sbag_del_element'( [],	  _,	[]).
 'chr sbag_del_element'( [X|Xs], Elem, Set2) :-
