@@ -3645,15 +3645,19 @@ module_initializers(G), module_initializer(Initializer) <=>
 module_initializers(G) <=>
 	G = true.
 
+% NOTE: Do not rename or the 'chr_initialization' predicate
+% without warning SSS
+
 generate_attach_code(Constraints,Clauses) :-
 	enumerate_stores_code(Constraints,Enumerate),
 	append(Enumerate,L,Clauses),
 	generate_attach_code(Constraints,L,T),
 	module_initializers(Initializers),
 	prolog_global_variables_code(PrologGlobalVariables),
-	% Do not rename or the 'chr_initialization' predicate
-	% without warning SSS
-	T = [('$chr_initialization' :- Initializers),(:- initialization '$chr_initialization')|PrologGlobalVariables].
+	T = [ ('$chr_initialization' :- Initializers),
+	      (:- initialization '$chr_initialization')
+	    | PrologGlobalVariables
+	    ].
 
 generate_attach_code([],L,L).
 generate_attach_code([C|Cs],L,T) :-
@@ -4291,29 +4295,46 @@ prolog_global_variables(List), prolog_global_variable(Name) <=>
 	prolog_global_variables(Tail).
 prolog_global_variables(List) <=> List = [].
 
-%% SWI begin
+:- if(current_predicate(user:exception/3)).
+
+%%	prolog_global_variables_code(-Code) is det.
+%
+%	Generate the code for initializating   global  variables lazily.
+%	This is needed to lazily initialize  CHR   when  called in a new
+%	thread.
+%
+%	If we are compiling into a temporary   module we omit this as it
+%	breaks the module isolation. As a   consequence, only one thread
+%	can operate on the temporary  module,   but  that is usually the
+%	case.  Temporary modules are used by library(pengines).
+
+prolog_global_variables_code([]) :-
+	tmp_module, !.
 prolog_global_variables_code(Code) :-
 	prolog_global_variables(Names),
-	( Names == [] ->
-		Code = []
-	;
-		maplist(wrap_in_functor('$chr_prolog_global_variable'),Names,NameDeclarations),
-		Code = [(:- dynamic user:exception/3),
-			(:- multifile user:exception/3),
-			(user:exception(undefined_global_variable,Name,retry) :-
-			        (
+	(   Names == []
+	->  Code = []
+	;   maplist(wrap_in_functor('$chr_prolog_global_variable'),
+		    Names, NameDeclarations),
+	    Code = [ (:- dynamic user:exception/3),
+		     (:- multifile user:exception/3),
+		     (user:exception(undefined_global_variable, Name, retry) :-
 				'$chr_prolog_global_variable'(Name),
 				'$chr_initialization'
-			        )
-			)
-			|
-			NameDeclarations
-			]
+		     )
+		   | NameDeclarations
+		   ]
 	).
-%% SWI end
-%% SICStus begin
-% prolog_global_variables_code([]).
-%% SICStus end
+tmp_module :-
+	prolog_load_context(module, Module),
+	module_property(Module, class(temporary)).
+
+:- else.
+
+prolog_global_variables_code([]).
+
+:- endif.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %sbag_member_call(S,L,sysh:mem(S,L)).
 sbag_member_call(S,L,'chr sbag_member'(S,L)).
