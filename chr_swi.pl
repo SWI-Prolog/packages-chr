@@ -112,7 +112,7 @@ user:file_search_path(chr, library(chr)).
 
 :- multifile chr:'$chr_module'/1.
 
-:- dynamic chr_term/3.			% File, Term
+:- dynamic chr_term/3.		% File, Term
 
 :- dynamic chr_pp/2.		% File, Term
 
@@ -346,12 +346,13 @@ prolog:message(query(YesNo,Bindings)) --> !,
 print_all_stores :-
 	( chr_current_prolog_flag(chr_toplevel_show_store,true),
 	  catch(nb_getval(chr_global, _), _, fail),
-	  chr:'$chr_module'(Mod),
+	  'chr module'(Mod),
 	  chr_show_store(Mod),
 	  fail
 	;
 	  true
 	).
+
 
 		 /*******************************
 		 *	   MUST BE LAST!	*

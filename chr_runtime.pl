@@ -124,6 +124,8 @@
 
 	    'chr select'/3,
 
+	    'chr module'/1,		% ?Module
+
 	    chr_show_store/1,	% +Module
 	    find_chr_constraint/1,
 
@@ -199,6 +201,21 @@ chr_show_store(Mod) :-
 find_chr_constraint(Constraint) :-
 	chr:'$chr_module'(Mod),
 	Mod:'$enumerate_constraints'(Constraint).
+
+%%	'chr module'(?Module)
+%
+%	True when Module is a CHR module.   The  first clause deals with
+%	normal modules. The second with temporary modules, which are not
+%	allowed to generate clauses for chr:'$chr_module'/1.
+
+'chr module'(Module) :-
+	chr:'$chr_module'(Module).
+:- if(current_prolog_flag(dialect, swi)).
+'chr module'(Module) :-
+	module_property(Module, class(temporary)),
+	current_predicate(Module:'$chr_initialization'/0),
+	\+ current_predicate(Module:'$chr_initialization', imported_from(_)).
+:- endif.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Inlining of some goals is good for performance

@@ -38,25 +38,22 @@
 :- set_prolog_flag(generate_debug_info, false).
 
 
-%	chr_show_store(+Module)
-%	
+%%	chr_show_store(+Module)
+%
 %	Prints all suspended constraints of module   Mod to the standard
 %	output.
 
 chr_show_store(Mod) :-
-	(
-		Mod:'$enumerate_suspensions'(Susp),
-%		arg(6,Susp,C),
-		Susp =.. [_,_,_,_,_,_,F|Arg],
-		functor(F,Fun,_),
-		C =.. [Fun|Arg],
-		print(C),nl, % allows use of portray to control printing
-		fail
-	;
-		true
+	(   Mod:'$enumerate_suspensions'(Susp),
+	    Susp =.. [_,_,_,_,_,_,F|Arg],
+	    functor(F,Fun,_),
+	    C =.. [Fun|Arg],
+	    print(C),nl, % allows use of portray to control printing
+	    fail
+	;   true
 	).
 
 find_chr_constraint(C) :-
-	chr:'$chr_module'(Mod),
+	chr:chr_module(Mod),
 	Mod:'$enumerate_suspensions'(Susp),
 	arg(6,Susp,C).
