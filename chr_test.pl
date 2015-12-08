@@ -74,7 +74,7 @@ run_test_script(Script) :-
 
 run_test_scripts(Directory) :-
 	(   script_dir(ScriptDir),
-	    concat_atom([ScriptDir, /, Directory], Dir),
+	    atomic_list_concat([ScriptDir, /, Directory], Dir),
 	    exists_directory(Dir)
 	->  true
 	;   Dir = Directory
@@ -82,7 +82,7 @@ run_test_scripts(Directory) :-
 	atom_concat(Dir, '/*.chr', Pattern),
 	expand_file_name(Pattern, Files),
 	file_base_name(Dir, BaseDir),
-	format('Running scripts from ~w ', [BaseDir]), flush,
+	format('Running scripts from ~w ', [BaseDir]), flush_output,
 	run_scripts(Files),
 	format(' done~n').
 
@@ -90,10 +90,10 @@ run_scripts([]).
 run_scripts([H|T]) :-
 	(   catch(run_test_script(H), Except, true)
 	->  (   var(Except)
-	    ->  put(.), flush
+	    ->  put(.), flush_output
 	    ;   Except = blocked(Reason)
 	    ->  assert(blocked(H, Reason)),
-		put(!), flush
+		put(!), flush_output
 	    ;   script_failed(H, Except)
 	    )
 	;   script_failed(H, fail)

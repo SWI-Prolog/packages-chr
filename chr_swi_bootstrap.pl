@@ -145,8 +145,8 @@ writeheader(File, Out) :-
 %% SWI begin
 format_date(Out) :-
 	get_time(Now),
-	convert_time(Now, Date),
-	format(Out, '    Date: ~w~n~n', [Date]).
+	format_time(string(Date), '%+', Now),
+	format(Out, '    Date: ~s~n~n', [Date]).
 %% SWI end
 
 %% SICStus begin

@@ -3909,7 +3909,7 @@ multi_hash_lookup_body(ConstraintSymbol,HashType,Index,Key,SuspsList,Goal) :-
 			Goal =
 			(
 				GetStoreGoal, % nb_getval(StoreName,HT),
-				HashCall,     % hash_term(Key,Hash),
+				HashCall,     % term_hash(Key,Hash),
 				lookup_ht1(HT,Hash,Key,SuspsList)
 			)
 		;
@@ -3945,10 +3945,10 @@ lookup_hash_call(inthash,HT,Key,SuspsList,lookup_iht(HT,Key,SuspsList)).
 specialized_hash_term_call(Constraint,Index,Key,Hash,Call) :-
 	( ground(Key) ->
 		% This is based on a property of SWI-Prolog's
-		% hash_term/2 predicate:
+		% term_hash/2 predicate:
 		%	the hash value is stable over repeated invocations
 		%	of SWI-Prolog
-		hash_term(Key,Hash),
+		term_hash(Key,Hash),
 		Call = true
 %	; Index = [IndexPos],
 %	  get_constraint_type(Constraint,ArgTypes),
@@ -4540,7 +4540,7 @@ get_bg_info(Q) <=> Q = [].
 
 background_info(T,I), get_bg_info(A,Q) ==>
         copy_term_nat(T,T1),
-	subsumes_chk(T1,A)
+	subsumes_term(T1,A)
 	|
         copy_term_nat(T-I,A-X),
 	get_bg_info_answer([X]).
@@ -5216,10 +5216,10 @@ add_failing_occ(Rule,Heads,NH,ID_o1,FailCond,FH,M,C,Repl) :-
 	extract_explicit_matchings(FG,FG2),
 	negate_b(FG2,NotFG),
 	copy_with_variable_replacement(MPCond,FMPCond,Repl),
-	( subsumes(FH,FH2) ->
-	    FailCond = [(NotFG;FMPCond)]
-	;
-	    % in this case, not much can be done
+	(   subsumes_term(FH,FH2),
+	    FH=FH2
+	->  FailCond = [(NotFG;FMPCond)]
+	;   % in this case, not much can be done
 	    % e.g.    c(f(...)), c(g(...)) <=> ...
 	    FailCond = [chr_pp_void_info]
 	).
@@ -5289,9 +5289,7 @@ type_alias(T1,T2) <=>
 	chr_error(type_error,'Variable alias definition: "~w".\n',[(:- chr_type T1 == T2)]).
 
 type_alias(T,T2) <=>
-	functor(T,F,A),
-	functor(T2,F,A),
-	copy_term((T,T2),(X,Y)), subsumes(X,Y)
+	subsumes_term(T, T2)
 	|
 	chr_error(type_error,'Cyclic alias definition: "~w".\n',[(T == T2)]).
 
@@ -5310,7 +5308,7 @@ type_alias(T,B) \ type_alias(X,T2) <=>
 	functor(T,F,A),
 	functor(T2,F,A),
 	copy_term_nat((X,T2,T,B),(X2,T3,T1,D1)),
-	subsumes(T1,T3)
+	subsumes_term(T1,T3)
 	|
 	% chr_info(type_information,'Inferring `~w\' from `~w\' and `~w\'.\n',[X2==D1,X==T2,T==B]),
 	type_alias(X2,D1).
@@ -9954,7 +9952,7 @@ ht_prev_fields_int([H|T],Fields) :-
 	ht_prev_fields_int(T,FT).
 
 ht_prev_field(Index,Field) :-
-	concat_atom(['multi_hash_prev-'|Index],Field).
+	atomic_list_concat(['multi_hash_prev-'|Index],Field).
 
 get_static_suspension_term_field(FieldName,FA,StaticSuspension,Field) :-
 	suspension_term_base_fields(FA,Fields),
