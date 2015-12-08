@@ -445,3 +445,23 @@ add_pragma_to_chr_rule((Head ==> Body), Pragma, Result) :- !,
 add_pragma_to_chr_rule((Head <=> Body), Pragma, Result) :- !,
 	Result = (Head <=> Body pragma Pragma).
 add_pragma_to_chr_rule(Term,_,Term).
+
+
+		 /*******************************
+		 *	  SANDBOX SUPPORT	*
+		 *******************************/
+
+:- multifile
+	sandbox:safe_primitive/1.
+
+% CHR uses a lot of global variables. We   don't  really mind as long as
+% the user does not mess around  with   global  variable that may have a
+% predefined meaning.
+
+sandbox:safe_primitive(system:b_setval(V, _)) :-
+	chr_var(V).
+sandbox:safe_primitive(system:nb_linkval(V, _)) :-
+	chr_var(V).
+
+chr_var(Name) :- sub_atom(Name, 0, _, _, '$chr').
+chr_var(Name) :- sub_atom(Name, 0, _, _, 'chr').
