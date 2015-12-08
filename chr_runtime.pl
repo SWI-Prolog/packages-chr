@@ -210,7 +210,7 @@ chr_show_store(Mod) :-
 %	@deprecated	current_chr_constraint/1 handles modules.
 
 find_chr_constraint(Constraint) :-
-	chr:'$chr_module'(Mod),
+	'chr module'(Mod),
 	Mod:'$enumerate_constraints'(Constraint).
 
 %%	current_chr_constraint(:Constraint) is nondet.
@@ -234,7 +234,7 @@ current_chr_constraint(Mod:Constraint) :-
 'chr module'(Module) :-
 	module_property(Module, class(temporary)),
 	current_predicate(Module:'$chr_initialization'/0),
-	\+ current_predicate(Module:'$chr_initialization', imported_from(_)).
+	\+ predicate_property(Module:'$chr_initialization', imported_from(_)).
 :- endif.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

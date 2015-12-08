@@ -73,7 +73,7 @@ user:file_search_path(chr, library(chr)).
 		silent(true)
 	      ]).
 
-:- use_module(library(lists),[member/2]).
+:- use_module(library(lists), [member/2]).
 %% SWI end
 
 %% SICStus begin
@@ -335,23 +335,19 @@ check:trivial_fail_goal(_:Goal) :-
 
 :- create_prolog_flag(chr_toplevel_show_store, true, []).
 
-prolog:message(query(YesNo)) --> !,
-	['~@'-[chr:print_all_stores]],
-        '$messages':prolog_message(query(YesNo)).
+:- multifile
+	prolog:residual_goal/1.
 
-prolog:message(query(YesNo,Bindings)) --> !,
-	['~@'-[chr:print_all_stores]],
-        '$messages':prolog_message(query(YesNo,Bindings)).
+%%	prolog:residual_goal(-Goal) is nondet.
+%
+%	Make the CHR store accessible as   residual  goals to the Prolog
+%	toplevel.
 
-print_all_stores :-
-	( chr_current_prolog_flag(chr_toplevel_show_store,true),
-	  catch(nb_getval(chr_global, _), _, fail),
-	  'chr module'(Mod),
-	  chr_show_store(Mod),
-	  fail
-	;
-	  true
-	).
+prolog:residual_goal(Goal) :-
+	chr_current_prolog_flag(chr_toplevel_show_store,true),
+	nb_current(chr_global, _),
+	Goal = _:_,
+	current_chr_constraint(Goal).
 
 
 		 /*******************************
