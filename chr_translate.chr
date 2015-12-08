@@ -960,6 +960,8 @@ generate_counter_code(Clauses) :-
 	).
 
 % for systems with multifile declaration
+chr_module_declaration([]) :-
+	tmp_module, !.
 chr_module_declaration(CHRModuleDeclaration) :-
 	get_target_module(Mod),
 	( Mod \== chr_translate, chr_pp_flag(toplevel_show_store,on) ->
