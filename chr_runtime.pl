@@ -126,8 +126,9 @@
 
 	    'chr module'/1,		% ?Module
 
-	    chr_show_store/1,	% +Module
-	    find_chr_constraint/1,
+	    chr_show_store/1,		% +Module
+	    find_chr_constraint/1,	% -Constraint
+	    current_chr_constraint/1,	% :Constraint
 
 	    chr_trace/0,
 	    chr_notrace/0,
@@ -137,6 +138,9 @@
 %% SWI begin
 :- set_prolog_flag(generate_debug_info, false).
 %% SWI end
+
+:- meta_predicate
+	current_chr_constraint(:).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -198,8 +202,24 @@ chr_show_store(Mod) :-
 		true
 	).
 
+%%	find_chr_constraint(-Constraint) is nondet.
+%
+%	True when Constraint is a  currently   known  constraint  in any
+%	known CHR module.
+%
+%	@deprecated	current_chr_constraint/1 handles modules.
+
 find_chr_constraint(Constraint) :-
 	chr:'$chr_module'(Mod),
+	Mod:'$enumerate_constraints'(Constraint).
+
+%%	current_chr_constraint(:Constraint) is nondet.
+%
+%	True if Constraint is a constraint associated with the qualified
+%	module.
+
+current_chr_constraint(Mod:Constraint) :-
+	'chr module'(Mod),
 	Mod:'$enumerate_constraints'(Constraint).
 
 %%	'chr module'(?Module)
