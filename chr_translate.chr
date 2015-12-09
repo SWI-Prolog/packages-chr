@@ -4432,7 +4432,7 @@ enumerate_store_bodies([C|Cs],Constraint,L) :-
 enumerate_store_body(default,C,Susp,Body) :-
 	global_list_store_name(C,StoreName),
 	sbag_member_call(Susp,List,Sbag),
-	make_get_store_goal(StoreName,List,GetStoreGoal),
+	make_get_store_goal_no_error(StoreName,List,GetStoreGoal),
 	Body =
 	(
 		GetStoreGoal, % nb_getval(StoreName,List),
