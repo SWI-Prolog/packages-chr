@@ -461,3 +461,116 @@ sandbox:safe_primitive(system:nb_linkval(V, _)) :-
 
 chr_var(Name) :- sub_atom(Name, 0, _, _, '$chr').
 chr_var(Name) :- sub_atom(Name, 0, _, _, 'chr').
+
+
+		 /*******************************
+		 *     SYNTAX HIGHLIGHTING	*
+		 *******************************/
+
+:- multifile
+	prolog_colour:term_colours/2,
+	prolog_colour:goal_colours/2.
+
+%%	term_colours(+Term, -Colours)
+%
+%	Colourisation of a toplevel term as read from the file.
+
+term_colours((_Name @ Rule), delimiter - [ identifier, RuleColours ]) :- !,
+	term_colours(Rule, RuleColours).
+term_colours((Rule pragma _Pragma), delimiter - [RuleColours,pragma]) :- !,
+	term_colours(Rule, RuleColours).
+term_colours((Head <=> Body), delimiter - [ HeadColours, BodyColours ]) :- !,
+	chr_head(Head, HeadColours),
+	chr_body(Body, BodyColours).
+term_colours((Head ==> Body), delimiter - [ HeadColours, BodyColours ]) :- !,
+	chr_head(Head, HeadColours),
+	chr_body(Body, BodyColours).
+
+chr_head(_C#_Id, delimiter - [ head, identifier ]) :- !.
+chr_head((A \ B), delimiter - [ AC, BC ]) :- !,
+	chr_head(A, AC),
+	chr_head(B, BC).
+chr_head((A, B), functor - [ AC, BC ]) :- !,
+	chr_head(A, AC),
+	chr_head(B, BC).
+chr_head(_, head).
+
+chr_body((Guard|Goal), delimiter - [ GuardColour, GoalColour ]) :- !,
+	chr_body(Guard, GuardColour),
+	chr_body(Goal, GoalColour).
+chr_body(_, body).
+
+
+%%	goal_colours(+Goal, -Colours)
+%
+%	Colouring of special goals.
+
+goal_colours(constraints(Decls), deprecated-[DeclColours]) :-
+	chr_constraint_colours(Decls, DeclColours).
+goal_colours(chr_constraint(Decls), built_in-[DeclColours]) :-
+	chr_constraint_colours(Decls, DeclColours).
+goal_colours(chr_type(TypeDecl), built_in-[DeclColours]) :-
+	chr_type_decl_colours(TypeDecl, DeclColours).
+goal_colours(chr_option(Option,Value), built_in-[OpC,ValC]) :-
+	chr_option_colours(Option, Value, OpC, ValC).
+
+chr_constraint_colours(Var, instantiation_error(Var)) :-
+	var(Var), !.
+chr_constraint_colours((H,T), classify-[HeadColours,BodyColours]) :- !,
+	chr_constraint_colours(H, HeadColours),
+	chr_constraint_colours(T, BodyColours).
+chr_constraint_colours(PI, Colours) :-
+	pi_to_term(PI, Goal), !,
+	Colours = predicate_indicator-[ goal(constraint(0), Goal),
+					arity
+				      ].
+chr_constraint_colours(Goal, Colours) :-
+	atom(Goal), !,
+	Colours = goal(constraint(0), Goal).
+chr_constraint_colours(Goal, Colours) :-
+	compound(Goal), !,
+	compound_name_arguments(Goal, _Name, Args),
+	maplist(chr_argspec, Args, ArgColours),
+	Colours = goal(constraint(0), Goal)-ArgColours.
+
+chr_argspec(Term, mode(Mode)-[chr_type(Type)]) :-
+	compound(Term),
+	compound_name_arguments(Term, Mode, [Type]),
+	chr_mode(Mode).
+
+chr_mode(+).
+chr_mode(?).
+chr_mode(-).
+
+pi_to_term(Name/Arity, Term) :-
+	atom(Name), integer(Arity), Arity >= 0, !,
+	functor(Term, Name, Arity).
+
+chr_type_decl_colours((Type ---> Def), built_in-[chr_type(Type), DefColours]) :-
+	chr_type_colours(Def, DefColours).
+chr_type_decl_colours((Type == Alias), built_in-[chr_type(Type), chr_type(Alias)]).
+
+chr_type_colours(Var, classify) :-
+	var(Var), !.
+chr_type_colours((A;B), control-[CA,CB]) :- !,
+	chr_type_colours(A, CA),
+	chr_type_colours(B, CB).
+chr_type_colours(T, chr_type(T)).
+
+chr_option_colours(Option, Value, identifier, ValCol) :-
+	chr_option_range(Option, Values), !,
+	(   nonvar(Value),
+	    memberchk(Value, Values)
+	->  ValCol = classify
+	;   ValCol = error
+	).
+chr_option_colours(_, _, error, classify).
+
+chr_option_range(check_guard_bindings, [on,off]).
+chr_option_range(optimize, [off, full]).
+chr_option_range(debug, [on, off]).
+
+prolog_colour:term_colours(Term, Colours) :-
+	term_colours(Term, Colours).
+prolog_colour:goal_colours(Term, Colours) :-
+	goal_colours(Term, Colours).
