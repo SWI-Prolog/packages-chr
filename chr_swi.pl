@@ -241,8 +241,8 @@ add_optimise_decl(CHR, CHR).
 %
 %	Call user chr:preprocess(CHR0, CHR).
 
-call_preprocess(CHR0, CHR) :- !,
-	preprocess(CHR0, CHR).
+call_preprocess(CHR0, CHR) :-
+	preprocess(CHR0, CHR), !.
 call_preprocess(CHR, CHR).
 
 %	call_chr_translate(+File, +In, -Out)
