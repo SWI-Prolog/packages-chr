@@ -4339,8 +4339,7 @@ prolog_global_variables_code([]).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %sbag_member_call(S,L,sysh:mem(S,L)).
-sbag_member_call(S,L,'chr sbag_member'(S,L)).
-%sbag_member_call(S,L,member(S,L)).
+sbag_member_call(S,L,member(S,L)).
 update_mutable_call(A,B,'chr update_mutable'( A, B)).
 %update_mutable_call(A,B,setarg(1, B, A)).
 create_mutable_call(Value,Mutable,true) :- Mutable = mutable(Value).

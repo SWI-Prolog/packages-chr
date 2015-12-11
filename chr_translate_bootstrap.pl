@@ -71,7 +71,7 @@
 %%              ...
 %%              if( (
 %%			generator_n(Y),
-%%		     	test(X,Y)
+%%			test(X,Y)
 %%		    ),
 %%		    true,
 %%		    ('_$cutto'(CP_1), fail)
@@ -103,7 +103,7 @@
 %%	* clean up generated code
 %%	* input verification: pragmas
 %%	* SICStus compatibility: handler/1, constraints/1
-%% 	* optimise variable passing for propagation rule
+%%	* optimise variable passing for propagation rule
 %%	* reordering of head constraints for passive head search
 %%	* unique inference for simpagation rules
 %%	* unique optimisation for simpagation and simplification rules
@@ -226,7 +226,7 @@ is_declaration(D, Constraints) :-		%% constraint declaration
 %%		list(constraint),	:: surviving constraints
 %%		goal,			:: guard
 %%		goal			:: body
-%%	 	)
+%%		)
 
 rule(RI,R) :-				%% name @ rule
 	RI = (Name @ RI2), !,
@@ -524,7 +524,7 @@ generate_attach_a_constraint_1_1(CFct / CAty,Mod,Clause) :-
 	            put_attr(Var, Mod, NewSusps)
 	        ;
 	            put_attr(Var, Mod, [Susp])
-        	),
+		),
 		RecursiveCall
 	),
 	Clause = (Head :- Body).
@@ -718,7 +718,7 @@ generate_attr_unify_hook_one(Mod,Clause) :-
 			( get_attr(Other,Mod,OtherSusps) ->
 				true
 			;
-		        	OtherSusps = []
+				OtherSusps = []
 			),
 			sort(OtherSusps,SortedOtherSusps),
 			'chr merge_attributes'(SortedSusps,SortedOtherSusps,NewSusps),
@@ -802,7 +802,7 @@ constraints_code([Constr|Constrs],I,N,Constraints,Rules,Mod,L,T) :-
 	J is I + 1,
 	constraints_code(Constrs,J,N,Constraints,Rules,Mod,T1,T).
 
-%% 	Generate code for a single CHR constraint
+%%	Generate code for a single CHR constraint
 constraint_code(Constraint, I, N, Constraints, Rules, Mod, L, T) :-
 	constraint_prelude(Constraint,Mod,Clause),
 	L = [Clause | L1],
@@ -821,7 +821,7 @@ constraint_prelude(F/A, _Mod, Clause) :-
 gen_cond_attach_clause(Mod,F/A,_I,_N,_Constraints,Id,L,T) :-
 	( Id == [0] ->
 		gen_cond_attach_goal(Mod,F/A,Body,AllArgs)
-	; 	vars_susp(A,_Args,Susp,AllArgs),
+	;	vars_susp(A,_Args,Susp,AllArgs),
 		gen_uncond_attach_goal(F/A,Susp,Mod,Body,_)
 	),
 	build_head(F,A,Id,AllArgs,Head),
@@ -1359,7 +1359,7 @@ simplification_code(Head,RestHeads,RestIDs,PragmaRule,F/A,_I,N,Constraints,Mod,I
 	gen_cond_susp_detachment(Susp,F/A,SuspDetachment),
 
 	Clause = ( ClauseHead :-
-	     	FirstMatching,
+		FirstMatching,
 		     RescheduledTest,
 	             !,
 	             SuspsDetachments,
@@ -1428,7 +1428,7 @@ rest_heads_retrieval_and_matching_n([H|Hs],[ID|IDs],Pragmas,PrevHs,PrevSusps,Act
 	create_get_mutable_ref(active,State,GetMutable),
 	Goal1 =
 	(
-		'chr sbag_member'(Susp,VarSusps),
+		member(Susp,VarSusps),
 		Susp = Suspension,
 		GetMutable,
 		DiffSuspGoals,
@@ -1682,7 +1682,7 @@ simpagation_head1_code(Head,RestHeads,OtherIDs,PragmaRule,F/A,_I,N,Constraints,M
 simpagation_head2_code(Head2,RestHeads2,RestIDs,PragmaRule,FA,I,N,Constraints,Mod,Id,L,T) :-
    PragmaRule = pragma(Rule,ids(IDs1,_),Pragmas,_Name),
    Rule = rule(Heads1,_,Guard,Body),
-   reorder_heads(Head2,Heads1,IDs1,[Head1|RestHeads1],[ID1|RestIDs1]),   	% Heads1 = [Head1|RestHeads1],
+   reorder_heads(Head2,Heads1,IDs1,[Head1|RestHeads1],[ID1|RestIDs1]),		% Heads1 = [Head1|RestHeads1],
 										% IDs1 = [ID1|RestIDs1],
    simpagation_head2_prelude(Head2,Head1,[RestHeads2,Heads1,Guard,Body],FA,I,N,Constraints,Mod,Id,L,L1),
    extend_id(Id,Id2),
@@ -1821,8 +1821,8 @@ simpagation_head2_worker_body(Head2,Head1,ID1,RestHeads1,IDs1,RestHeads2,IDs2,Ru
 		)
     ;
 	Clause =
-      		( ClauseHead :-
-             		( IteratorSuspTest,
+		( ClauseHead :-
+			( IteratorSuspTest,
 			  FirstMatching,
 			  RescheduledTest ->
 				Susps1Detachments,
@@ -1938,7 +1938,7 @@ propagation_prelude(Head,[First|Rest],Rule,F/A,N,Constraints,Mod,Id,L,T) :-
    passive_head_via(First,[Head],[],Constraints,Mod,VarDict,FirstSuspGoal,Attr,AttrDict),
    instantiate_pattern_goals(AttrDict,N),
    ( N == 1 ->
-       	Susps = Attr
+	Susps = Attr
    ;
 	functor(First,FirstFct,FirstAty),
 	make_attr(N,_Mask,SuspsList,Attr),

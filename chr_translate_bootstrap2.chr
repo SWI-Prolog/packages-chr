@@ -1684,10 +1684,10 @@ enumerate_store_body(default,C,Susp,Body) :-
 		Body2 =
 		(
 			arg(NIndex,Attr,List),
-			'chr sbag_member'(Susp,List)
+			member(Susp,List)
 		)
 	;
-		Body2 = 'chr sbag_member'(Susp,Attr)
+		Body2 = member(Susp,Attr)
 	),
 	Body = (Body1,Body2).
 enumerate_store_body(multi_hash([Index|_]),C,Susp,Body) :-
@@ -1698,7 +1698,7 @@ enumerate_store_body(global_ground,C,Susp,Body) :-
 	Body =
 	(
 		GetStoreGoal, % nb_getval(StoreName,List),
-		'chr sbag_member'(Susp,List)
+		member(Susp,List)
 	).
 enumerate_store_body(multi_store(STs),C,Susp,Body) :-
 	once((
@@ -2575,7 +2575,7 @@ rest_heads_retrieval_and_matching_n([H|Hs],[ID|IDs],Pragmas,PrevHs,PrevSusps,Act
 	create_get_mutable_ref(active,State,GetMutable),
 	Goal1 =
 	(
-		'chr sbag_member'(Susp,VarSusps),
+		member(Susp,VarSusps),
 		Susp = Suspension,
 		GetMutable,
 		DiffSuspGoals,

@@ -70,7 +70,6 @@
 
 :- module(chr_runtime,
 	  [ 'chr sbag_del_element'/3,
-	    'chr sbag_member'/2,
 	    'chr merge_attributes'/3,
 
 	    'chr run_suspensions'/1,
@@ -666,14 +665,6 @@ insert_constraint_internal([Global|Vars], Self, Term, Closure, F, Args) :-
 %% SICStus end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-'chr sbag_member'( Element, [Head|Tail]) :-
-      sbag_member( Tail, Element, Head).
-
-% auxiliary to avoid choicepoint for last element
- sbag_member( _, E,	     E).
- sbag_member( [Head|Tail], E, _) :-
-	sbag_member( Tail, E, Head).
 
 'chr sbag_del_element'( [],	  _,	[]).
 'chr sbag_del_element'( [X|Xs], Elem, Set2) :-
