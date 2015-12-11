@@ -335,19 +335,14 @@ check:trivial_fail_goal(_:Goal) :-
 
 :- create_prolog_flag(chr_toplevel_show_store, true, []).
 
-:- multifile
-	prolog:residual_goal/1.
+:- residual_goals(chr_residuals).
 
-%%	prolog:residual_goal(-Goal) is nondet.
-%
-%	Make the CHR store accessible as   residual  goals to the Prolog
-%	toplevel.
-
-prolog:residual_goal(Goal) :-
+chr_residuals(Residuals, Tail) :-
 	chr_current_prolog_flag(chr_toplevel_show_store,true),
 	nb_current(chr_global, _),
 	Goal = _:_,
-	current_chr_constraint(Goal).
+	findall(Goal, current_chr_constraint(Goal), Residuals, Tail).
+chr_residuals(Residuals, Residuals).
 
 
 		 /*******************************
