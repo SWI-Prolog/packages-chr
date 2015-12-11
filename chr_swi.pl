@@ -357,12 +357,47 @@ check:trivial_fail_goal(_:Goal) :-
 
 :- residual_goals(chr_residuals).
 
+%%	chr_residuals// is det.
+%
+%	Find the CHR constraints from the   store.  These are accessible
+%	through the nondet predicate   current_chr_constraint/1. Doing a
+%	findall/4 however would loose the  bindings. We therefore rolled
+%	findallv/4,  which  exploits  non-backtrackable  assignment  and
+%	realises a copy of the template  without disturbing the bindings
+%	using this strangely looking construct.   Note that the bindings
+%	created by the unifications are in New,  which is newer then the
+%	latest choicepoint and therefore the bindings are not trailed.
+%
+%	  ==
+%	  duplicate_term(Templ, New),
+%	  New = Templ
+%	  ==
+
 chr_residuals(Residuals, Tail) :-
 	chr_current_prolog_flag(chr_toplevel_show_store,true),
-	nb_current(chr_global, _),
-	Goal = _:_, !,
-	findall(Goal, current_chr_constraint(Goal), Residuals, Tail).
+	nb_current(chr_global, _), !,
+	Goal = _:_,
+	findallv(Goal, current_chr_constraint(Goal), Residuals, Tail).
 chr_residuals(Residuals, Residuals).
+
+:- meta_predicate
+	findallv(?, 0, ?, ?).
+
+findallv(Templ, Goal, List, Tail) :-
+	List2 = [x|_],
+	State = state(List2),
+	(   call(Goal),
+	    arg(1, State, L),
+	    duplicate_term(Templ, New),
+	    New = Templ,
+	    Cons = [New|_],
+	    nb_linkarg(2, L, Cons),
+	    nb_linkarg(1, State, Cons),
+	    fail
+	;   List2 = [x|List],
+	    arg(1, State, Last),
+	    arg(2, Last, Tail)
+	).
 
 
 		 /*******************************
