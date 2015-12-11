@@ -57,6 +57,10 @@
 
 :- set_prolog_flag(generate_debug_info, false).
 
+:- multifile
+	debug_ask_continue/1,
+	preprocess/2.
+
 :- multifile user:file_search_path/2.
 :- dynamic   user:file_search_path/2.
 :- dynamic   chr_translated_program/1.
@@ -184,13 +188,14 @@ chr_expand(end_of_file, FinalProgram) :-
 	prolog_load_context(module, Module),
 	add_debug_decl(CHR0, CHR1),
 	add_optimise_decl(CHR1, CHR2),
-	CHR3 = [ (:- module(Module, [])) | CHR2 ],
+	call_preprocess(CHR2, CHR3),
+	CHR4 = [ (:- module(Module, [])) | CHR3 ],
 	findall(P, retract(chr_pp(File, P)), Preprocessors),
 	( Preprocessors = [] ->
-		CHR3 = CHR
+		CHR4 = CHR
 	; Preprocessors = [Preprocessor] ->
 		chr_compiler_errors:chr_info(preprocessor,'\tPreprocessing with ~w.\n',[Preprocessor]),
-		call_chr_preprocessor(Preprocessor,CHR3,CHR)
+		call_chr_preprocessor(Preprocessor,CHR4,CHR)
 	;
 		chr_compiler_errors:print_chr_error(error(syntax(Preprocessors),'Too many preprocessors! Only one is allowed!\n',[])),
 		fail
@@ -232,6 +237,13 @@ add_optimise_decl(CHR, [(:- chr_option(optimize, full))|CHR]) :-
 	chr_current_prolog_flag(optimize, full), !.
 add_optimise_decl(CHR, CHR).
 
+%%	call_preprocess(+CHR0, -CHR) is det.
+%
+%	Call user chr:preprocess(CHR0, CHR).
+
+call_preprocess(CHR0, CHR) :- !,
+	preprocess(CHR0, CHR).
+call_preprocess(CHR, CHR).
 
 %	call_chr_translate(+File, +In, -Out)
 %
