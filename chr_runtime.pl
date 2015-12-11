@@ -362,6 +362,7 @@ run_suspensions_d([S|Next] ) :-
 %- attribute handler -----------------------------------------------------------
 %	intercepts unification of locked variable unification
 
+:- public locked:attr_unify_hook/2.
 locked:attr_unify_hook(_,_) :- fail.
 
 %- locking & unlocking ---------------------------------------------------------
