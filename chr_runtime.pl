@@ -112,6 +112,7 @@
 
 	    'chr gen_id'/1,
 
+	    'chr debugging'/0,
 	    'chr debug_event'/1,
 	    'chr debug command'/2,	% Char, Command
 
@@ -752,13 +753,17 @@ all_suspensions([APos-ASusps|RAttr],Susps,SuspsList,Pos) :-
 	chr:debug_event/2,		% +State, +Event
 	chr:debug_interact/3.		% +Event, +Depth, -Command
 
+'chr debugging' :-
+	nb_getval(chr_debug,mutable(trace)).
+
 'chr debug_event'(Event) :-
-	nb_getval(chr_debug,mutable(State)),  % XXX
-	( State == off ->
-		true
-	; chr:debug_event(State, Event) ->
-		true
-	;	debug_event(State,Event)
+	(   nb_getval(chr_debug,mutable(State)),
+	    State \== off
+	->  (   chr:debug_event(State, Event)
+	    ->  true
+	    ;	debug_event(State,Event)
+	    )
+	;   true
 	).
 
 chr_trace :-

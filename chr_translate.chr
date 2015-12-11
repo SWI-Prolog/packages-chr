@@ -2758,18 +2758,17 @@ generate_run_suspensions_clause(Constraint,List,Tail) :-
 					    Generation is Gen+1,
 					    UpdateGeneration,
 					    GetContinuation,
-					    (
-						'chr debug_event'(wake(Suspension)),
-					        call(Continuation)
-					    ;
-						'chr debug_event'(fail(Suspension)), !,
-						fail
-					    ),
-					    (
-						'chr debug_event'(exit(Suspension))
-					    ;
-						'chr debug_event'(redo(Suspension)),
-						fail
+					    (	'chr debugging'
+					    ->  (  'chr debug_event'(wake(Suspension)),
+						   call(Continuation)
+						;  'chr debug_event'(fail(Suspension)), !,
+						   fail
+						),
+						(  'chr debug_event'(exit(Suspension))
+						;  'chr debug_event'(redo(Suspension)),
+						   fail
+						)
+					    ;	call(Continuation)
 					    ),
 					    GetPost,
 					    GetPostValue,
@@ -6218,19 +6217,18 @@ constraint_prelude(F/A, Clause) :-
 				AttachCall,
 				Inactive,
 				'chr debug_event'(insert(Head#Susp)),
-			        (
-					'chr debug_event'(call(Susp)),
+				(   'chr debugging'
+				->  (  'chr debug_event'(call(Susp)),
 			                Delegate
-				;
-					'chr debug_event'(fail(Susp)), !,
+				    ;   'chr debug_event'(fail(Susp)), !,
 					fail
-				),
-			        (
-					'chr debug_event'(exit(Susp))
-			        ;
-					'chr debug_event'(redo(Susp)),
-				        fail
-			        )
+				    ),
+				    (   'chr debug_event'(exit(Susp))
+				    ;   'chr debug_event'(redo(Susp)),
+					fail
+				    )
+				;   Delegate
+				)
 			)
 	; get_allocation_occurrence(F/A,0) ->
 		gen_insert_constraint_internal_goal(F/A,Goal,VarsSusp,Vars,Susp),
