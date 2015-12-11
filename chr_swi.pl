@@ -294,12 +294,16 @@ user:message_hook(trace_mode(OnOff), _, _) :-
 	),
 	fail.				% backtrack to other handlers
 
-%	chr:debug_event(+State, +Event)
+:- public
+	debug_event/2,
+	debug_interact/3.
+
+%%	debug_event(+State, +Event)
 %
 %	Hook into the CHR debugger.  At this moment we will discard CHR
 %	events if we are in a Prolog `skip' and we ignore the
 
-chr:debug_event(_State, _Event) :-
+debug_event(_State, _Event) :-
 	tracing,			% are we tracing?
 	prolog_skip_level(Skip, Skip),
 	Skip \== very_deep,
@@ -307,13 +311,13 @@ chr:debug_event(_State, _Event) :-
 	prolog_frame_attribute(Me, level, Level),
 	Level > Skip, !.
 
-%	chr:debug_interact(+Event, +Depth, -Command)
+%%	debug_interact(+Event, +Depth, -Command)
 %
 %	Hook into the CHR debugger to display Event and ask for the next
 %	command to execute. This  definition   causes  the normal Prolog
 %	debugger to be used for the standard ports.
 
-chr:debug_interact(Event, _Depth, creep) :-
+debug_interact(Event, _Depth, creep) :-
 	prolog_event(Event),
 	tracing, !.
 
@@ -321,7 +325,11 @@ prolog_event(call(_)).
 prolog_event(exit(_)).
 prolog_event(fail(_)).
 
-
+%%	debug_ask_continue(-Command) is semidet.
+%
+%	Hook to ask for a CHR debug   continuation. Must bind Command to
+%	one of =creep=, =skip=, =ancestors=, =nodebug=, =abort=, =fail=,
+%	=break=, =help= or =exit=.
 
 
 		 /*******************************
@@ -465,6 +473,8 @@ sandbox:safe_primitive(system:b_setval(V, _)) :-
 	chr_var(V).
 sandbox:safe_primitive(system:nb_linkval(V, _)) :-
 	chr_var(V).
+sandbox:safe_primitive(chr:debug_event(_,_)).
+sandbox:safe_primitive(chr:debug_interact(_,_,_)).
 
 chr_var(Name) :- sub_atom(Name, 0, _, _, '$chr').
 chr_var(Name) :- sub_atom(Name, 0, _, _, 'chr').

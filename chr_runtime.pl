@@ -910,6 +910,11 @@ leashed(Event) :-
 	nb_getval(chr_leash, mutable(Ports)),
 	memberchk(Port, Ports).
 
+:- multifile
+	chr:debug_ask_continue/1.
+
+ask_continue(Command) :-
+	chr:debug_ask_continue(Command), !.
 ask_continue(Command) :-
 	print_message(trace, chr(prompt)),
 	get_single_char(CharCode),
@@ -951,7 +956,6 @@ handle_debug_command(skip, Event, Depth) :- !,
 		Rest = [Susp],
 		set_chr_debug(skip(Susp,Depth))
 	).
-
 handle_debug_command(ancestors,Event,Depth) :- !,
 	print_chr_debug_history,
 	chr_debug_interact(Event,Depth).
@@ -960,7 +964,10 @@ handle_debug_command(nodebug,_,_) :- !,
 handle_debug_command(abort,_,_) :- !,
 	abort.
 handle_debug_command(exit,_,_) :- !,
-	halt.
+	(   thread_self(main)		% Only allow terminating from the
+	->  halt			% main thread
+	;   permission_error(access, chr_debug, halt)
+	).
 handle_debug_command(fail,_,_) :- !,
 	fail.
 handle_debug_command(break,Event,Depth) :- !,
@@ -998,3 +1005,13 @@ set_chr_debug(State) :-
 'chr chr_indexed_variables'(Susp,Vars) :-
         Susp =.. [_,_,_,_,_,_,_|Args],
 	term_variables(Args,Vars).
+
+
+		 /*******************************
+		 *	      SANDBOX		*
+		 *******************************/
+:- multifile
+	sandbox:safe_primitive/1.
+
+sandbox:safe_primitive(chr_runtime:handle_debug_command(_,_,_)).
+sandbox:safe_primitive(chr_runtime:ask_continue(_)).
