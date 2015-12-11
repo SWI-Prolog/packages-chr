@@ -340,7 +340,7 @@ check:trivial_fail_goal(_:Goal) :-
 chr_residuals(Residuals, Tail) :-
 	chr_current_prolog_flag(chr_toplevel_show_store,true),
 	nb_current(chr_global, _),
-	Goal = _:_,
+	Goal = _:_, !,
 	findall(Goal, current_chr_constraint(Goal), Residuals, Tail).
 chr_residuals(Residuals, Residuals).
 
