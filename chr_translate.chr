@@ -916,7 +916,7 @@ chr_analysis(Rules,Constraints,Declarations) :-
 
 store_management_preds(Constraints,Clauses) :-
 	generate_attach_detach_a_constraint_all(Constraints,AttachAConstraintClauses),
-	generate_verify_attributes(AttrUnifyHookClauses),
+	generate_attr_unify_hook(AttrUnifyHookClauses),
 	generate_attach_increment(AttachIncrementClauses),
 	generate_extra_clauses(Constraints,ExtraClauses),
 	generate_insert_delete_constraints(Constraints,DeleteClauses),
@@ -1977,7 +1977,7 @@ do_is_observed(_,_) <=> chr_pp_flag(observation_analysis,off).
 %%	attach_$CONSTRAINT
 %%	attach_increment
 %%	detach_$CONSTRAINT
-%%	verify_attributes
+%%	attr_unify_hook
 
 %%	attach_$CONSTRAINT
 generate_attach_detach_a_constraint_all([],[]).
@@ -2884,8 +2884,8 @@ generate_attach_increment_many(N,Clause) :-
 	),
 	Clause = (Head :- Body).
 
-%%	verify_attributes
-generate_verify_attributes(Clauses) :-
+%%	attr_unify_hook
+generate_attr_unify_hook(Clauses) :-
 	get_max_constraint_index(N),
 	( N == 0 ->
 		Clauses = []
@@ -2893,18 +2893,15 @@ generate_verify_attributes(Clauses) :-
 		Clauses = [GoalsClause|HookClauses],
 		GoalsClause = attribute_goals(_,Goals,Goals),
 		( N == 1 ->
-			generate_verify_attributes_one(HookClauses)
+			generate_attr_unify_hook_one(HookClauses)
 		;
-			generate_verify_attributes_many(N,HookClauses)
+			generate_attr_unify_hook_many(N,HookClauses)
 		)
 	).
 
-generate_verify_attributes_one([Clause]) :-
+generate_attr_unify_hook_one([Clause]) :-
+	Head = attr_unify_hook(Susps,Other),
 	get_target_module(Mod),
-        Head = verify_attributes(Var, Other, Gs),
-        Cond = ( get_attr(Var, Mod, Susps) -> Gs = [Body]
-               ; Gs = []
-               ),
 	get_indexed_constraint(1,C),
 	( get_store_type(C,ST),
 	  ( ST = default ; ST = multi_store(STs), memberchk(default,STs) ) ->
@@ -2948,7 +2945,7 @@ generate_verify_attributes_one([Clause]) :-
 				WakeSusps
 			)
 		),
-		Clause = (Head :- Cond)
+		Clause = (Head :- Body)
 	; get_store_type(C,var_assoc_store(VarIndex,KeyIndex)) ->
 		make_run_suspensions(List,List,WakeNewSusps),
 		MergeGoal = (merge_into_assoc_store(Susps,OtherSusps,List)),
@@ -2959,16 +2956,13 @@ generate_verify_attributes_one([Clause]) :-
 			;
 				put_attr(Other,Mod,Susps)
 			),
-		Clause = (Head :- Cond)
+		Clause = (Head :- Body)
 	).
 
 
-generate_verify_attributes_many(N,[verify_attributes(Var, Other, Gs) :- Cond]) :-
+generate_attr_unify_hook_many(N,[Clause]) :-
 	chr_pp_flag(dynattr,off), !,
-	Cond = ( get_attr(Var, Mod, Attr) ->
-                 Gs = [Body]
-               ; Gs = []
-               ),
+	Head = attr_unify_hook(Attr,Other),
 	get_target_module(Mod),
 	make_attr(N,Mask,SuspsList,Attr),
 	bagof(Sort,A ^ B ^ ( member(A,SuspsList) , Sort = sort(A,B) ) , SortGoalList),
@@ -3007,10 +3001,12 @@ generate_verify_attributes_many(N,[verify_attributes(Var, Other, Gs) :- Cond]) :
 			NonvarBody,
 			WakeSortedSusps
 		)
-   ).
+	),
+	Clause = (Head :- Body).
 
 % NEW
-generate_verify_attributes_many(N,Clauses) :-
+generate_attr_unify_hook_many(N,Clauses) :-
+	Head = attr_unify_hook(Attr,Other),
 	get_target_module(Mod),
 	normalize_attr(Attr,NormalGoal,NormalAttr),
 	normalize_attr(OtherAttr,NormalOtherGoal,NormalOtherAttr),
@@ -3046,9 +3042,7 @@ generate_verify_attributes_many(N,Clauses) :-
 			'$dispatch_run_suspensions'(NormalAttr)
 		)
 	),
-	Clause = (verify_attributes(Var, Other, Gs) :-
-                    ( get_attr(Var, Mod, Attr) -> Gs = [Body]
-                    ; Gs = [] )),
+	Clause = (Head :- Body),
 	Clauses = [Clause,DispatchList1,DispatchList2|Dispatchers],
 	DispatchList1 = ('$dispatch_run_suspensions'([])),
 	DispatchList2 = ('$dispatch_run_suspensions'([Pos-List|Rest]) :- '$dispatch_run_suspensions'(Pos,List),'$dispatch_run_suspensions'(Rest)),
