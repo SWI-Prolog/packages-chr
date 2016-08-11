@@ -182,6 +182,11 @@ option_definition(inline_insertremove,on,Flags) :-
 option_definition(inline_insertremove,off,Flags) :-
 	Flags = [ inline_insertremove - off ].
 
+option_definition(persistent_store,on,Flags) :-
+	Flags = [ persistent_store - on ].
+option_definition(persistent_store,off,Flags) :-
+	Flags = [ persistent_store - off ].
+
 option_definition(type_definition,TypeDef,[]) :-
 	( nonvar(TypeDef) ->
 	TypeDef = type(T,D),
@@ -345,6 +350,7 @@ chr_pp_flag_definition(verbosity,[on,off]).
 chr_pp_flag_definition(ht_removal,[off,on]).
 chr_pp_flag_definition(mixed_stores,[on,off]).
 chr_pp_flag_definition(line_numbers,[off,on]).
+chr_pp_flag_definition(persistent_store,[off,on]).
 chr_pp_flag_definition(dynattr,[off,on]).
 chr_pp_flag_definition(experiment,[off,on]).
 chr_pp_flag_definition(sss,[off,on]).

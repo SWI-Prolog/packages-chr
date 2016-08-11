@@ -3172,7 +3172,7 @@ insert_constraint_body(C,Susp,UsedVars,Body) :-
 insert_constraint_body(default,C,Susp,[],Body) :-
 	global_list_store_name(C,StoreName),
 	make_get_store_goal(StoreName,Store,GetStoreGoal),
-	make_update_store_goal(StoreName,Cell,UpdateStoreGoal),
+	make_update_store_goal1(StoreName,Cell,UpdateStoreGoal),
 	( chr_pp_flag(debugable,on) ->
 		Cell = [Susp|Store],
 		Body =
@@ -3236,7 +3236,7 @@ insert_constraint_body(ground_constants(Index,_,_),C,Susp,UsedVars,Body) :-
 insert_constraint_body(global_ground,C,Susp,[],Body) :-
 	global_ground_store_name(C,StoreName),
 	make_get_store_goal(StoreName,Store,GetStoreGoal),
-	make_update_store_goal(StoreName,Cell,UpdateStoreGoal),
+	make_update_store_goal1(StoreName,Cell,UpdateStoreGoal),
 	( chr_pp_flag(debugable,on) ->
 		Cell = [Susp|Store],
 		Body =
@@ -3260,7 +3260,7 @@ insert_constraint_body(global_ground,C,Susp,[],Body) :-
 	).
 %	global_ground_store_name(C,StoreName),
 %	make_get_store_goal(StoreName,Store,GetStoreGoal),
-%	make_update_store_goal(StoreName,[Susp|Store],UpdateStoreGoal),
+%	make_update_store_goal1(StoreName,[Susp|Store],UpdateStoreGoal),
 %	Body =
 %	(
 %		GetStoreGoal,    % nb_getval(StoreName,Store),
@@ -3279,7 +3279,7 @@ insert_constraint_body(var_assoc_store(VarIndex,AssocIndex),C,Susp,[VarIndex-Var
 
 insert_constraint_body(global_singleton,C,Susp,[],Body) :-
 	global_singleton_store_name(C,StoreName),
-	make_update_store_goal(StoreName,Susp,UpdateStoreGoal),
+	make_update_store_goal1(StoreName,Susp,UpdateStoreGoal),
 	Body =
 	(
 		UpdateStoreGoal
@@ -3402,7 +3402,7 @@ delete_constraint_body(default,C,_,Susp,_,Body) :-
 	( chr_pp_flag(debugable,on) ->
 		global_list_store_name(C,StoreName),
 		make_get_store_goal(StoreName,Store,GetStoreGoal),
-		make_update_store_goal(StoreName,NStore,UpdateStoreGoal),
+		make_update_store_goal1(StoreName,NStore,UpdateStoreGoal),
 		Body =
 		(
 			GetStoreGoal, % nb_getval(StoreName,Store),
@@ -3413,7 +3413,7 @@ delete_constraint_body(default,C,_,Susp,_,Body) :-
 		get_dynamic_suspension_term_field(global_list_prev,C,Susp,PredCell,GetGoal),
 		global_list_store_name(C,StoreName),
 		make_get_store_goal(StoreName,Store,GetStoreGoal),
-		make_update_store_goal(StoreName,Tail,UpdateStoreGoal),
+		make_update_store_goal1(StoreName,Tail,UpdateStoreGoal),
 		set_dynamic_suspension_term_field(global_list_prev,C,NextSusp,_,SetGoal1),
 		set_dynamic_suspension_term_field(global_list_prev,C,NextSusp,PredCell,SetGoal2),
 		Body =
@@ -3490,7 +3490,7 @@ delete_constraint_body(global_ground,C,_,Susp,_,Body) :-
 	( chr_pp_flag(debugable,on) ->
 		global_ground_store_name(C,StoreName),
 		make_get_store_goal(StoreName,Store,GetStoreGoal),
-		make_update_store_goal(StoreName,NStore,UpdateStoreGoal),
+		make_update_store_goal1(StoreName,NStore,UpdateStoreGoal),
 		Body =
 		(
 			GetStoreGoal, % nb_getval(StoreName,Store),
@@ -3501,7 +3501,7 @@ delete_constraint_body(global_ground,C,_,Susp,_,Body) :-
 		get_dynamic_suspension_term_field(global_list_prev,C,Susp,PredCell,GetGoal),
 		global_ground_store_name(C,StoreName),
 		make_get_store_goal(StoreName,Store,GetStoreGoal),
-		make_update_store_goal(StoreName,Tail,UpdateStoreGoal),
+		make_update_store_goal1(StoreName,Tail,UpdateStoreGoal),
 		set_dynamic_suspension_term_field(global_list_prev,C,NextSusp,_,SetGoal1),
 		set_dynamic_suspension_term_field(global_list_prev,C,NextSusp,PredCell,SetGoal2),
 		Body =
@@ -3529,7 +3529,7 @@ delete_constraint_body(global_ground,C,_,Susp,_,Body) :-
 	).
 %	global_ground_store_name(C,StoreName),
 %	make_get_store_goal(StoreName,Store,GetStoreGoal),
-%	make_update_store_goal(StoreName,NStore,UpdateStoreGoal),
+%	make_update_store_goal1(StoreName,NStore,UpdateStoreGoal),
 %	Body =
 %	(
 %		GetStoreGoal, % nb_getval(StoreName,Store),
@@ -3548,7 +3548,7 @@ delete_constraint_body(var_assoc_store(VarIndex,AssocIndex),C,_,Susp,_,Body) :-
 	).
 delete_constraint_body(global_singleton,C,_,_Susp,_,Body) :-
 	global_singleton_store_name(C,StoreName),
-	make_update_store_goal(StoreName,[],UpdateStoreGoal),
+	make_update_store_goal1(StoreName,[],UpdateStoreGoal),
 	Body =
 	(
 		UpdateStoreGoal  % b_setval(StoreName,[])
@@ -8399,6 +8399,13 @@ create_get_mutable(V,M,GM) :- M = mutable(V), GM = true.
 %% | |_| | |_| | | | |_| |_| |
 %%  \___/ \__|_|_|_|\__|\__, |
 %%                      |___/
+
+make_update_store_goal1(Name,Value,Goal) :-
+   ( chr_pp_flag(persistent_store,on) ->
+      Goal = nb_setval(Name,Value), !
+   ;
+      make_update_store_goal(Name,Value,Goal)
+   ).
 
 %	Create a fresh variable.
 gen_var(_).
