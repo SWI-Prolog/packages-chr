@@ -54,11 +54,11 @@ local_current_prolog_flag(X,Y) :- current_prolog_flag(X,Y).
 % Global Options
 %
 
-handle_option(Name,Value) :- 
+handle_option(Name,Value) :-
 	var(Name), !,
 	chr_error(syntax((:- chr_option(Name,Value))),'First argument should be an atom, not a variable.\n',[]).
 
-handle_option(Name,Value) :- 
+handle_option(Name,Value) :-
 	var(Value), !,
 	chr_error(syntax((:- chr_option(Name,Value))),'Second argument cannot be a variable.\n',[]).
 
@@ -67,11 +67,11 @@ handle_option(Name,Value) :-
 	!,
 	set_chr_pp_flags(Flags).
 
-handle_option(Name,Value) :- 
+handle_option(Name,Value) :-
 	\+ option_definition(Name,_,_), !,
 	chr_error(syntax((:- chr_option(Name,Value))),'Invalid option name ~w: consult the manual for valid options.\n',[Name]).
 
-handle_option(Name,Value) :- 
+handle_option(Name,Value) :-
 	chr_error(syntax((:- chr_option(Name,Value))),'Invalid option value ~w: consult the manual for valid option values.\n',[Value]).
 
 option_definition(optimize,experimental,Flags) :-
