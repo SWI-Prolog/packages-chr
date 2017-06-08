@@ -33,35 +33,35 @@ chr_translate_bootstrap.pl:
 
 chr_translate_bootstrap1.pl: chr_translate_bootstrap1.chr chr_translate_bootstrap.pl
 		$(PL) -q -f none -s chr_swi_bootstrap.pl \
-		      -g "chr_compile_step1('$<','$@'),halt" \
-		      -t 'halt(1)'
+		      -g "chr_compile_step1('$<','$@')" \
+		      -t halt
 		$(PL) -q -f none -s chr_swi_bootstrap.pl \
-		      -g "chr_compile_step2('$<','$@'),halt" \
-		      -t 'halt(1)'
+		      -g "chr_compile_step2('$<','$@')" \
+		      -t halt
 
 chr_translate_bootstrap2.pl: chr_translate_bootstrap2.chr chr_translate_bootstrap1.pl
 		$(PL) -q -f none -s chr_swi_bootstrap.pl \
-		      -g "chr_compile_step2('$<','$@'),halt" \
-		      -t 'halt(1)'
+		      -g "chr_compile_step2('$<','$@')" \
+		      -t halt
 		$(PL) -q -f none -s chr_swi_bootstrap.pl \
-		      -g "chr_compile_step3('$<','$@'),halt" \
-		      -t 'halt(1)'
+		      -g "chr_compile_step3('$<','$@')" \
+		      -t halt
 
 guard_entailment.pl: guard_entailment.chr chr_translate_bootstrap2.pl
 		$(PL) -q -f none -s chr_swi_bootstrap.pl \
-		      -g "chr_compile_step3('$<','$@'),halt" \
-		      -t 'halt(1)'
+		      -g "chr_compile_step3('$<','$@')" \
+		      -t halt
 
 chr_translate.pl: chr_translate.chr chr_translate_bootstrap2.pl guard_entailment.pl
 		$(PL) -q -f none -s chr_swi_bootstrap.pl \
-		      -g "chr_compile_step3('$<','$@'),halt" \
-		      -t 'halt(1)'
+		      -g "chr_compile_step3('$<','$@')" \
+		      -t halt
 		$(PL) -p chr=. -q -f none -s chr_swi_bootstrap.pl \
-		      -g "chr_compile_step4('guard_entailment.chr','guard_entailment.pl'),halt" \
-		      -t 'halt(1)'
+		      -g "chr_compile_step4('guard_entailment.chr','guard_entailment.pl')" \
+		      -t halt
 		$(PL) -p chr=. -q -f none -s chr_swi_bootstrap.pl \
-		      -g "chr_compile_step4('$<','$@'),halt" \
-		      -t 'halt(1)'
+		      -g "chr_compile_step4('$<','$@')" \
+		      -t halt
 
 chr.pl:		chr_swi.pl
 		cp $< $@
@@ -94,7 +94,7 @@ uninstall:
 		@IN_SWI@$$(PL) -f none -g make -t halt
 
 check:		chr.pl
-		$(PL) -q -f none -s chr_test.pl -g test,halt -t 'halt(1)'
+		$(PL) -q -f none -s chr_test.pl -g test -t halt
 
 
 ################################################################
