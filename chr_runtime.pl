@@ -545,9 +545,11 @@ unerror_lockv([T|R]) :- del_attr( T, error_locked), unerror_lockv(R).
 		'chr default_store'(V)
 	).
 
+:- if(\+current_predicate(nonground/2)).
 nonground( Term, V) :-
 	term_variables( Term, Vs),
 	Vs = [V|_].
+:- endif.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 'chr novel_production'( Self, Tuple) :-
