@@ -174,11 +174,12 @@ extra_declarations([ (:- use_module(chr(chr_runtime))),
 
 chr_expand(Term, []) :-
 	chr_expandable(Term), !,
+	prolog_load_context(source,Source),
 	prolog_load_context(source,File),
 	prolog_load_context(term_position,Pos),
 	stream_position_data(line_count,Pos,LineNumber),
-	add_pragma_to_chr_rule(Term,line_number(LineNumber),NTerm),
-	assert(chr_term(File, LineNumber, NTerm)).
+	add_pragma_to_chr_rule(Term,line_number(File:LineNumber),NTerm),
+	assert(chr_term(Source, LineNumber, NTerm)).
 chr_expand(Term, []) :-
 	Term = (:- chr_preprocessor Preprocessor), !,
 	prolog_load_context(source,File),
