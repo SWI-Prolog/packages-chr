@@ -168,9 +168,9 @@ format_rule(PragmaRule) :-
 	;
 		write('rule number '), write(N)
 	),
-	( memberchk(line_number(LineNumber),Pragmas) ->
+	( memberchk(source_location(SourceLocation),Pragmas) ->
 		write(' at '),
-		write(LineNumber)
+		write(SourceLocation)
 	;
 		true
 	).

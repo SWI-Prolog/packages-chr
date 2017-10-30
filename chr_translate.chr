@@ -258,18 +258,18 @@ get_target_module(Query)
 	<=> Query = user.
 
 %------------------------------------------------------------------------------%
-:- chr_constraint line_number/2.
-:- chr_option(mode,line_number(+,+)).
-:- chr_option(type_declaration,line_number(rule_nb,source_location)).
+:- chr_constraint source_location/2.
+:- chr_option(mode,source_location(+,+)).
+:- chr_option(type_declaration,source_location(rule_nb,source_location)).
 %------------------------------------------------------------------------------%
-line_number(RuleNb,LineNb) \ line_number(RuleNb,LineNumber) <=> true.
+source_location(RuleNb,SrcLoc) \ source_location(RuleNb,SourceLocation) <=> true.
 
 %------------------------------------------------------------------------------%
 :- chr_constraint get_line_number/2.
 :- chr_option(mode,get_line_number(+,-)).
 :- chr_option(type_declaration,get_line_number(rule_nb,source_location)).
 %------------------------------------------------------------------------------%
-line_number(RuleNb,LineNb) \ get_line_number(RuleNb,Q) <=> Q = LineNb.
+source_location(RuleNb,SrcLoc) \ get_line_number(RuleNb,Q) <=> Q = SrcLoc.
 get_line_number(RuleNb,Q) <=> Q = (?):0.		% no line number available
 
 :- chr_constraint indexed_argument/2.			% argument instantiation may enable applicability of rule
@@ -1399,10 +1399,10 @@ check_pragma(Pragma, PragmaRule) :-
 		chr_error(syntax(Pragma),'Invalid identifier(s) in pragma ~w of rule number ~w.\n',[Pragma,RuleNb])
 	).
 check_pragma(Pragma,PragmaRule) :-
-	Pragma = line_number(LineNumber),
+	Pragma = source_location(SourceLocation),
 	!,
 	PragmaRule = pragma(_,_,_,_,RuleNb),
-	line_number(RuleNb,LineNumber).
+	source_location(RuleNb,SourceLocation).
 
 check_history_pragma_ids([], _, _).
 check_history_pragma_ids([ID|IDs],IDs1,IDs2) :-
@@ -1469,9 +1469,9 @@ format_rule(PragmaRule) :-
 	;
 		write('rule number '), write(RuleNumber)
 	),
-	get_line_number(RuleNumber,LineNumber),
+	get_line_number(RuleNumber,SourceLocation),
 	write(' at '),
-	write(LineNumber).
+	write(SourceLocation).
 
 check_ast_rule_indexing(AstRule,PragmaRule) :-
 	AstRule = ast_rule(AstHead,AstGuard,_,_,_),
@@ -6940,8 +6940,8 @@ actual_cut(Symbol,Occurrence,ActualCut) :-
 
 add_location(Clause,RuleNb,NClause) :-
 	( chr_pp_flag(line_numbers,on) ->
-		get_line_number(RuleNb,File:LineNb),
-		NClause = '$source_location'(File,LineNb):Clause
+		get_line_number(RuleNb,File:SrcLoc),
+		NClause = '$source_location'(File,SrcLoc):Clause
 	;
 		NClause = Clause
 	).
