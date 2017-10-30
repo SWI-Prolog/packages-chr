@@ -3,7 +3,7 @@
     Author:        Tom Schrijvers
     E-mail:        Tom.Schrijvers@cs.kuleuven.be
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2004-2016, K.U. Leuven
+    Copyright (c)  2004-2017, K.U. Leuven
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -218,6 +218,7 @@
 			;	identifier_store(int)
 			;	type_indexed_identifier_store(int,any).
 :- chr_type coverage	--->	complete ; incomplete.
+:- chr_type source_location ---> (atom:int).
 % }}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -259,17 +260,17 @@ get_target_module(Query)
 %------------------------------------------------------------------------------%
 :- chr_constraint line_number/2.
 :- chr_option(mode,line_number(+,+)).
-:- chr_option(type_declaration,line_number(rule_nb,int)).
+:- chr_option(type_declaration,line_number(rule_nb,source_location)).
 %------------------------------------------------------------------------------%
 line_number(RuleNb,LineNb) \ line_number(RuleNb,LineNumber) <=> true.
 
 %------------------------------------------------------------------------------%
 :- chr_constraint get_line_number/2.
 :- chr_option(mode,get_line_number(+,-)).
-:- chr_option(type_declaration,get_line_number(rule_nb,int)).
+:- chr_option(type_declaration,get_line_number(rule_nb,source_location)).
 %------------------------------------------------------------------------------%
 line_number(RuleNb,LineNb) \ get_line_number(RuleNb,Q) <=> Q = LineNb.
-get_line_number(RuleNb,Q) <=> Q = 0.			% no line number available
+get_line_number(RuleNb,Q) <=> Q = (?):0.		% no line number available
 
 :- chr_constraint indexed_argument/2.			% argument instantiation may enable applicability of rule
 :- chr_option(mode,indexed_argument(+,+)).
@@ -1469,9 +1470,8 @@ format_rule(PragmaRule) :-
 		write('rule number '), write(RuleNumber)
 	),
 	get_line_number(RuleNumber,LineNumber),
-	write(' (line '),
-	write(LineNumber),
-	write(')').
+	write(' at '),
+	write(LineNumber).
 
 check_ast_rule_indexing(AstRule,PragmaRule) :-
 	AstRule = ast_rule(AstHead,AstGuard,_,_,_),
@@ -6940,8 +6940,7 @@ actual_cut(Symbol,Occurrence,ActualCut) :-
 
 add_location(Clause,RuleNb,NClause) :-
 	( chr_pp_flag(line_numbers,on) ->
-		get_chr_source_file(File),
-		get_line_number(RuleNb,LineNb),
+		get_line_number(RuleNb,File:LineNb),
 		NClause = '$source_location'(File,LineNb):Clause
 	;
 		NClause = Clause
