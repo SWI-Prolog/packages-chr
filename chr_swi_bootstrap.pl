@@ -180,7 +180,7 @@ prolog:message(chr(end(_From, To))) -->
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 read_chr_file_to_terms(Spec, Terms) :-
-	chr_absolute_file_name(Spec, [ access(read) ], Path),
+	absolute_file_name(Spec, Path, [ access(read) ]),
 	open(Path, read, Fd, []),
 	read_chr_stream_to_terms(Fd, Terms),
 	close(Fd).
@@ -205,10 +205,8 @@ read_chr_stream_to_terms(C, Fd, [C|T]) :-
 
 %% SWI begin
 chr_local_only_read_term(A,B,C) :- read_term(A,B,C).
-chr_absolute_file_name(A,B,C) :- absolute_file_name(A,B,C).
 %% SWI end
 
 %% SICStus begin
 %% chr_local_only_read_term(A,B,_) :- read_term(A,B,[]).
-%% chr_absolute_file_name(A,B,C) :- absolute_file_name(A,C,B).
 %% SICStus end
