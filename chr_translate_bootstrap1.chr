@@ -8,9 +8,7 @@
 :- module(chr_translate_bootstrap1,
 	  [ chr_translate/2
 	  ]).
-:- use_module(chr_runtime).
-:- style_check(- (discontiguous)).
-:- use_module(chr_runtime).
+:- use_module(chr(chr_runtime)).
 :- style_check(- (discontiguous)).
 :- use_module(library(lists),
 	      [ append/3,
@@ -20,8 +18,8 @@
 	      ]).
 :- use_module(library(ordsets)).
 :- use_module(library(dialect/hprolog)).
-:- use_module(pairlist).
-:- include(chr_op2).
+:- use_module(chr(pairlist)).
+:- include(chr(chr_op2)).
 chr_translate(A, C) :-
 	init_chr_pp_flags,
 	partition_clauses(A, B, E, D),

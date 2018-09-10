@@ -146,18 +146,18 @@
 %% SWI end }}}
 
 % imports and operators {{{
-:- use_module(pairlist).
-:- use_module(a_star).
-:- use_module(listmap).
-:- use_module(clean_code).
-:- use_module(builtins).
-:- use_module(find).
-:- use_module(binomialheap).
-:- use_module(guard_entailment).
-:- use_module(chr_compiler_options).
-:- use_module(chr_compiler_utility).
-:- use_module(chr_compiler_errors).
-:- include(chr_op).
+:- use_module(chr(pairlist)).
+:- use_module(chr(a_star)).
+:- use_module(chr(listmap)).
+:- use_module(chr(clean_code)).
+:- use_module(chr(builtins)).
+:- use_module(chr(find)).
+:- use_module(chr(binomialheap)).
+:- use_module(chr(guard_entailment)).
+:- use_module(chr(chr_compiler_options)).
+:- use_module(chr(chr_compiler_utility)).
+:- use_module(chr(chr_compiler_errors)).
+:- include(chr(chr_op)).
 :- op(1150, fx, chr_type).
 :- op(1150, fx, chr_declaration).
 :- op(1130, xfx, --->).

@@ -65,16 +65,16 @@
 %	Compile a CHR specification into a Prolog file
 
 chr_compile_step1(From, To) :-
-	use_module('chr_translate_bootstrap.pl'),
+	use_module(chr(chr_translate_bootstrap)),
 	chr_compile(From, To, informational).
 chr_compile_step2(From, To) :-
-	use_module('chr_translate_bootstrap1.pl'),
+	use_module(chr(chr_translate_bootstrap1)),
 	chr_compile(From, To, informational).
 chr_compile_step3(From, To) :-
-	use_module('chr_translate_bootstrap2.pl'),
+	use_module(chr(chr_translate_bootstrap2)),
 	chr_compile(From, To, informational).
 chr_compile_step4(From, To) :-
-	use_module('chr_translate.pl'),
+	use_module(chr(chr_translate)),
 	chr_compile(From, To, informational).
 
 chr_compile(From, To, MsgLevel) :-
@@ -92,7 +92,7 @@ chr_compile(From, To, MsgLevel) :-
 
 
 %% SWI begin
-specific_declarations([ (:- use_module('chr_runtime')),
+specific_declarations([ (:- use_module(chr(chr_runtime))),
 			(:- style_check(-discontiguous)),
 			(:- style_check(-singleton)),
 			(:- style_check(-no_effect))

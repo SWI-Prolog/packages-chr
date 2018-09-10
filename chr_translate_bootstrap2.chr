@@ -121,12 +121,12 @@
 %% SWI end
 
 :- use_module(library(dialect/hprolog)).
-:- use_module(pairlist).
-:- use_module(a_star).
-:- use_module(clean_code).
-:- use_module(builtins).
-:- use_module(find).
-:- include(chr_op2).
+:- use_module(chr(pairlist)).
+:- use_module(chr(a_star)).
+:- use_module(chr(clean_code)).
+:- use_module(chr(builtins)).
+:- use_module(chr(find)).
+:- include(chr(chr_op2)).
 
 :- chr_option(debug,off).
 :- chr_option(optimize,full).
@@ -414,8 +414,8 @@ store_management_preds(Constraints,Clauses) :-
 
 
 %% SWI begin
-specific_declarations([(:- use_module('chr_runtime'))
-		      ,(:- use_module('chr_hashtable_store'))
+specific_declarations([(:- use_module(chr(chr_runtime)))
+		      ,(:- use_module(chr(chr_hashtable_store)))
 		      ,(:- style_check(-discontiguous))
 		      |Tail],Tail).
 %% SWI end
