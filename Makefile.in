@@ -94,7 +94,7 @@ uninstall:
 		@IN_SWI@$$(PL) -f none -g make -t halt
 
 check:		chr.pl
-		$(PL) -q -f none -s chr_test.pl -g test -t halt
+		$(PL) -q -f none -s test_chr.pl -g test_chr -t halt
 
 
 ################################################################

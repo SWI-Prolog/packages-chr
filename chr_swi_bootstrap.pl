@@ -39,6 +39,10 @@
 	  , chr_compile_step4/2		% +CHRFile, -PlFile
 	  , chr_compile/3
 	  ]).
+
+:- multifile user:file_search_path/2.
+user:file_search_path(chr, '.').
+
 %% SWI begin
 % vsc:
 :- expects_dialect(swi).
