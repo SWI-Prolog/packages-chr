@@ -8,7 +8,7 @@ set(CHR_SOURCES chr_runtime.pl chr_op.pl chr_debug.pl
     binomialheap.pl builtins.pl chr_hashtable_store.pl listmap.pl
     chr_compiler_options.pl chr_compiler_utility.pl
     chr_compiler_errors.pl chr_integertable_store.pl)
-set(CHR_SOURCES_GENERATED guard_entailment.pl chr_translate.pl)
+set(CHR_SOURCES_GENERATED guard_entailment.pl chr_translate.pl chr.pl)
 
 set(CHR_EXAMPLES chrfreeze.chr fib.chr gcd.chr primes.chr bool.chr
     family.chr fibonacci.chr leq.chr listdom.chr chrdif.chr)
@@ -73,13 +73,14 @@ add_custom_command(
     COMMAND swipl ${CMD_4b}
     COMMAND swipl ${CMD_4c}
     DEPENDS chr_translate.chr chr_translate_bootstrap2.pl guard_entailment.pl)
+add_custom_command(
+    OUTPUT chr.pl
+    COMMAND cp -p ${CMAKE_CURRENT_SOURCE_DIR}/chr_swi.pl chr.pl
+    DEPENDS chr_swi.pl)
 
 add_custom_target(
     chr_compile ALL
     DEPENDS ${CHR_SOURCES_GENERATED})
-install(FILES chr_swi.pl
-	DESTINATION ${SWIPL_INSTALL_LIBRARY}
-	RENAME chr.pl)
 
 prepend(CHR_SOURCES_GENERATED ${CMAKE_CURRENT_BINARY_DIR} ${CHR_SOURCES_GENERATED})
 swipl_plugin(chr
@@ -87,3 +88,5 @@ swipl_plugin(chr
 	     PL_LIBS ${CHR_SOURCES} ${CHR_SOURCES_GENERATED})
 
 swipl_examples(${CHR_EXAMPLES})
+
+test_libs(chr)

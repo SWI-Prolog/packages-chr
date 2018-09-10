@@ -3,7 +3,7 @@
     Author:        Jan Wielemaker
     E-mail:        J.Wielemaker@vu.nl
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2004-2015, 2006, University of Amsterdam
+    Copyright (c)  2004-2018, University of Amsterdam
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -32,8 +32,15 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 
+:- module(test_chr,
+	  [ test_chr/0
+	  ]).
+
 :- asserta(user:file_search_path(chr, '.')).
 :- asserta(user:file_search_path(library, '.')).
+% ctest adds a foreign path to the cmake binary directory
+:- asserta(user:file_search_path(chr, foreign('.'))).
+:- asserta(user:file_search_path(library, foreign('.'))).
 :- use_module(library(chr)).
 %%  :- use_module(chr).			% == library(chr)
 
@@ -122,7 +129,7 @@ testdir('Tests').
 	failed/1,
 	blocked/2.
 
-test :-
+test_chr :-
 	retractall(failed(_)),
 	retractall(blocked(_,_)),
 	scripts,
