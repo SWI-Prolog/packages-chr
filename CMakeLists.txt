@@ -57,22 +57,26 @@ add_custom_command(
     OUTPUT chr_translate_bootstrap1.pl
     COMMAND swipl ${CMD_1a}
     COMMAND swipl ${CMD_1b}
-    DEPENDS chr_translate_bootstrap1.chr chr_translate_bootstrap.pl)
+    DEPENDS prolog_products
+            chr_translate_bootstrap1.chr chr_translate_bootstrap.pl)
 add_custom_command(
     OUTPUT chr_translate_bootstrap2.pl
     COMMAND swipl ${CMD_2a}
     COMMAND swipl ${CMD_2b}
-    DEPENDS chr_translate_bootstrap2.chr chr_translate_bootstrap1.pl)
+    DEPENDS prolog_products
+            chr_translate_bootstrap2.chr chr_translate_bootstrap1.pl)
 add_custom_command(
     OUTPUT guard_entailment.pl
     COMMAND swipl ${CMD_3}
-    DEPENDS guard_entailment.chr chr_translate_bootstrap2.pl)
+    DEPENDS prolog_products
+            guard_entailment.chr chr_translate_bootstrap2.pl)
 add_custom_command(
     OUTPUT chr_translate.pl
     COMMAND swipl ${CMD_4a}
     COMMAND swipl ${CMD_4b}
     COMMAND swipl ${CMD_4c}
-    DEPENDS chr_translate.chr chr_translate_bootstrap2.pl guard_entailment.pl)
+    DEPENDS prolog_products
+            chr_translate.chr chr_translate_bootstrap2.pl guard_entailment.pl)
 add_custom_command(
     OUTPUT chr.pl
     COMMAND cp -p ${CMAKE_CURRENT_SOURCE_DIR}/chr_swi.pl chr.pl
