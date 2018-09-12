@@ -80,7 +80,7 @@ add_custom_command(
 
 add_custom_target(
     chr_compile ALL
-    DEPENDS ${CHR_SOURCES_GENERATED})
+    DEPENDS ${CHR_SOURCES_GENERATED} chr.pl)
 
 prepend(CHR_SOURCES_GENERATED ${CMAKE_CURRENT_BINARY_DIR} ${CHR_SOURCES_GENERATED})
 swipl_plugin(chr_priv
