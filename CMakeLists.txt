@@ -18,7 +18,7 @@ function(chr_bootstrap step file cmd)
   set(from ${CMAKE_CURRENT_SOURCE_DIR}/${file}.chr)
   set(to   ${file}.pl)
   set(${cmd} -f none -s ${CMAKE_CURRENT_SOURCE_DIR}/chr_swi_bootstrap.pl
-	     -p chr=${CMAKE_CURRENT_SOURCE_DIR}:${CMAKE_CURRENT_BINARY_DIR}
+	     -p chr=${CMAKE_CURRENT_BINARY_DIR}:${CMAKE_CURRENT_SOURCE_DIR}
              -g "\"chr_compile_step${step}('${from}','${to}')\""
 	     -t halt
      PARENT_SCOPE)
@@ -57,29 +57,39 @@ add_custom_command(
     OUTPUT chr_translate_bootstrap1.pl
     COMMAND swipl ${CMD_1a}
     COMMAND swipl ${CMD_1b}
+    COMMENT "-- CHR bootstrap compilation step 1"
     DEPENDS prolog_products
-            chr_translate_bootstrap1.chr chr_translate_bootstrap.pl)
+            chr_translate_bootstrap1.chr
+            chr_translate_bootstrap.pl)
 add_custom_command(
     OUTPUT chr_translate_bootstrap2.pl
     COMMAND swipl ${CMD_2a}
     COMMAND swipl ${CMD_2b}
+    COMMENT "-- CHR bootstrap compilation step 2"
     DEPENDS prolog_products
-            chr_translate_bootstrap2.chr chr_translate_bootstrap1.pl)
+            chr_translate_bootstrap2.chr
+            ${CMAKE_CURRENT_BINARY_DIR}/chr_translate_bootstrap1.pl)
 add_custom_command(
     OUTPUT guard_entailment.pl
     COMMAND swipl ${CMD_3}
+    COMMENT "-- CHR bootstrap compilation step 3"
     DEPENDS prolog_products
-            guard_entailment.chr chr_translate_bootstrap2.pl)
+            guard_entailment.chr
+	    ${CMAKE_CURRENT_BINARY_DIR}/chr_translate_bootstrap2.pl)
 add_custom_command(
     OUTPUT chr_translate.pl
     COMMAND swipl ${CMD_4a}
     COMMAND swipl ${CMD_4b}
     COMMAND swipl ${CMD_4c}
+    COMMENT "-- CHR bootstrap compilation step 4"
     DEPENDS prolog_products
-            chr_translate.chr chr_translate_bootstrap2.pl guard_entailment.pl)
+            chr_translate.chr
+	    ${CMAKE_CURRENT_BINARY_DIR}/chr_translate_bootstrap2.pl
+            ${CMAKE_CURRENT_BINARY_DIR}/guard_entailment.pl)
 add_custom_command(
     OUTPUT chr.pl
-    COMMAND cp -p ${CMAKE_CURRENT_SOURCE_DIR}/chr_swi.pl chr.pl
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            ${CMAKE_CURRENT_SOURCE_DIR}/chr_swi.pl chr.pl
     DEPENDS chr_swi.pl)
 
 add_custom_target(
