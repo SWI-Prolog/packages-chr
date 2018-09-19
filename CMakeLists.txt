@@ -18,7 +18,7 @@ function(chr_bootstrap step file cmd)
   set(from ${CMAKE_CURRENT_SOURCE_DIR}/${file}.chr)
   set(to   ${file}.pl)
   set(${cmd} -f none -s ${CMAKE_CURRENT_SOURCE_DIR}/chr_swi_bootstrap.pl
-	     -p chr=${CMAKE_CURRENT_BINARY_DIR}:${CMAKE_CURRENT_SOURCE_DIR}
+	     -p "\"chr=${CMAKE_CURRENT_BINARY_DIR}${SWIPL_PATH_SEP}${CMAKE_CURRENT_SOURCE_DIR}\""
              -g "\"chr_compile_step${step}('${from}','${to}')\""
 	     -t halt
      PARENT_SCOPE)
