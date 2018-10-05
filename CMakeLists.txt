@@ -96,12 +96,12 @@ add_custom_target(
     chr_compile ALL
     DEPENDS ${CHR_SOURCES_GENERATED} chr.pl)
 
-prepend(CHR_SOURCES_GENERATED ${CMAKE_CURRENT_BINARY_DIR} ${CHR_SOURCES_GENERATED})
 swipl_plugin(chr_priv
 	     PL_LIB_SUBDIR chr
-	     PL_LIBS ${CHR_SOURCES} ${CHR_SOURCES_GENERATED})
+	     PL_LIBS ${CHR_SOURCES}
+	     PL_GENERATED_LIBRARIES ${CHR_SOURCES_GENERATED})
 swipl_plugin(chr
-	     PL_LIBS ${CMAKE_CURRENT_BINARY_DIR}/chr.pl)
+	     PL_GENERATED_LIBRARIES chr.pl)
 
 swipl_examples(${CHR_EXAMPLES})
 
