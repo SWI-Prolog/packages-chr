@@ -97,12 +97,11 @@ add_custom_target(
     chr_compile ALL
     DEPENDS ${CHR_SOURCES_GENERATED} chr.pl)
 
-swipl_plugin(chr_priv
-	     PL_LIB_SUBDIR chr
-	     PL_LIBS ${CHR_SOURCES}
-	     PL_GENERATED_LIBRARIES ${CHR_SOURCES_GENERATED})
 swipl_plugin(chr
-	     PL_GENERATED_LIBRARIES chr.pl)
+	     PL_GENERATED_LIBRARIES chr.pl
+	     PL_LIB_SUBDIR chr
+	         PL_LIBS ${CHR_SOURCES}
+	         PL_GENERATED_LIBRARIES ${CHR_SOURCES_GENERATED})
 
 swipl_examples(${CHR_EXAMPLES})
 
