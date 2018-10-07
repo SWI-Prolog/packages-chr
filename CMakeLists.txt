@@ -102,6 +102,7 @@ swipl_plugin(chr
 	     PL_LIB_SUBDIR chr
 	         PL_LIBS ${CHR_SOURCES}
 	         PL_GENERATED_LIBRARIES ${CHR_SOURCES_GENERATED})
+add_dependencies(chr chr_compile)
 
 swipl_examples(${CHR_EXAMPLES})
 
