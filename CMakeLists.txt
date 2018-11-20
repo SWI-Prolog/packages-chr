@@ -56,32 +56,32 @@ chr_bootstrap(4
 
 add_custom_command(
     OUTPUT chr_translate_bootstrap1.pl
-    COMMAND swipl ${CMD_1a}
-    COMMAND swipl ${CMD_1b}
+    COMMAND ${PROG_SWIPL} ${CMD_1a}
+    COMMAND ${PROG_SWIPL} ${CMD_1b}
     COMMENT "-- CHR bootstrap compilation step 1"
     DEPENDS prolog_products
             chr_translate_bootstrap1.chr
             chr_translate_bootstrap.pl)
 add_custom_command(
     OUTPUT chr_translate_bootstrap2.pl
-    COMMAND swipl ${CMD_2a}
-    COMMAND swipl ${CMD_2b}
+    COMMAND ${PROG_SWIPL} ${CMD_2a}
+    COMMAND ${PROG_SWIPL} ${CMD_2b}
     COMMENT "-- CHR bootstrap compilation step 2"
     DEPENDS prolog_products
             chr_translate_bootstrap2.chr
             ${CMAKE_CURRENT_BINARY_DIR}/chr_translate_bootstrap1.pl)
 add_custom_command(
     OUTPUT guard_entailment.pl
-    COMMAND swipl ${CMD_3}
+    COMMAND ${PROG_SWIPL} ${CMD_3}
     COMMENT "-- CHR bootstrap compilation step 3"
     DEPENDS prolog_products
             guard_entailment.chr
 	    ${CMAKE_CURRENT_BINARY_DIR}/chr_translate_bootstrap2.pl)
 add_custom_command(
     OUTPUT chr_translate.pl
-    COMMAND swipl ${CMD_4a}
-    COMMAND swipl ${CMD_4b}
-    COMMAND swipl ${CMD_4c}
+    COMMAND ${PROG_SWIPL} ${CMD_4a}
+    COMMAND ${PROG_SWIPL} ${CMD_4b}
+    COMMAND ${PROG_SWIPL} ${CMD_4c}
     COMMENT "-- CHR bootstrap compilation step 4"
     DEPENDS prolog_products
             chr_translate.chr
