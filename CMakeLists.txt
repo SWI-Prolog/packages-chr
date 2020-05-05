@@ -98,6 +98,7 @@ add_custom_target(
     DEPENDS ${CHR_SOURCES_GENERATED} chr.pl)
 
 swipl_plugin(chr
+	     NOINDEX
 	     PL_GENERATED_LIBRARIES chr.pl
 	     PL_LIB_SUBDIR chr
 	         PL_LIBS ${CHR_SOURCES}
