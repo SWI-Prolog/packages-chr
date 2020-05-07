@@ -116,7 +116,7 @@
 	  [ chr_translate/2		% +Decls, -TranslatedDecls
 	  ]).
 %% SWI begin
-:- use_module(library(lists),[append/3,member/2,delete/3,reverse/2,permutation/2]).
+:- use_module(library(lists)).
 :- use_module(library(ordsets)).
 %% SWI end
 

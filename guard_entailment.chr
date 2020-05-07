@@ -4,6 +4,7 @@
 	  ]).
 :- include(chr(chr_op)).
 :- use_module(library(dialect/hprolog)).
+:- use_module(library(lists)).
 :- use_module(chr(builtins)).
 :- use_module(chr(chr_compiler_errors)).
 :- chr_option(debug, off).

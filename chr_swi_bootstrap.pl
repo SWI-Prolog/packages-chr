@@ -39,6 +39,8 @@
 	  , chr_compile_step4/2		% +CHRFile, -PlFile
 	  , chr_compile/3
 	  ]).
+:- autoload(library(listing), [portray_clause/2]).
+:- autoload(library(dialect), [expects_dialect/1]).
 
 :- multifile user:file_search_path/2.
 user:file_search_path(chr, '.').

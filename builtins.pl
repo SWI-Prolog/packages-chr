@@ -39,8 +39,8 @@
 		binds_b/2,
 		builtin_binds_b/2
 	]).
-
 :- use_module(library(dialect/hprolog)).
+:- use_module(library(lists)).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 negate_b(A,B) :- once(negate(A,B)).

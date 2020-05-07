@@ -55,7 +55,7 @@
 	    chr_notrace/0,
 	    chr_leash/1			% +Ports
 	  ]).
-
+:- use_module(library(dialect), [expects_dialect/1]).
 :- expects_dialect(swi).
 
 :- set_prolog_flag(generate_debug_info, false).

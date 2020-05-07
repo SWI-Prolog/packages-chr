@@ -10,12 +10,7 @@
 	  ]).
 :- use_module(chr(chr_runtime)).
 :- style_check(- (discontiguous)).
-:- use_module(library(lists),
-	      [ append/3,
-		member/2,
-		permutation/2,
-		reverse/2
-	      ]).
+:- use_module(library(lists)).
 :- use_module(library(ordsets)).
 :- use_module(library(dialect/hprolog)).
 :- use_module(chr(pairlist)).
@@ -1704,7 +1699,7 @@ pair_all_with([], _, []).
 pair_all_with([A|C], B, [A-B|D]) :-
 	pair_all_with(C, B, D).
 verbosity_on :-
-	prolog_flag(verbose, A),
+	current_prolog_flag(verbose, A),
 	A==yes.
 'attach_constraint/2'([], _).
 'attach_constraint/2'([A|L], D) :-
