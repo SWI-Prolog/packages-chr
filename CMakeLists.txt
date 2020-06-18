@@ -59,7 +59,7 @@ add_custom_command(
     COMMAND ${PROG_SWIPL} ${CMD_1a}
     COMMAND ${PROG_SWIPL} ${CMD_1b}
     COMMENT "-- CHR bootstrap compilation step 1"
-    DEPENDS core
+    DEPENDS core prolog_home
             chr_translate_bootstrap1.chr
             chr_translate_bootstrap.pl)
 add_custom_command(
@@ -67,14 +67,14 @@ add_custom_command(
     COMMAND ${PROG_SWIPL} ${CMD_2a}
     COMMAND ${PROG_SWIPL} ${CMD_2b}
     COMMENT "-- CHR bootstrap compilation step 2"
-    DEPENDS core
+    DEPENDS core prolog_home
             chr_translate_bootstrap2.chr
             ${CMAKE_CURRENT_BINARY_DIR}/chr_translate_bootstrap1.pl)
 add_custom_command(
     OUTPUT guard_entailment.pl
     COMMAND ${PROG_SWIPL} ${CMD_3}
     COMMENT "-- CHR bootstrap compilation step 3"
-    DEPENDS core
+    DEPENDS core prolog_home
             guard_entailment.chr
 	    ${CMAKE_CURRENT_BINARY_DIR}/chr_translate_bootstrap2.pl)
 add_custom_command(
@@ -83,7 +83,7 @@ add_custom_command(
     COMMAND ${PROG_SWIPL} ${CMD_4b}
     COMMAND ${PROG_SWIPL} ${CMD_4c}
     COMMENT "-- CHR bootstrap compilation step 4"
-    DEPENDS core
+    DEPENDS core prolog_home
             chr_translate.chr
 	    ${CMAKE_CURRENT_BINARY_DIR}/chr_translate_bootstrap2.pl
             ${CMAKE_CURRENT_BINARY_DIR}/guard_entailment.pl)
