@@ -455,8 +455,8 @@ builtin_binds_(true,L,L).
 % builtin_binds_(read_clause(_, _), L, L).
 % builtin_binds_(read_history(_, _, _, _, _, _), L, L).
 % builtin_binds_(read_link(_, _, _), L, L).
-% builtin_binds_(read_pending_codes(_, _, _), L, L).
-% builtin_binds_(read_pending_chars(_, _, _), L, L).
+% builtin_binds_(get_pending_codes(_, _, _), L, L).
+% builtin_binds_(get_pending_chars(_, _, _), L, L).
 % builtin_binds_(read_term(_, _), L, L).
 % builtin_binds_(read_term(_, _, _), L, L).
 % builtin_binds_(recorda(_, _), L, L).
