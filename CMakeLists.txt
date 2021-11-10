@@ -19,8 +19,8 @@ function(chr_bootstrap step file cmd)
   set(to   ${file}.pl)
   set(${cmd} -f none --no-packs --nopce -q
              -s ${CMAKE_CURRENT_SOURCE_DIR}/chr_swi_bootstrap.pl
-	     -p "\"chr=${CMAKE_CURRENT_BINARY_DIR}${SWIPL_PATH_SEP}${CMAKE_CURRENT_SOURCE_DIR}\""
-             -g "\"chr_compile_step${step}('${from}','${to}')\""
+	     -p "chr=${CMAKE_CURRENT_BINARY_DIR}${SWIPL_PATH_SEP}${CMAKE_CURRENT_SOURCE_DIR}"
+             -g "chr_compile_step${step}('${from}','${to}')"
 	     -t halt
      PARENT_SCOPE)
 endfunction()
@@ -61,7 +61,8 @@ add_custom_command(
     COMMENT "-- CHR bootstrap compilation step 1"
     DEPENDS core prolog_home
             chr_translate_bootstrap1.chr
-            chr_translate_bootstrap.pl)
+            chr_translate_bootstrap.pl
+    VERBATIM)
 add_custom_command(
     OUTPUT chr_translate_bootstrap2.pl
     COMMAND ${PROG_SWIPL} ${CMD_2a}
@@ -69,14 +70,16 @@ add_custom_command(
     COMMENT "-- CHR bootstrap compilation step 2"
     DEPENDS core prolog_home
             chr_translate_bootstrap2.chr
-            ${CMAKE_CURRENT_BINARY_DIR}/chr_translate_bootstrap1.pl)
+            ${CMAKE_CURRENT_BINARY_DIR}/chr_translate_bootstrap1.pl
+    VERBATIM)
 add_custom_command(
     OUTPUT guard_entailment.pl
     COMMAND ${PROG_SWIPL} ${CMD_3}
     COMMENT "-- CHR bootstrap compilation step 3"
     DEPENDS core prolog_home
             guard_entailment.chr
-	    ${CMAKE_CURRENT_BINARY_DIR}/chr_translate_bootstrap2.pl)
+	    ${CMAKE_CURRENT_BINARY_DIR}/chr_translate_bootstrap2.pl
+    VERBATIM)
 add_custom_command(
     OUTPUT chr_translate.pl
     COMMAND ${PROG_SWIPL} ${CMD_4a}
@@ -86,16 +89,19 @@ add_custom_command(
     DEPENDS core prolog_home
             chr_translate.chr
 	    ${CMAKE_CURRENT_BINARY_DIR}/chr_translate_bootstrap2.pl
-            ${CMAKE_CURRENT_BINARY_DIR}/guard_entailment.pl)
+            ${CMAKE_CURRENT_BINARY_DIR}/guard_entailment.pl
+    VERBATIM)
 add_custom_command(
     OUTPUT chr.pl
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
             ${CMAKE_CURRENT_SOURCE_DIR}/chr_swi.pl chr.pl
-    DEPENDS chr_swi.pl)
+    DEPENDS chr_swi.pl
+    VERBATIM)
 
 add_custom_target(
     chr_compile ALL
-    DEPENDS ${CHR_SOURCES_GENERATED} chr.pl)
+    DEPENDS ${CHR_SOURCES_GENERATED} chr.pl
+    VERBATIM)
 
 swipl_plugin(chr
 	     NOINDEX
