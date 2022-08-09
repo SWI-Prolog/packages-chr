@@ -114,3 +114,9 @@ add_dependencies(chr chr_compile)
 swipl_examples(${CHR_EXAMPLES})
 
 test_libs(chr)
+
+if(EMSCRIPTEN)
+  install_in_wasm_preload(library chr.pl)
+  install_in_wasm_preload(library/chr chr_translate.pl)
+  install_in_wasm_preload(library/chr guard_entailment.pl)
+endif()
