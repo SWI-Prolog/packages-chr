@@ -56,6 +56,9 @@
 	    chr_leash/1			% +Ports
 	  ]).
 :- use_module(library(dialect), [expects_dialect/1]).
+:- use_module(library(apply), [maplist/3]).
+:- use_module(library(lists), [member/2]).
+
 :- expects_dialect(swi).
 
 :- set_prolog_flag(generate_debug_info, false).
