@@ -4,27 +4,26 @@
 %% thom fruehwirth 920218-20, 980311
 %% christian holzbaur 980207 for Sicstus CHR
 %%
-%% ported to hProlog by Tom Schrijvers 
+%% ported to hProlog by Tom Schrijvers
+%% Updated to current CHR and added how to extract the primes by
+%% Jan Wielemaker.
 
-:- module(primes,[]).
+:- module(primes,
+          [ candidate/1,                % +Max
+            primes/2                    % +Max, -ListOfPrimes
+          ]).
 :- use_module(library(chr)).
 
-:- constraints candidate/1.
-:- constraints prime/1.
-
+:- chr_constraint candidate/1.
+:- chr_constraint prime/1.
 
 candidate(1) <=> true.
-candidate(N) <=> primes:prime(N), N1 is N - 1, primes:candidate(N1).
+candidate(N) <=> prime(N), N1 is N - 1, candidate(N1).
 
 absorb @ prime(Y) \ prime(X) <=> 0 is X mod Y | true.
 
-time(N):-
-	cputime(X),
-	candidate(N),
-	cputime( Now),
-	Time is Now-X,
-	write(N-Time), nl.
-
-cputime( Ts) :- 
-	statistics( runtime, [Tm,_]),
-	Ts is Tm/1000.
+primes(Max, Primes) :-
+    findall(P,
+            ( candidate(Max),
+              current_chr_constraint(prime(P))),
+            Primes).
