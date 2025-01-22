@@ -3,7 +3,8 @@
     Author:        Tom Schrijvers and Jan Wielemaker
     E-mail:        Tom.Schrijvers@cs.kuleuven.be
     WWW:           http://www.swi-prolog.org
-    Copyright (c)  2004-2015, K.U. Leuven
+    Copyright (c)  2004-2025, K.U. Leuven
+                              SWI-Prolog Solutions b.v.
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -59,6 +60,7 @@
 :- use_module(library(dialect), [expects_dialect/1]).
 :- use_module(library(apply), [maplist/3]).
 :- use_module(library(lists), [member/2]).
+:- use_module(library(prolog_code), [pi_head/2]).
 
 :- expects_dialect(swi).
 
@@ -425,12 +427,30 @@ findallv(Templ, Goal, List, Tail) :-
                  *         MUST BE LAST!        *
                  *******************************/
 
+%!  in_chr_context is semidet.
+%
+%   True if we are expanding into  a   context  where  the chr module is
+%   loaded.
+
+in_chr_context :-
+    prolog_load_context(module, M),
+    (   current_op(1180, xfx, M:(==>))
+    ->  true
+    ;   module_property(chr, exports(PIs)),
+        member(PI, PIs),
+        pi_head(PI, Head),
+        predicate_property(M:Head, imported_from(chr))
+    ->  true
+    ).
+
 :- multifile system:term_expansion/2.
 :- dynamic   system:term_expansion/2.
 
 system:term_expansion(In, Out) :-
     \+ current_prolog_flag(xref, true),
+    in_chr_context,
     chr_expand(In, Out).
+
 %% SWI end
 
 %% SICStus begin
