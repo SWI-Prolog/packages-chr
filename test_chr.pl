@@ -35,17 +35,8 @@
 :- module(test_chr,
 	  [ test_chr/0
 	  ]).
-
-:- asserta(user:file_search_path(chr, '.')).
-:- asserta(user:file_search_path(library, '.')).
-% ctest adds a foreign path to the cmake binary directory
-:- asserta(user:file_search_path(chr, foreign('.'))).
-:- asserta(user:file_search_path(library, foreign('.'))).
-:- use_module(library(chr)).
-%%  :- use_module(chr).			% == library(chr)
-
 :- set_prolog_flag(optimise, true).
-%:- set_prolog_flag(trace_gc, true).
+:- use_module(library(chr)).
 
 :- format('CHR test suite.  To run all tests run ?- test.~n~n', []).
 
